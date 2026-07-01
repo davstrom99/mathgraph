@@ -1,0 +1,16 @@
+\section{Synthetic Recovery Validation Derivation}
+\label{validation:synthetic-recovery}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{estimator.beta\_map}. Data are generated from \texttt{model.gaussian\_observation}.
+
+\subsection{Derivation}
+For each \(n\), seed, and true coefficient \(\beta_0\), compute
+\[
+  e_n = \|\hat{\beta}_{MAP,n}-\beta_0\|_2.
+\]
+Average \(e_n\) across seeds.
+
+\subsection{Result}
+The validation result is a decreasing mean error trend as sample size increases.
+

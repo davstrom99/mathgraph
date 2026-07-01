@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mathgraph/paper/declarations/likelihood_student_t.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], processEnvironments: true },
+        svg: { fontCache: "global" },
+        startup: {
+          ready() {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(() => document.documentElement.classList.add("math-ready"));
+          }
+        }
+      };
+      window.setTimeout(() => {
+        if (!document.documentElement.classList.contains("math-ready")) document.documentElement.classList.add("math-failed");
+      }, 8000);
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+      .math-document { visibility: hidden; }
+      .math-ready .math-document { visibility: visible; }
+      .render-failure { display: none; padding: 16px; border: 1px solid #dc2626; color: #991b1b; }
+      .math-failed .render-failure { display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="render-failure">Could not render this derivation locally or load the browser math renderer. A local TeX compiler was not available.</div>
+    <main class="math-document"><a class="anchor" id="likelihood:student-t"></a>
+<h2>Student-t Likelihood</h2>
+<h3>Input and Assumption Nodes</h3>
+<p>Input node: <code>model.student_t_noise</code>. The scale \(\sigma\) and degrees of freedom \(\nu\) are known.</p>
+<h3>Declaration</h3>
+<p>The likelihood is the product of Student-t densities over residuals \(r_i=y_i-x_i^\top\beta\):</p>
+<div class="math">\[
+  p(y\mid X,\beta,\sigma,\nu)
+  =
+  \prod_{i=1}^n
+  \frac{\Gamma((\nu+1)/2)}{\Gamma(\nu/2)\sqrt{\nu\pi}\sigma}
+  \left(1+\frac{r_i^2}{\nu\sigma^2}\right)^{-(\nu+1)/2}.
+\]</div>
+<h3>Result</h3>
+<p>The node <code>likelihood.student_t</code> defines the robust likelihood used by the Student-t MAP approximation.</p></main>
+  </body>
+</html>

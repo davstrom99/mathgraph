@@ -1,0 +1,2486 @@
+{
+  "project": {
+    "id": "linear_bayes_demo",
+    "title": "Linear Bayesian Regression Demo",
+    "tex_root": "mathgraph/paper/main.tex",
+    "repo_root": ".",
+    "code_roots": [
+      "src/linear_bayes",
+      "experiments",
+      "tests/test_linear_gaussian_recovery.py",
+      "tests/test_student_t_change.py"
+    ],
+    "code_exclude": []
+  },
+  "nodes": [
+    {
+      "id": "var.X",
+      "kind": "variable",
+      "title": "Design matrix",
+      "displayLabel": "X \u2208 \u211d^{n\u00d7d}",
+      "titleImage": "math/nodes/var.X.svg",
+      "layout": {
+        "titleWidth": 103.690938,
+        "titleHeight": 16.429375,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Observed design matrix X in R^{n x d}.",
+      "symbol": "X",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/var_X.tex",
+        "label": "def:design-matrix",
+        "href": "tex/mathgraph/paper/declarations/var_X.html#def:design-matrix",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "var.X",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model uses X as the design matrix.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_X_to_gaussian_model.tex",
+            "label": "edge:X-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_X_to_gaussian_model.html#edge:X-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.X",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model uses X as the design matrix.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_X_to_student_t_model.tex",
+            "label": "edge:X-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_X_to_student_t_model.html#edge:X-to-student-t-model",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "var.y",
+      "kind": "variable",
+      "title": "Response vector",
+      "displayLabel": "y \u2208 \u211d^n",
+      "titleImage": "math/nodes/var.y.svg",
+      "layout": {
+        "titleWidth": 63.952813,
+        "titleHeight": 16.429375,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Observed response vector y in R^n.",
+      "symbol": "y",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/var_y.tex",
+        "label": "def:response-vector",
+        "href": "tex/mathgraph/paper/declarations/var_y.html#def:response-vector",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "var.y",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model defines the distribution of y.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_y_to_gaussian_model.tex",
+            "label": "edge:y-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_y_to_gaussian_model.html#edge:y-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.y",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model defines the conditional distribution of y.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_y_to_student_t_model.tex",
+            "label": "edge:y-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_y_to_student_t_model.html#edge:y-to-student-t-model",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "param.beta",
+      "kind": "variable",
+      "title": "Regression coefficients",
+      "displayLabel": "\u03b2 \u2208 \u211d^d",
+      "titleImage": "math/nodes/param.beta.svg",
+      "layout": {
+        "titleWidth": 64.615625,
+        "titleHeight": 16.516875,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Unknown coefficient vector beta in R^d.",
+      "symbol": "\\beta",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/param_beta.tex",
+        "label": "def:beta",
+        "href": "tex/mathgraph/paper/declarations/param_beta.html#def:beta",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "param.beta",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "Beta is the unknown coefficient vector in the observation model.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_beta_to_gaussian_model.tex",
+            "label": "edge:beta-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_beta_to_gaussian_model.html#edge:beta-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.beta",
+          "to": "prior.gaussian_beta",
+          "kind": "defines",
+          "description": "The Gaussian prior is a distributional assumption on beta.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_beta_to_gaussian_prior.tex",
+            "label": "edge:beta-to-gaussian-prior",
+            "href": "tex/mathgraph/paper/derivations/edge_beta_to_gaussian_prior.html#edge:beta-to-gaussian-prior",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.beta",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "Beta is the unknown coefficient vector in the Student-t observation model.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_beta_to_student_t_model.tex",
+            "label": "edge:beta-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_beta_to_student_t_model.html#edge:beta-to-student-t-model",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "var.epsilon",
+      "kind": "variable",
+      "title": "Noise vector",
+      "displayLabel": "\u03b5 \u2208 \u211d^n",
+      "titleImage": "math/nodes/var.epsilon.svg",
+      "layout": {
+        "titleWidth": 63.233125,
+        "titleHeight": 16.429375,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Noise vector epsilon in R^n.",
+      "symbol": "\\epsilon",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/var_epsilon.tex",
+        "label": "def:noise-vector",
+        "href": "tex/mathgraph/paper/declarations/var_epsilon.html#def:noise-vector",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "var.epsilon",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model assigns a Gaussian distribution to the noise vector epsilon.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.tex",
+            "label": "edge:epsilon-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.html#edge:epsilon-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.epsilon",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model assigns a heavy-tailed distribution to the noise vector epsilon.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_epsilon_to_student_t_model.tex",
+            "label": "edge:epsilon-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_epsilon_to_student_t_model.html#edge:epsilon-to-student-t-model",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "param.sigma",
+      "kind": "variable",
+      "title": "Noise scale",
+      "displayLabel": "\u03c3 \u2208 \u211d\u208a",
+      "titleImage": "math/nodes/param.sigma.svg",
+      "layout": {
+        "titleWidth": 51.324375,
+        "titleHeight": 16.429375,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Positive noise scale sigma in R_{>0}.",
+      "symbol": "\\sigma",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/param_sigma.tex",
+        "label": "def:sigma",
+        "href": "tex/mathgraph/paper/declarations/param_sigma.html#def:sigma",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "param.sigma",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model uses sigma as the positive noise scale.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_sigma_to_gaussian_model.tex",
+            "label": "edge:sigma-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_sigma_to_gaussian_model.html#edge:sigma-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.sigma",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model uses sigma as the positive scale parameter.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_sigma_to_student_t_model.tex",
+            "label": "edge:sigma-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_sigma_to_student_t_model.html#edge:sigma-to-student-t-model",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "param.tau",
+      "kind": "variable",
+      "title": "Prior scale",
+      "displayLabel": "\u03c4 \u2208 \u211d\u208a",
+      "titleImage": "math/nodes/param.tau.svg",
+      "layout": {
+        "titleWidth": 50.880313,
+        "titleHeight": 16.429375,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Positive prior scale tau in R_{>0}.",
+      "symbol": "\\tau",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/param_tau.tex",
+        "label": "def:tau",
+        "href": "tex/mathgraph/paper/declarations/param_tau.html#def:tau",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "param.tau",
+          "to": "prior.gaussian_beta",
+          "kind": "defines",
+          "description": "The Gaussian prior uses tau as its positive prior scale.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_tau_to_gaussian_prior.tex",
+            "label": "edge:tau-to-gaussian-prior",
+            "href": "tex/mathgraph/paper/derivations/edge_tau_to_gaussian_prior.html#edge:tau-to-gaussian-prior",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "param.nu",
+      "kind": "variable",
+      "title": "Student-t degrees of freedom",
+      "displayLabel": "\u03bd \u2208 \u211d\u208a",
+      "titleImage": "math/nodes/param.nu.svg",
+      "layout": {
+        "titleWidth": 50.272188,
+        "titleHeight": 16.429375,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Positive Student-t degrees of freedom nu in R_{>0}.",
+      "symbol": "\\nu",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/param_nu.tex",
+        "label": "def:nu",
+        "href": "tex/mathgraph/paper/declarations/param_nu.html#def:nu",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "param.nu",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model uses nu as the positive degrees-of-freedom parameter.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_nu_to_student_t_model.tex",
+            "label": "edge:nu-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_nu_to_student_t_model.html#edge:nu-to-student-t-model",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "model.gaussian_observation",
+      "kind": "assumption",
+      "title": "Gaussian linear observation model",
+      "displayLabel": "y = X\u03b2 + \u03b5, \u03b5 ~ N(0, \u03c3\u00b2I)",
+      "titleImage": "math/nodes/model.gaussian_observation.svg",
+      "layout": {
+        "titleWidth": 173.432812,
+        "titleHeight": 16.516875,
+        "boxWidth": 225.43,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "y = X beta + epsilon, epsilon ~ N(0, sigma^2 I).",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "var.epsilon",
+        "param.sigma"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/model_gaussian_observation.tex",
+        "label": "model:gaussian-observation",
+        "href": "tex/mathgraph/paper/declarations/model_gaussian_observation.html#model:gaussian-observation",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/simulate.py",
+          "symbol": "simulate_gaussian_linear",
+          "label": "src/linear_bayes/simulate.py::simulate_gaussian_linear",
+          "href": "code/src/linear_bayes/simulate.py.html#simulate_gaussian_linear",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/simulate.py:8",
+          "lineStart": 8,
+          "lineEnd": 30,
+          "exists": true
+        }
+      ],
+      "tests": [],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "var.X",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model uses X as the design matrix.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_X_to_gaussian_model.tex",
+            "label": "edge:X-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_X_to_gaussian_model.html#edge:X-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.y",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model defines the distribution of y.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_y_to_gaussian_model.tex",
+            "label": "edge:y-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_y_to_gaussian_model.html#edge:y-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.beta",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "Beta is the unknown coefficient vector in the observation model.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_beta_to_gaussian_model.tex",
+            "label": "edge:beta-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_beta_to_gaussian_model.html#edge:beta-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.epsilon",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model assigns a Gaussian distribution to the noise vector epsilon.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.tex",
+            "label": "edge:epsilon-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.html#edge:epsilon-to-gaussian-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.sigma",
+          "to": "model.gaussian_observation",
+          "kind": "defines",
+          "description": "The Gaussian observation model uses sigma as the positive noise scale.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_sigma_to_gaussian_model.tex",
+            "label": "edge:sigma-to-gaussian-model",
+            "href": "tex/mathgraph/paper/derivations/edge_sigma_to_gaussian_model.html#edge:sigma-to-gaussian-model",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "model.gaussian_observation",
+          "to": "likelihood.gaussian",
+          "kind": "derives",
+          "description": "The Gaussian observation model implies the Gaussian likelihood.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_likelihood.tex",
+            "label": "deriv:gaussian-likelihood",
+            "href": "tex/mathgraph/paper/derivations/gaussian_likelihood.html#deriv:gaussian-likelihood",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "prior.gaussian_beta",
+      "kind": "assumption",
+      "title": "Gaussian prior on beta",
+      "displayLabel": "\u03b2 ~ N(0, \u03c4\u00b2I)",
+      "titleImage": "math/nodes/prior.gaussian_beta.svg",
+      "layout": {
+        "titleWidth": 89.82,
+        "titleHeight": 16.516875,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "beta ~ N(0, tau^2 I_d).",
+      "symbol": null,
+      "uses": [
+        "param.beta",
+        "param.tau"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/prior_gaussian_beta.tex",
+        "label": "prior:gaussian-beta",
+        "href": "tex/mathgraph/paper/declarations/prior_gaussian_beta.html#prior:gaussian-beta",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "param.beta",
+          "to": "prior.gaussian_beta",
+          "kind": "defines",
+          "description": "The Gaussian prior is a distributional assumption on beta.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_beta_to_gaussian_prior.tex",
+            "label": "edge:beta-to-gaussian-prior",
+            "href": "tex/mathgraph/paper/derivations/edge_beta_to_gaussian_prior.html#edge:beta-to-gaussian-prior",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.tau",
+          "to": "prior.gaussian_beta",
+          "kind": "defines",
+          "description": "The Gaussian prior uses tau as its positive prior scale.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_tau_to_gaussian_prior.tex",
+            "label": "edge:tau-to-gaussian-prior",
+            "href": "tex/mathgraph/paper/derivations/edge_tau_to_gaussian_prior.html#edge:tau-to-gaussian-prior",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "prior.gaussian_beta",
+          "to": "posterior.gaussian_conjugate",
+          "kind": "derives",
+          "description": "The Gaussian prior is required for the closed-form posterior.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_posterior.tex",
+            "label": "deriv:gaussian-posterior",
+            "href": "tex/mathgraph/paper/derivations/gaussian_posterior.html#deriv:gaussian-posterior",
+            "exists": true
+          }
+        },
+        {
+          "from": "prior.gaussian_beta",
+          "to": "approx.student_t_map",
+          "kind": "assumes",
+          "description": "The Student-t MAP approximation keeps the Gaussian prior on beta.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_map_objective.tex",
+            "label": "deriv:student-t-map-objective",
+            "href": "tex/mathgraph/paper/derivations/student_t_map_objective.html#deriv:student-t-map-objective",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "likelihood.gaussian",
+      "kind": "assumption",
+      "title": "Gaussian likelihood",
+      "displayLabel": "p(y | X, \u03b2, \u03c3\u00b2)",
+      "titleImage": "math/nodes/likelihood.gaussian.svg",
+      "layout": {
+        "titleWidth": 95.400312,
+        "titleHeight": 16.90625,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "p(y | X, beta, sigma^2) under iid Gaussian noise.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/likelihood_gaussian.tex",
+        "label": "likelihood:gaussian",
+        "href": "tex/mathgraph/paper/declarations/likelihood_gaussian.html#likelihood:gaussian",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/likelihoods.py",
+          "symbol": "gaussian_log_likelihood",
+          "label": "src/linear_bayes/likelihoods.py::gaussian_log_likelihood",
+          "href": "code/src/linear_bayes/likelihoods.py.html#gaussian_log_likelihood",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/likelihoods.py:9",
+          "lineStart": 9,
+          "lineEnd": 28,
+          "exists": true
+        }
+      ],
+      "tests": [],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "model.gaussian_observation",
+          "to": "likelihood.gaussian",
+          "kind": "derives",
+          "description": "The Gaussian observation model implies the Gaussian likelihood.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_likelihood.tex",
+            "label": "deriv:gaussian-likelihood",
+            "href": "tex/mathgraph/paper/derivations/gaussian_likelihood.html#deriv:gaussian-likelihood",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "likelihood.gaussian",
+          "to": "posterior.gaussian_conjugate",
+          "kind": "derives",
+          "description": "Combining the Gaussian likelihood with the Gaussian prior yields the conjugate Gaussian posterior.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_posterior.tex",
+            "label": "deriv:gaussian-posterior",
+            "href": "tex/mathgraph/paper/derivations/gaussian_posterior.html#deriv:gaussian-posterior",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "posterior.gaussian_conjugate",
+      "kind": "assumption",
+      "title": "Closed-form Gaussian posterior",
+      "displayLabel": "\u03b2 | X,y ~ N(\u03bc\u2099, \u03a3\u2099)",
+      "titleImage": "math/nodes/posterior.gaussian_conjugate.svg",
+      "layout": {
+        "titleWidth": 127.591563,
+        "titleHeight": 16.90625,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "p(beta | X,y) = N(mu_n, Sigma_n).",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/posterior_gaussian_conjugate.tex",
+        "label": "posterior:gaussian-conjugate",
+        "href": "tex/mathgraph/paper/declarations/posterior_gaussian_conjugate.html#posterior:gaussian-conjugate",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/estimators.py",
+          "symbol": "gaussian_posterior",
+          "label": "src/linear_bayes/estimators.py::gaussian_posterior",
+          "href": "code/src/linear_bayes/estimators.py.html#gaussian_posterior",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:11",
+          "lineStart": 11,
+          "lineEnd": 27,
+          "exists": true
+        }
+      ],
+      "tests": [],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "likelihood.gaussian",
+          "to": "posterior.gaussian_conjugate",
+          "kind": "derives",
+          "description": "Combining the Gaussian likelihood with the Gaussian prior yields the conjugate Gaussian posterior.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_posterior.tex",
+            "label": "deriv:gaussian-posterior",
+            "href": "tex/mathgraph/paper/derivations/gaussian_posterior.html#deriv:gaussian-posterior",
+            "exists": true
+          }
+        },
+        {
+          "from": "prior.gaussian_beta",
+          "to": "posterior.gaussian_conjugate",
+          "kind": "derives",
+          "description": "The Gaussian prior is required for the closed-form posterior.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_posterior.tex",
+            "label": "deriv:gaussian-posterior",
+            "href": "tex/mathgraph/paper/derivations/gaussian_posterior.html#deriv:gaussian-posterior",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "posterior.gaussian_conjugate",
+          "to": "objective.gaussian_negative_log_posterior",
+          "kind": "derives",
+          "description": "The Gaussian posterior induces a quadratic negative log posterior objective.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_negative_log_posterior.tex",
+            "label": "deriv:gaussian-negative-log-posterior",
+            "href": "tex/mathgraph/paper/derivations/gaussian_negative_log_posterior.html#deriv:gaussian-negative-log-posterior",
+            "exists": true
+          }
+        },
+        {
+          "from": "posterior.gaussian_conjugate",
+          "to": "estimator.beta_map",
+          "kind": "derives",
+          "description": "The MAP estimator is the posterior mode. For the Gaussian posterior it equals the posterior mean.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/map_from_posterior.tex",
+            "label": "deriv:map-from-posterior",
+            "href": "tex/mathgraph/paper/derivations/map_from_posterior.html#deriv:map-from-posterior",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "objective.gaussian_negative_log_posterior",
+      "kind": "objective",
+      "title": "Gaussian negative log posterior",
+      "displayLabel": "(1/(2\u03c3\u00b2))\u2016y\u2212X\u03b2\u2016\u00b2 + (1/(2\u03c4\u00b2))\u2016\u03b2\u2016\u00b2",
+      "titleImage": "math/nodes/objective.gaussian_negative_log_posterior.svg",
+      "layout": {
+        "titleWidth": 227.499063,
+        "titleHeight": 16.90625,
+        "boxWidth": 279.5,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Quadratic objective equivalent to the Gaussian MAP estimator.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/objective_gaussian_negative_log_posterior.tex",
+        "label": "objective:gaussian-negative-log-posterior",
+        "href": "tex/mathgraph/paper/declarations/objective_gaussian_negative_log_posterior.html#objective:gaussian-negative-log-posterior",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/estimators.py",
+          "symbol": "negative_log_posterior_gaussian",
+          "label": "src/linear_bayes/estimators.py::negative_log_posterior_gaussian",
+          "href": "code/src/linear_bayes/estimators.py.html#negative_log_posterior_gaussian",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:30",
+          "lineStart": 30,
+          "lineEnd": 46,
+          "exists": true
+        }
+      ],
+      "tests": [],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "posterior.gaussian_conjugate",
+          "to": "objective.gaussian_negative_log_posterior",
+          "kind": "derives",
+          "description": "The Gaussian posterior induces a quadratic negative log posterior objective.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_negative_log_posterior.tex",
+            "label": "deriv:gaussian-negative-log-posterior",
+            "href": "tex/mathgraph/paper/derivations/gaussian_negative_log_posterior.html#deriv:gaussian-negative-log-posterior",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "objective.gaussian_negative_log_posterior",
+          "to": "estimator.beta_map",
+          "kind": "derives",
+          "description": "Minimizing the Gaussian negative log posterior gives the MAP estimator.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/map_from_objective.tex",
+            "label": "deriv:map-from-objective",
+            "href": "tex/mathgraph/paper/derivations/map_from_objective.html#deriv:map-from-objective",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "estimator.beta_map",
+      "kind": "estimator",
+      "title": "MAP estimator for beta",
+      "displayLabel": "\u03b2\u0302_MAP = \u03bc\u2099",
+      "titleImage": "math/nodes/estimator.beta_map.svg",
+      "layout": {
+        "titleWidth": 84.0275,
+        "titleHeight": 17.37875,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "The MAP estimator minimizes the Gaussian negative log posterior and equals the posterior mean in the conjugate Gaussian model.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/estimator_beta_map.tex",
+        "label": "estimator:beta-map",
+        "href": "tex/mathgraph/paper/declarations/estimator_beta_map.html#estimator:beta-map",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/estimators.py",
+          "symbol": "beta_map_closed_form",
+          "label": "src/linear_bayes/estimators.py::beta_map_closed_form",
+          "href": "code/src/linear_bayes/estimators.py.html#beta_map_closed_form",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:49",
+          "lineStart": 49,
+          "lineEnd": 57,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_linear_gaussian_recovery.py",
+          "symbol": "test_closed_form_map_equals_posterior_mean",
+          "label": "tests/test_linear_gaussian_recovery.py::test_closed_form_map_equals_posterior_mean",
+          "href": "code/tests/test_linear_gaussian_recovery.py.html#test_closed_form_map_equals_posterior_mean",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_linear_gaussian_recovery.py:14",
+          "lineStart": 14,
+          "lineEnd": 28,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "objective.gaussian_negative_log_posterior",
+          "to": "estimator.beta_map",
+          "kind": "derives",
+          "description": "Minimizing the Gaussian negative log posterior gives the MAP estimator.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/map_from_objective.tex",
+            "label": "deriv:map-from-objective",
+            "href": "tex/mathgraph/paper/derivations/map_from_objective.html#deriv:map-from-objective",
+            "exists": true
+          }
+        },
+        {
+          "from": "posterior.gaussian_conjugate",
+          "to": "estimator.beta_map",
+          "kind": "derives",
+          "description": "The MAP estimator is the posterior mode. For the Gaussian posterior it equals the posterior mean.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/map_from_posterior.tex",
+            "label": "deriv:map-from-posterior",
+            "href": "tex/mathgraph/paper/derivations/map_from_posterior.html#deriv:map-from-posterior",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "estimator.beta_map",
+          "to": "validation.synthetic_recovery",
+          "kind": "validates",
+          "description": "The synthetic recovery validation checks whether the estimator approaches the true coefficient vector as n increases.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/synthetic_recovery_validation.tex",
+            "label": "validation:synthetic-recovery",
+            "href": "tex/mathgraph/paper/derivations/synthetic_recovery_validation.html#validation:synthetic-recovery",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "validation.synthetic_recovery",
+      "kind": "validation",
+      "title": "Synthetic recovery validation",
+      "displayLabel": "Synthetic recovery validation",
+      "titleImage": "math/nodes/validation.synthetic_recovery.svg",
+      "layout": {
+        "titleWidth": 208.065313,
+        "titleHeight": 16.429375,
+        "boxWidth": 260.07,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Empirical validation that posterior mean/MAP estimation error decreases as sample size increases under data generated from the Gaussian model.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/validation_synthetic_recovery.tex",
+        "label": "validation:synthetic-recovery",
+        "href": "tex/mathgraph/paper/declarations/validation_synthetic_recovery.html#validation:synthetic-recovery",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/experiments.py",
+          "symbol": "run_recovery_experiment",
+          "label": "src/linear_bayes/experiments.py::run_recovery_experiment",
+          "href": "code/src/linear_bayes/experiments.py.html#run_recovery_experiment",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/experiments.py:13",
+          "lineStart": 13,
+          "lineEnd": 53,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_linear_gaussian_recovery.py",
+          "symbol": "test_recovery_improves_with_n",
+          "label": "tests/test_linear_gaussian_recovery.py::test_recovery_improves_with_n",
+          "href": "code/tests/test_linear_gaussian_recovery.py.html#test_recovery_improves_with_n",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_linear_gaussian_recovery.py:31",
+          "lineStart": 31,
+          "lineEnd": 55,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "estimator.beta_map",
+          "to": "validation.synthetic_recovery",
+          "kind": "validates",
+          "description": "The synthetic recovery validation checks whether the estimator approaches the true coefficient vector as n increases.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/synthetic_recovery_validation.tex",
+            "label": "validation:synthetic-recovery",
+            "href": "tex/mathgraph/paper/derivations/synthetic_recovery_validation.html#validation:synthetic-recovery",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "validation.synthetic_recovery",
+          "to": "experiment.gaussian_recovery",
+          "kind": "tests",
+          "description": "The experiment executes the synthetic recovery validation.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_recovery_experiment.tex",
+            "label": "experiment:gaussian-recovery",
+            "href": "tex/mathgraph/paper/derivations/gaussian_recovery_experiment.html#experiment:gaussian-recovery",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "experiment.gaussian_recovery",
+      "kind": "experiment",
+      "title": "Gaussian recovery experiment",
+      "displayLabel": "Gaussian recovery experiment",
+      "titleImage": "math/nodes/experiment.gaussian_recovery.svg",
+      "layout": {
+        "titleWidth": 217.681563,
+        "titleHeight": 16.429375,
+        "boxWidth": 269.68,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Runs synthetic recovery experiment over multiple sample sizes and seeds.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/experiment_gaussian_recovery.tex",
+        "label": "experiment:gaussian-recovery",
+        "href": "tex/mathgraph/paper/declarations/experiment_gaussian_recovery.html#experiment:gaussian-recovery",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/experiments.py",
+          "symbol": "run_recovery_experiment",
+          "label": "src/linear_bayes/experiments.py::run_recovery_experiment",
+          "href": "code/src/linear_bayes/experiments.py.html#run_recovery_experiment",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/experiments.py:13",
+          "lineStart": 13,
+          "lineEnd": 53,
+          "exists": true
+        },
+        {
+          "path": "experiments/run_gaussian_recovery.py",
+          "symbol": "main",
+          "label": "experiments/run_gaussian_recovery.py::main",
+          "href": "code/experiments/run_gaussian_recovery.py.html#main",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/experiments/run_gaussian_recovery.py:29",
+          "lineStart": 29,
+          "lineEnd": 53,
+          "exists": true
+        }
+      ],
+      "tests": [],
+      "outputs": [
+        {
+          "path": "results/gaussian_recovery_summary.json",
+          "href": "refs/results/gaussian_recovery_summary.json",
+          "exists": true
+        },
+        {
+          "path": "results/gaussian_recovery_error.png",
+          "href": "refs/results/gaussian_recovery_error.png",
+          "exists": true
+        }
+      ],
+      "incoming": [
+        {
+          "from": "validation.synthetic_recovery",
+          "to": "experiment.gaussian_recovery",
+          "kind": "tests",
+          "description": "The experiment executes the synthetic recovery validation.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/gaussian_recovery_experiment.tex",
+            "label": "experiment:gaussian-recovery",
+            "href": "tex/mathgraph/paper/derivations/gaussian_recovery_experiment.html#experiment:gaussian-recovery",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": []
+    },
+    {
+      "id": "model.student_t_noise",
+      "kind": "assumption",
+      "title": "Student-t noise observation model",
+      "displayLabel": "y = X\u03b2 + \u03b5, \u03b5 ~ t_\u03bd(0, \u03c3)",
+      "titleImage": "math/nodes/model.student_t_noise.svg",
+      "layout": {
+        "titleWidth": 173.524687,
+        "titleHeight": 16.90625,
+        "boxWidth": 225.52,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "y = X beta + epsilon, epsilon ~ StudentT_nu(0, sigma).",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "var.epsilon",
+        "param.sigma",
+        "param.nu"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/model_student_t_noise.tex",
+        "label": "model:student-t-noise",
+        "href": "tex/mathgraph/paper/declarations/model_student_t_noise.html#model:student-t-noise",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/simulate.py",
+          "symbol": "simulate_student_t_linear",
+          "label": "src/linear_bayes/simulate.py::simulate_student_t_linear",
+          "href": "code/src/linear_bayes/simulate.py.html#simulate_student_t_linear",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/simulate.py:33",
+          "lineStart": 33,
+          "lineEnd": 58,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_student_t_change.py",
+          "symbol": "test_student_t_simulation_has_heavy_tailed_residuals",
+          "label": "tests/test_student_t_change.py::test_student_t_simulation_has_heavy_tailed_residuals",
+          "href": "code/tests/test_student_t_change.py.html#test_student_t_simulation_has_heavy_tailed_residuals",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:15",
+          "lineStart": 15,
+          "lineEnd": 31,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "var.X",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model uses X as the design matrix.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_X_to_student_t_model.tex",
+            "label": "edge:X-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_X_to_student_t_model.html#edge:X-to-student-t-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.y",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model defines the conditional distribution of y.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_y_to_student_t_model.tex",
+            "label": "edge:y-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_y_to_student_t_model.html#edge:y-to-student-t-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.beta",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "Beta is the unknown coefficient vector in the Student-t observation model.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_beta_to_student_t_model.tex",
+            "label": "edge:beta-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_beta_to_student_t_model.html#edge:beta-to-student-t-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "var.epsilon",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model assigns a heavy-tailed distribution to the noise vector epsilon.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_epsilon_to_student_t_model.tex",
+            "label": "edge:epsilon-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_epsilon_to_student_t_model.html#edge:epsilon-to-student-t-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.sigma",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model uses sigma as the positive scale parameter.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_sigma_to_student_t_model.tex",
+            "label": "edge:sigma-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_sigma_to_student_t_model.html#edge:sigma-to-student-t-model",
+            "exists": true
+          }
+        },
+        {
+          "from": "param.nu",
+          "to": "model.student_t_noise",
+          "kind": "defines",
+          "description": "The Student-t observation model uses nu as the positive degrees-of-freedom parameter.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/edge_nu_to_student_t_model.tex",
+            "label": "edge:nu-to-student-t-model",
+            "href": "tex/mathgraph/paper/derivations/edge_nu_to_student_t_model.html#edge:nu-to-student-t-model",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "model.student_t_noise",
+          "to": "likelihood.student_t",
+          "kind": "derives",
+          "description": "The Student-t observation model implies the Student-t likelihood.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_likelihood.tex",
+            "label": "deriv:student-t-likelihood",
+            "href": "tex/mathgraph/paper/derivations/student_t_likelihood.html#deriv:student-t-likelihood",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "likelihood.student_t",
+      "kind": "assumption",
+      "title": "Student-t likelihood",
+      "displayLabel": "\u220f\u1d62 t_\u03bd(y\u1d62\u2212x\u1d62\u1d40\u03b2; 0, \u03c3)",
+      "titleImage": "math/nodes/likelihood.student_t.svg",
+      "layout": {
+        "titleWidth": 135.13625,
+        "titleHeight": 16.90625,
+        "boxWidth": 190.0,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Student-t likelihood for robust regression.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.nu"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/likelihood_student_t.tex",
+        "label": "likelihood:student-t",
+        "href": "tex/mathgraph/paper/declarations/likelihood_student_t.html#likelihood:student-t",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/likelihoods.py",
+          "symbol": "student_t_log_likelihood",
+          "label": "src/linear_bayes/likelihoods.py::student_t_log_likelihood",
+          "href": "code/src/linear_bayes/likelihoods.py.html#student_t_log_likelihood",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/likelihoods.py:44",
+          "lineStart": 44,
+          "lineEnd": 70,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_student_t_change.py",
+          "symbol": "test_student_t_log_likelihood_matches_scipy_density",
+          "label": "tests/test_student_t_change.py::test_student_t_log_likelihood_matches_scipy_density",
+          "href": "code/tests/test_student_t_change.py.html#test_student_t_log_likelihood_matches_scipy_density",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:34",
+          "lineStart": 34,
+          "lineEnd": 48,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "model.student_t_noise",
+          "to": "likelihood.student_t",
+          "kind": "derives",
+          "description": "The Student-t observation model implies the Student-t likelihood.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_likelihood.tex",
+            "label": "deriv:student-t-likelihood",
+            "href": "tex/mathgraph/paper/derivations/student_t_likelihood.html#deriv:student-t-likelihood",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "likelihood.student_t",
+          "to": "approx.student_t_map",
+          "kind": "approximates",
+          "description": "Since conjugacy is not used here, the estimator is implemented as a numerical MAP approximation.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_map_objective.tex",
+            "label": "deriv:student-t-map-objective",
+            "href": "tex/mathgraph/paper/derivations/student_t_map_objective.html#deriv:student-t-map-objective",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "approx.student_t_map",
+      "kind": "approximation",
+      "title": "Numerical MAP approximation under Student-t noise",
+      "displayLabel": "Numerical Student-t MAP",
+      "titleImage": "math/nodes/approx.student_t_map.svg",
+      "layout": {
+        "titleWidth": 178.936563,
+        "titleHeight": 16.429375,
+        "boxWidth": 230.94,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "MAP objective optimized numerically using a Student-t likelihood and Gaussian prior; this is not a closed-form posterior.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau",
+        "param.nu"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/approx_student_t_map.tex",
+        "label": "approx:student-t-map",
+        "href": "tex/mathgraph/paper/declarations/approx_student_t_map.html#approx:student-t-map",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/linear_bayes/estimators.py",
+          "symbol": "student_t_map_numerical",
+          "label": "src/linear_bayes/estimators.py::student_t_map_numerical",
+          "href": "code/src/linear_bayes/estimators.py.html#student_t_map_numerical",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:86",
+          "lineStart": 86,
+          "lineEnd": 122,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_student_t_change.py",
+          "symbol": "test_student_t_map_handles_outlier_better_than_gaussian_map",
+          "label": "tests/test_student_t_change.py::test_student_t_map_handles_outlier_better_than_gaussian_map",
+          "href": "code/tests/test_student_t_change.py.html#test_student_t_map_handles_outlier_better_than_gaussian_map",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:51",
+          "lineStart": 51,
+          "lineEnd": 62,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "likelihood.student_t",
+          "to": "approx.student_t_map",
+          "kind": "approximates",
+          "description": "Since conjugacy is not used here, the estimator is implemented as a numerical MAP approximation.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_map_objective.tex",
+            "label": "deriv:student-t-map-objective",
+            "href": "tex/mathgraph/paper/derivations/student_t_map_objective.html#deriv:student-t-map-objective",
+            "exists": true
+          }
+        },
+        {
+          "from": "prior.gaussian_beta",
+          "to": "approx.student_t_map",
+          "kind": "assumes",
+          "description": "The Student-t MAP approximation keeps the Gaussian prior on beta.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_map_objective.tex",
+            "label": "deriv:student-t-map-objective",
+            "href": "tex/mathgraph/paper/derivations/student_t_map_objective.html#deriv:student-t-map-objective",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "approx.student_t_map",
+          "to": "experiment.student_t_change",
+          "kind": "tests",
+          "description": "The Student-t change experiment exercises the numerical MAP approximation.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_change_experiment.tex",
+            "label": "deriv:student-t-change-experiment",
+            "href": "tex/mathgraph/paper/derivations/student_t_change_experiment.html#deriv:student-t-change-experiment",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "experiment.student_t_change",
+      "kind": "experiment",
+      "title": "Student-t change experiment",
+      "displayLabel": "Student-t change experiment",
+      "titleImage": "math/nodes/experiment.student_t_change.svg",
+      "layout": {
+        "titleWidth": 209.369063,
+        "titleHeight": 16.429375,
+        "boxWidth": 261.37,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Compares Gaussian MAP and Student-t MAP under heavy-tailed noise.",
+      "symbol": null,
+      "uses": [
+        "var.X",
+        "var.y",
+        "param.beta",
+        "param.sigma",
+        "param.tau",
+        "param.nu"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/experiment_student_t_change.tex",
+        "label": "experiment:student-t-change",
+        "href": "tex/mathgraph/paper/declarations/experiment_student_t_change.html#experiment:student-t-change",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "experiments/run_student_t_change.py",
+          "symbol": "main",
+          "label": "experiments/run_student_t_change.py::main",
+          "href": "code/experiments/run_student_t_change.py.html#main",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/experiments/run_student_t_change.py:31",
+          "lineStart": 31,
+          "lineEnd": 109,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_student_t_change.py",
+          "symbol": "test_student_t_change_script_writes_declared_outputs",
+          "label": "tests/test_student_t_change.py::test_student_t_change_script_writes_declared_outputs",
+          "href": "code/tests/test_student_t_change.py.html#test_student_t_change_script_writes_declared_outputs",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:65",
+          "lineStart": 65,
+          "lineEnd": 85,
+          "exists": true
+        }
+      ],
+      "outputs": [
+        {
+          "path": "results/student_t_change_summary.json",
+          "href": "refs/results/student_t_change_summary.json",
+          "exists": true
+        },
+        {
+          "path": "results/student_t_change_error.png",
+          "href": "refs/results/student_t_change_error.png",
+          "exists": true
+        }
+      ],
+      "incoming": [
+        {
+          "from": "approx.student_t_map",
+          "to": "experiment.student_t_change",
+          "kind": "tests",
+          "description": "The Student-t change experiment exercises the numerical MAP approximation.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/student_t_change_experiment.tex",
+            "label": "deriv:student-t-change-experiment",
+            "href": "tex/mathgraph/paper/derivations/student_t_change_experiment.html#deriv:student-t-change-experiment",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": []
+    },
+    {
+      "id": "var.repository_files",
+      "kind": "variable",
+      "title": "\\(F \\in \\mathcal{P}_{\\mathrm{fin}}(\\mathrm{Path})\\)",
+      "displayLabel": "Repository evidence files F",
+      "titleImage": "math/nodes/var.repository_files.svg",
+      "layout": {
+        "titleWidth": 190.816875,
+        "titleHeight": 16.429375,
+        "boxWidth": 242.82,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "F is the finite set of repository paths considered during initialization.",
+      "symbol": "F",
+      "uses": [],
+      "tex": {
+        "file": "mathgraph/paper/declarations/var_repository_files.tex",
+        "label": "var:repository-files",
+        "href": "tex/mathgraph/paper/declarations/var_repository_files.html#var:repository-files",
+        "exists": true
+      },
+      "code": [],
+      "tests": [],
+      "outputs": [],
+      "incoming": [],
+      "outgoing": [
+        {
+          "from": "var.repository_files",
+          "to": "assumption.evidence_classification",
+          "kind": "defines",
+          "description": "The finite repository corpus is partitioned by authority and provenance.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_evidence_partition.tex",
+            "label": "deriv:init-evidence-partition",
+            "href": "tex/mathgraph/paper/derivations/init_evidence_partition.html#deriv:init-evidence-partition",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "assumption.evidence_classification",
+      "kind": "assumption",
+      "title": "\\(F=A\\,\\dot\\cup\\,G\\,\\dot\\cup\\,E\\)",
+      "displayLabel": "Evidence authority classification",
+      "titleImage": "math/nodes/assumption.evidence_classification.svg",
+      "layout": {
+        "titleWidth": 229.839688,
+        "titleHeight": 16.429375,
+        "boxWidth": 281.84,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Repository evidence is partitioned into authoritative files, aggregate generated families, and explicit exclusions using defaults plus project configuration.",
+      "symbol": null,
+      "uses": [
+        "var.repository_files"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/evidence_classification.tex",
+        "label": "assumption:evidence-classification",
+        "href": "tex/mathgraph/paper/declarations/evidence_classification.html#assumption:evidence-classification",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/mathgraph_tool/discovery.py",
+          "symbol": "load_discovery_config",
+          "label": "src/mathgraph_tool/discovery.py::load_discovery_config:137",
+          "href": "code/src/mathgraph_tool/discovery.py.html#L137",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/discovery.py:137",
+          "lineStart": 137,
+          "lineEnd": 137,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/discovery.py",
+          "symbol": "discover_project_files",
+          "label": "src/mathgraph_tool/discovery.py::discover_project_files:157",
+          "href": "code/src/mathgraph_tool/discovery.py.html#L157",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/discovery.py:157",
+          "lineStart": 157,
+          "lineEnd": 157,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/discovery.py",
+          "symbol": "_classify",
+          "label": "src/mathgraph_tool/discovery.py::_classify:222",
+          "href": "code/src/mathgraph_tool/discovery.py.html#L222",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/discovery.py:222",
+          "lineStart": 222,
+          "lineEnd": 222,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:243",
+          "href": "code/tests/test_mathgraph_index.py.html#L243",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:243",
+          "lineStart": 243,
+          "lineEnd": 243,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "var.repository_files",
+          "to": "assumption.evidence_classification",
+          "kind": "defines",
+          "description": "The finite repository corpus is partitioned by authority and provenance.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_evidence_partition.tex",
+            "label": "deriv:init-evidence-partition",
+            "href": "tex/mathgraph/paper/derivations/init_evidence_partition.html#deriv:init-evidence-partition",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "assumption.evidence_classification",
+          "to": "dataset.init_evidence_index",
+          "kind": "generates",
+          "description": "Classification determines which records receive semantic extraction and which become aggregate manifests.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_evidence_partition.tex",
+            "label": "deriv:init-evidence-partition",
+            "href": "tex/mathgraph/paper/derivations/init_evidence_partition.html#deriv:init-evidence-partition",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "dataset.init_evidence_index",
+      "kind": "dataset",
+      "title": "\\(I=\\mathcal{H}(A)\\cup\\mathcal{T}(G)\\)",
+      "displayLabel": "Initialization evidence index",
+      "titleImage": "math/nodes/dataset.init_evidence_index.svg",
+      "layout": {
+        "titleWidth": 198.9325,
+        "titleHeight": 16.429375,
+        "boxWidth": 250.93,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "The initialization index stores semantic records for authoritative evidence and hash/provenance manifests for aggregate families.",
+      "symbol": null,
+      "uses": [
+        "var.repository_files"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/init_evidence_index.tex",
+        "label": "dataset:init-evidence-index",
+        "href": "tex/mathgraph/paper/declarations/init_evidence_index.html#dataset:init-evidence-index",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "build_index",
+          "label": "src/mathgraph_tool/indexing.py::build_index:76",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L76",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:76",
+          "lineStart": 76,
+          "lineEnd": 76,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "check_index",
+          "label": "src/mathgraph_tool/indexing.py::check_index:182",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L182",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:182",
+          "lineStart": 182,
+          "lineEnd": 182,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "_family_record",
+          "label": "src/mathgraph_tool/indexing.py::_family_record:632",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L632",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:632",
+          "lineStart": 632,
+          "lineEnd": 632,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/init.py",
+          "symbol": "initialize_mathgraph",
+          "label": "src/mathgraph_tool/init.py::initialize_mathgraph:43",
+          "href": "code/src/mathgraph_tool/init.py.html#L43",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/init.py:43",
+          "lineStart": 43,
+          "lineEnd": 43,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:217",
+          "href": "code/tests/test_mathgraph_index.py.html#L217",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:217",
+          "lineStart": 217,
+          "lineEnd": 217,
+          "exists": true
+        },
+        {
+          "path": "tests/test_mathgraph_init.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_init.py:170",
+          "href": "code/tests/test_mathgraph_init.py.html#L170",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_init.py:170",
+          "lineStart": 170,
+          "lineEnd": 170,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "assumption.evidence_classification",
+          "to": "dataset.init_evidence_index",
+          "kind": "generates",
+          "description": "Classification determines which records receive semantic extraction and which become aggregate manifests.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_evidence_partition.tex",
+            "label": "deriv:init-evidence-partition",
+            "href": "tex/mathgraph/paper/derivations/init_evidence_partition.html#deriv:init-evidence-partition",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "dataset.init_evidence_index",
+          "to": "dataset.init_evidence_dossier",
+          "kind": "generates",
+          "description": "The authoritative index records generate the compact dossier.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_index_products.tex",
+            "label": "deriv:init-index-products",
+            "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+            "exists": true
+          }
+        },
+        {
+          "from": "dataset.init_evidence_index",
+          "to": "dataset.init_reference_draft",
+          "kind": "generates",
+          "description": "Indexed scopes and occurrences generate exact role-classified references.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_index_products.tex",
+            "label": "deriv:init-index-products",
+            "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+            "exists": true
+          }
+        },
+        {
+          "from": "dataset.init_evidence_index",
+          "to": "validation.init_traceability",
+          "kind": "validates",
+          "description": "Hash and coverage checks validate initialization traceability.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_index_products.tex",
+            "label": "deriv:init-index-products",
+            "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "dataset.init_evidence_dossier",
+      "kind": "dataset",
+      "title": "\\(D=\\operatorname{compact}(I_A)\\)",
+      "displayLabel": "Compact evidence dossier",
+      "titleImage": "math/nodes/dataset.init_evidence_dossier.svg",
+      "layout": {
+        "titleWidth": 188.1875,
+        "titleHeight": 16.429375,
+        "boxWidth": 240.19,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "The dossier deduplicates equations, definitions, calls, tests, defaults, and identity candidates from authoritative evidence.",
+      "symbol": null,
+      "uses": [
+        "var.repository_files"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/init_evidence_dossier.tex",
+        "label": "dataset:init-evidence-dossier",
+        "href": "tex/mathgraph/paper/declarations/init_evidence_dossier.html#dataset:init-evidence-dossier",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "format_index_dossier",
+          "label": "src/mathgraph_tool/indexing.py::format_index_dossier:345",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L345",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:345",
+          "lineStart": 345,
+          "lineEnd": 345,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/cli.py",
+          "symbol": null,
+          "label": "src/mathgraph_tool/cli.py:157",
+          "href": "code/src/mathgraph_tool/cli.py.html#L157",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/cli.py:157",
+          "lineStart": 157,
+          "lineEnd": 157,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:226",
+          "href": "code/tests/test_mathgraph_index.py.html#L226",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:226",
+          "lineStart": 226,
+          "lineEnd": 226,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "dataset.init_evidence_index",
+          "to": "dataset.init_evidence_dossier",
+          "kind": "generates",
+          "description": "The authoritative index records generate the compact dossier.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_index_products.tex",
+            "label": "deriv:init-index-products",
+            "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": []
+    },
+    {
+      "id": "dataset.init_reference_draft",
+      "kind": "dataset",
+      "title": "\\(R_s=\\{(p,\\ell,r):s\\text{ occurs at }(p,\\ell)\\}\\)",
+      "displayLabel": "Mechanical code-reference draft",
+      "titleImage": "math/nodes/dataset.init_reference_draft.svg",
+      "layout": {
+        "titleWidth": 229.599063,
+        "titleHeight": 16.429375,
+        "boxWidth": 281.6,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Reference drafting emits exhaustive authoritative path-line occurrences with deterministic semantic roles and graph candidates.",
+      "symbol": null,
+      "uses": [
+        "var.repository_files"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/init_reference_draft.tex",
+        "label": "dataset:init-reference-draft",
+        "href": "tex/mathgraph/paper/declarations/init_reference_draft.html#dataset:init-reference-draft",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "draft_code_refs",
+          "label": "src/mathgraph_tool/indexing.py::draft_code_refs:410",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L410",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:410",
+          "lineStart": 410,
+          "lineEnd": 410,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "format_draft_refs",
+          "label": "src/mathgraph_tool/indexing.py::format_draft_refs:445",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L445",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:445",
+          "lineStart": 445,
+          "lineEnd": 445,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/indexing.py",
+          "symbol": "serialize_initial_draft",
+          "label": "src/mathgraph_tool/indexing.py::serialize_initial_draft:449",
+          "href": "code/src/mathgraph_tool/indexing.py.html#L449",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/indexing.py:449",
+          "lineStart": 449,
+          "lineEnd": 449,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:259",
+          "href": "code/tests/test_mathgraph_index.py.html#L259",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:259",
+          "lineStart": 259,
+          "lineEnd": 259,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "dataset.init_evidence_index",
+          "to": "dataset.init_reference_draft",
+          "kind": "generates",
+          "description": "Indexed scopes and occurrences generate exact role-classified references.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_index_products.tex",
+            "label": "deriv:init-index-products",
+            "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": []
+    },
+    {
+      "id": "validation.init_traceability",
+      "kind": "validation",
+      "title": "\\(\\operatorname{valid}(I)\\iff\\operatorname{current}(I)\\land\\operatorname{complete}(I_A)\\)",
+      "displayLabel": "Initialization traceability validation",
+      "titleImage": "math/nodes/validation.init_traceability.svg",
+      "layout": {
+        "titleWidth": 245.12375,
+        "titleHeight": 16.429375,
+        "boxWidth": 297.12,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "Validation checks current hashes, complete authoritative coverage, grouped generated evidence, shared derivations, and render isolation.",
+      "symbol": null,
+      "uses": [
+        "var.repository_files"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/init_traceability_validation.tex",
+        "label": "validation:init-traceability",
+        "href": "tex/mathgraph/paper/declarations/init_traceability_validation.html#validation:init-traceability",
+        "exists": true
+      },
+      "code": [],
+      "tests": [
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:217",
+          "href": "code/tests/test_mathgraph_index.py.html#L217",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:217",
+          "lineStart": 217,
+          "lineEnd": 217,
+          "exists": true
+        },
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:243",
+          "href": "code/tests/test_mathgraph_index.py.html#L243",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:243",
+          "lineStart": 243,
+          "lineEnd": 243,
+          "exists": true
+        },
+        {
+          "path": "tests/test_mathgraph_index.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_index.py:259",
+          "href": "code/tests/test_mathgraph_index.py.html#L259",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_index.py:259",
+          "lineStart": 259,
+          "lineEnd": 259,
+          "exists": true
+        },
+        {
+          "path": "tests/test_mathgraph_check.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_check.py:321",
+          "href": "code/tests/test_mathgraph_check.py.html#L321",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_check.py:321",
+          "lineStart": 321,
+          "lineEnd": 321,
+          "exists": true
+        },
+        {
+          "path": "tests/test_mathgraph_check.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_check.py:344",
+          "href": "code/tests/test_mathgraph_check.py.html#L344",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_check.py:344",
+          "lineStart": 344,
+          "lineEnd": 344,
+          "exists": true
+        },
+        {
+          "path": "tests/test_mathgraph_render.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_render.py:8",
+          "href": "code/tests/test_mathgraph_render.py.html#L8",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_render.py:8",
+          "lineStart": 8,
+          "lineEnd": 8,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "dataset.init_evidence_index",
+          "to": "validation.init_traceability",
+          "kind": "validates",
+          "description": "Hash and coverage checks validate initialization traceability.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/init_index_products.tex",
+            "label": "deriv:init-index-products",
+            "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": [
+        {
+          "from": "validation.init_traceability",
+          "to": "figure.graph_view",
+          "kind": "generates",
+          "description": "Validated traceability data and render isolation generate the interactive static graph viewer.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/render_graph_view.tex",
+            "label": "deriv:render-graph-view",
+            "href": "tex/mathgraph/paper/derivations/render_graph_view.html#deriv:render-graph-view",
+            "exists": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "figure.graph_view",
+      "kind": "figure",
+      "title": "\\(V=\\operatorname{render}(G_{\\mathrm{mg}},L_{\\mathrm{SCC}},B)\\)",
+      "displayLabel": "Static graph viewer",
+      "titleImage": "math/nodes/figure.graph_view.svg",
+      "layout": {
+        "titleWidth": 139.401875,
+        "titleHeight": 16.429375,
+        "boxWidth": 191.4,
+        "boxHeight": 82.0
+      },
+      "cluster": null,
+      "statement": "The graph viewer renders the validated mathgraph with SCC-aware layout, measured node boxes, and interactive traceability links.",
+      "symbol": null,
+      "uses": [
+        "var.repository_files"
+      ],
+      "tex": {
+        "file": "mathgraph/paper/declarations/figure_graph_view.tex",
+        "label": "figure:graph-view",
+        "href": "tex/mathgraph/paper/declarations/figure_graph_view.html#figure:graph-view",
+        "exists": true
+      },
+      "code": [
+        {
+          "path": "src/mathgraph_tool/render.py",
+          "symbol": "render_static_site",
+          "label": "src/mathgraph_tool/render.py::render_static_site:37",
+          "href": "code/src/mathgraph_tool/render.py.html#L37",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/render.py:37",
+          "lineStart": 37,
+          "lineEnd": 37,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/render.py",
+          "symbol": "_graph_payload",
+          "label": "src/mathgraph_tool/render.py::_graph_payload:346",
+          "href": "code/src/mathgraph_tool/render.py.html#L346",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/render.py:346",
+          "lineStart": 346,
+          "lineEnd": 346,
+          "exists": true
+        },
+        {
+          "path": "src/mathgraph_tool/render.py",
+          "symbol": "_modern_app_js",
+          "label": "src/mathgraph_tool/render.py::_modern_app_js:1227",
+          "href": "code/src/mathgraph_tool/render.py.html#L1227",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/mathgraph_tool/render.py:1227",
+          "lineStart": 1227,
+          "lineEnd": 1227,
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_mathgraph_render.py",
+          "symbol": null,
+          "label": "tests/test_mathgraph_render.py:8",
+          "href": "code/tests/test_mathgraph_render.py.html#L8",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_mathgraph_render.py:8",
+          "lineStart": 8,
+          "lineEnd": 8,
+          "exists": true
+        }
+      ],
+      "outputs": [],
+      "incoming": [
+        {
+          "from": "validation.init_traceability",
+          "to": "figure.graph_view",
+          "kind": "generates",
+          "description": "Validated traceability data and render isolation generate the interactive static graph viewer.",
+          "tex": {
+            "file": "mathgraph/paper/derivations/render_graph_view.tex",
+            "label": "deriv:render-graph-view",
+            "href": "tex/mathgraph/paper/derivations/render_graph_view.html#deriv:render-graph-view",
+            "exists": true
+          }
+        }
+      ],
+      "outgoing": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "var.repository_files",
+      "to": "assumption.evidence_classification",
+      "kind": "defines",
+      "description": "The finite repository corpus is partitioned by authority and provenance.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/init_evidence_partition.tex",
+        "label": "deriv:init-evidence-partition",
+        "href": "tex/mathgraph/paper/derivations/init_evidence_partition.html#deriv:init-evidence-partition",
+        "exists": true
+      }
+    },
+    {
+      "from": "assumption.evidence_classification",
+      "to": "dataset.init_evidence_index",
+      "kind": "generates",
+      "description": "Classification determines which records receive semantic extraction and which become aggregate manifests.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/init_evidence_partition.tex",
+        "label": "deriv:init-evidence-partition",
+        "href": "tex/mathgraph/paper/derivations/init_evidence_partition.html#deriv:init-evidence-partition",
+        "exists": true
+      }
+    },
+    {
+      "from": "dataset.init_evidence_index",
+      "to": "dataset.init_evidence_dossier",
+      "kind": "generates",
+      "description": "The authoritative index records generate the compact dossier.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/init_index_products.tex",
+        "label": "deriv:init-index-products",
+        "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+        "exists": true
+      }
+    },
+    {
+      "from": "dataset.init_evidence_index",
+      "to": "dataset.init_reference_draft",
+      "kind": "generates",
+      "description": "Indexed scopes and occurrences generate exact role-classified references.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/init_index_products.tex",
+        "label": "deriv:init-index-products",
+        "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+        "exists": true
+      }
+    },
+    {
+      "from": "dataset.init_evidence_index",
+      "to": "validation.init_traceability",
+      "kind": "validates",
+      "description": "Hash and coverage checks validate initialization traceability.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/init_index_products.tex",
+        "label": "deriv:init-index-products",
+        "href": "tex/mathgraph/paper/derivations/init_index_products.html#deriv:init-index-products",
+        "exists": true
+      }
+    },
+    {
+      "from": "validation.init_traceability",
+      "to": "figure.graph_view",
+      "kind": "generates",
+      "description": "Validated traceability data and render isolation generate the interactive static graph viewer.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/render_graph_view.tex",
+        "label": "deriv:render-graph-view",
+        "href": "tex/mathgraph/paper/derivations/render_graph_view.html#deriv:render-graph-view",
+        "exists": true
+      }
+    },
+    {
+      "from": "var.X",
+      "to": "model.gaussian_observation",
+      "kind": "defines",
+      "description": "The Gaussian observation model uses X as the design matrix.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_X_to_gaussian_model.tex",
+        "label": "edge:X-to-gaussian-model",
+        "href": "tex/mathgraph/paper/derivations/edge_X_to_gaussian_model.html#edge:X-to-gaussian-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "var.y",
+      "to": "model.gaussian_observation",
+      "kind": "defines",
+      "description": "The Gaussian observation model defines the distribution of y.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_y_to_gaussian_model.tex",
+        "label": "edge:y-to-gaussian-model",
+        "href": "tex/mathgraph/paper/derivations/edge_y_to_gaussian_model.html#edge:y-to-gaussian-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.beta",
+      "to": "model.gaussian_observation",
+      "kind": "defines",
+      "description": "Beta is the unknown coefficient vector in the observation model.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_beta_to_gaussian_model.tex",
+        "label": "edge:beta-to-gaussian-model",
+        "href": "tex/mathgraph/paper/derivations/edge_beta_to_gaussian_model.html#edge:beta-to-gaussian-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "var.epsilon",
+      "to": "model.gaussian_observation",
+      "kind": "defines",
+      "description": "The Gaussian observation model assigns a Gaussian distribution to the noise vector epsilon.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.tex",
+        "label": "edge:epsilon-to-gaussian-model",
+        "href": "tex/mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.html#edge:epsilon-to-gaussian-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.sigma",
+      "to": "model.gaussian_observation",
+      "kind": "defines",
+      "description": "The Gaussian observation model uses sigma as the positive noise scale.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_sigma_to_gaussian_model.tex",
+        "label": "edge:sigma-to-gaussian-model",
+        "href": "tex/mathgraph/paper/derivations/edge_sigma_to_gaussian_model.html#edge:sigma-to-gaussian-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.beta",
+      "to": "prior.gaussian_beta",
+      "kind": "defines",
+      "description": "The Gaussian prior is a distributional assumption on beta.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_beta_to_gaussian_prior.tex",
+        "label": "edge:beta-to-gaussian-prior",
+        "href": "tex/mathgraph/paper/derivations/edge_beta_to_gaussian_prior.html#edge:beta-to-gaussian-prior",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.tau",
+      "to": "prior.gaussian_beta",
+      "kind": "defines",
+      "description": "The Gaussian prior uses tau as its positive prior scale.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_tau_to_gaussian_prior.tex",
+        "label": "edge:tau-to-gaussian-prior",
+        "href": "tex/mathgraph/paper/derivations/edge_tau_to_gaussian_prior.html#edge:tau-to-gaussian-prior",
+        "exists": true
+      }
+    },
+    {
+      "from": "model.gaussian_observation",
+      "to": "likelihood.gaussian",
+      "kind": "derives",
+      "description": "The Gaussian observation model implies the Gaussian likelihood.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/gaussian_likelihood.tex",
+        "label": "deriv:gaussian-likelihood",
+        "href": "tex/mathgraph/paper/derivations/gaussian_likelihood.html#deriv:gaussian-likelihood",
+        "exists": true
+      }
+    },
+    {
+      "from": "likelihood.gaussian",
+      "to": "posterior.gaussian_conjugate",
+      "kind": "derives",
+      "description": "Combining the Gaussian likelihood with the Gaussian prior yields the conjugate Gaussian posterior.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/gaussian_posterior.tex",
+        "label": "deriv:gaussian-posterior",
+        "href": "tex/mathgraph/paper/derivations/gaussian_posterior.html#deriv:gaussian-posterior",
+        "exists": true
+      }
+    },
+    {
+      "from": "prior.gaussian_beta",
+      "to": "posterior.gaussian_conjugate",
+      "kind": "derives",
+      "description": "The Gaussian prior is required for the closed-form posterior.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/gaussian_posterior.tex",
+        "label": "deriv:gaussian-posterior",
+        "href": "tex/mathgraph/paper/derivations/gaussian_posterior.html#deriv:gaussian-posterior",
+        "exists": true
+      }
+    },
+    {
+      "from": "posterior.gaussian_conjugate",
+      "to": "objective.gaussian_negative_log_posterior",
+      "kind": "derives",
+      "description": "The Gaussian posterior induces a quadratic negative log posterior objective.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/gaussian_negative_log_posterior.tex",
+        "label": "deriv:gaussian-negative-log-posterior",
+        "href": "tex/mathgraph/paper/derivations/gaussian_negative_log_posterior.html#deriv:gaussian-negative-log-posterior",
+        "exists": true
+      }
+    },
+    {
+      "from": "objective.gaussian_negative_log_posterior",
+      "to": "estimator.beta_map",
+      "kind": "derives",
+      "description": "Minimizing the Gaussian negative log posterior gives the MAP estimator.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/map_from_objective.tex",
+        "label": "deriv:map-from-objective",
+        "href": "tex/mathgraph/paper/derivations/map_from_objective.html#deriv:map-from-objective",
+        "exists": true
+      }
+    },
+    {
+      "from": "posterior.gaussian_conjugate",
+      "to": "estimator.beta_map",
+      "kind": "derives",
+      "description": "The MAP estimator is the posterior mode. For the Gaussian posterior it equals the posterior mean.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/map_from_posterior.tex",
+        "label": "deriv:map-from-posterior",
+        "href": "tex/mathgraph/paper/derivations/map_from_posterior.html#deriv:map-from-posterior",
+        "exists": true
+      }
+    },
+    {
+      "from": "estimator.beta_map",
+      "to": "validation.synthetic_recovery",
+      "kind": "validates",
+      "description": "The synthetic recovery validation checks whether the estimator approaches the true coefficient vector as n increases.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/synthetic_recovery_validation.tex",
+        "label": "validation:synthetic-recovery",
+        "href": "tex/mathgraph/paper/derivations/synthetic_recovery_validation.html#validation:synthetic-recovery",
+        "exists": true
+      }
+    },
+    {
+      "from": "validation.synthetic_recovery",
+      "to": "experiment.gaussian_recovery",
+      "kind": "tests",
+      "description": "The experiment executes the synthetic recovery validation.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/gaussian_recovery_experiment.tex",
+        "label": "experiment:gaussian-recovery",
+        "href": "tex/mathgraph/paper/derivations/gaussian_recovery_experiment.html#experiment:gaussian-recovery",
+        "exists": true
+      }
+    },
+    {
+      "from": "var.X",
+      "to": "model.student_t_noise",
+      "kind": "defines",
+      "description": "The Student-t observation model uses X as the design matrix.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_X_to_student_t_model.tex",
+        "label": "edge:X-to-student-t-model",
+        "href": "tex/mathgraph/paper/derivations/edge_X_to_student_t_model.html#edge:X-to-student-t-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "var.y",
+      "to": "model.student_t_noise",
+      "kind": "defines",
+      "description": "The Student-t observation model defines the conditional distribution of y.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_y_to_student_t_model.tex",
+        "label": "edge:y-to-student-t-model",
+        "href": "tex/mathgraph/paper/derivations/edge_y_to_student_t_model.html#edge:y-to-student-t-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.beta",
+      "to": "model.student_t_noise",
+      "kind": "defines",
+      "description": "Beta is the unknown coefficient vector in the Student-t observation model.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_beta_to_student_t_model.tex",
+        "label": "edge:beta-to-student-t-model",
+        "href": "tex/mathgraph/paper/derivations/edge_beta_to_student_t_model.html#edge:beta-to-student-t-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "var.epsilon",
+      "to": "model.student_t_noise",
+      "kind": "defines",
+      "description": "The Student-t observation model assigns a heavy-tailed distribution to the noise vector epsilon.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_epsilon_to_student_t_model.tex",
+        "label": "edge:epsilon-to-student-t-model",
+        "href": "tex/mathgraph/paper/derivations/edge_epsilon_to_student_t_model.html#edge:epsilon-to-student-t-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.sigma",
+      "to": "model.student_t_noise",
+      "kind": "defines",
+      "description": "The Student-t observation model uses sigma as the positive scale parameter.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_sigma_to_student_t_model.tex",
+        "label": "edge:sigma-to-student-t-model",
+        "href": "tex/mathgraph/paper/derivations/edge_sigma_to_student_t_model.html#edge:sigma-to-student-t-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "param.nu",
+      "to": "model.student_t_noise",
+      "kind": "defines",
+      "description": "The Student-t observation model uses nu as the positive degrees-of-freedom parameter.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/edge_nu_to_student_t_model.tex",
+        "label": "edge:nu-to-student-t-model",
+        "href": "tex/mathgraph/paper/derivations/edge_nu_to_student_t_model.html#edge:nu-to-student-t-model",
+        "exists": true
+      }
+    },
+    {
+      "from": "model.student_t_noise",
+      "to": "likelihood.student_t",
+      "kind": "derives",
+      "description": "The Student-t observation model implies the Student-t likelihood.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/student_t_likelihood.tex",
+        "label": "deriv:student-t-likelihood",
+        "href": "tex/mathgraph/paper/derivations/student_t_likelihood.html#deriv:student-t-likelihood",
+        "exists": true
+      }
+    },
+    {
+      "from": "likelihood.student_t",
+      "to": "approx.student_t_map",
+      "kind": "approximates",
+      "description": "Since conjugacy is not used here, the estimator is implemented as a numerical MAP approximation.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/student_t_map_objective.tex",
+        "label": "deriv:student-t-map-objective",
+        "href": "tex/mathgraph/paper/derivations/student_t_map_objective.html#deriv:student-t-map-objective",
+        "exists": true
+      }
+    },
+    {
+      "from": "prior.gaussian_beta",
+      "to": "approx.student_t_map",
+      "kind": "assumes",
+      "description": "The Student-t MAP approximation keeps the Gaussian prior on beta.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/student_t_map_objective.tex",
+        "label": "deriv:student-t-map-objective",
+        "href": "tex/mathgraph/paper/derivations/student_t_map_objective.html#deriv:student-t-map-objective",
+        "exists": true
+      }
+    },
+    {
+      "from": "approx.student_t_map",
+      "to": "experiment.student_t_change",
+      "kind": "tests",
+      "description": "The Student-t change experiment exercises the numerical MAP approximation.",
+      "tex": {
+        "file": "mathgraph/paper/derivations/student_t_change_experiment.tex",
+        "label": "deriv:student-t-change-experiment",
+        "href": "tex/mathgraph/paper/derivations/student_t_change_experiment.html#deriv:student-t-change-experiment",
+        "exists": true
+      }
+    }
+  ],
+  "clusters": []
+}

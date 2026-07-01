@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/derivations/student_t_map_objective.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Student-t MAP Objective Derivation</h2>
+<a class="anchor" id="deriv:student-t-map-objective"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input nodes: <code>likelihood.student_t</code> and <code>prior.gaussian_beta</code>.</p>
+<h3>Derivation</h3>
+<p>The Student-t MAP approximation minimizes</p>
+<div class="math">\[
+  -\sum_{i=1}^n \log t_\nu(y_i-x_i^\top\beta;0,\sigma)
+  +
+  \frac{1}{2\tau^2}\|\beta\|_2^2.
+\]</div>
+<p>The Student-t likelihood is not conjugate to the Gaussian prior in this workflow, so the result is an optimization-based approximation node rather than a closed-form posterior node.</p>
+<h3>Result</h3>
+<p>The result node is <code>approx.student_t_map</code>.</p>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+\section{Gaussian Prior on Beta}
+\label{prior:gaussian-beta}
+
+\subsection{Input and Assumption Nodes}
+Inputs are \texttt{param.beta} and \texttt{param.tau}. The prior assumes the existing coefficient vector has Gaussian distribution with known positive scale.
+
+\subsection{Declaration}
+The prior is
+\[
+  \beta \sim \mathcal{N}(0,\tau^2 I_d).
+\]
+
+\subsection{Result}
+The node \texttt{prior.gaussian\_beta} supplies the quadratic prior penalty used by the posterior and MAP objective.

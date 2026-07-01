@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/declarations/var_X.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Design Matrix Declaration</h2>
+<a class="anchor" id="def:design-matrix"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>No upstream mathematical node is required. This declaration introduces the observed design matrix node <code>var.X</code>.</p>
+<h3>Declaration</h3>
+<p>The design matrix is</p>
+<div class="math">\[
+  X \in \mathbb{R}^{n \times d}.
+\]</div>
+<p>Row \(x_i^\top\) contains the \(d\)-dimensional covariates for observation \(i\).</p>
+<h3>Result</h3>
+<p>The node <code>var.X</code> supplies the covariates used by the observation model.</p>
+  </body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>experiments/run_student_t_change.py</title>
+    <link rel="stylesheet" href="../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>experiments/run_student_t_change.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>&quot;&quot;&quot;Run the Student-t model-change experiment.</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>Attached graph node: `experiment.student_t_change`.</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code>Declared outputs:</code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>- results/student_t_change_summary.json</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code>- results/student_t_change_error.png</code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code>&quot;&quot;&quot;</code></span>
+<span id="L8" class="source-line"><span class="line-number">8</span><code></code></span>
+<span id="L9" class="source-line"><span class="line-number">9</span><code>from __future__ import annotations</code></span>
+<span id="L10" class="source-line"><span class="line-number">10</span><code></code></span>
+<span id="L11" class="source-line"><span class="line-number">11</span><code>import json</code></span>
+<span id="L12" class="source-line"><span class="line-number">12</span><code>from pathlib import Path</code></span>
+<span id="L13" class="source-line"><span class="line-number">13</span><code></code></span>
+<span id="L14" class="source-line"><span class="line-number">14</span><code>import matplotlib.pyplot as plt</code></span>
+<span id="L15" class="source-line"><span class="line-number">15</span><code>import numpy as np</code></span>
+<span id="L16" class="source-line"><span class="line-number">16</span><code></code></span>
+<span id="L17" class="source-line"><span class="line-number">17</span><code>from linear_bayes.estimators import beta_map_closed_form, student_t_map_numerical</code></span>
+<span id="L18" class="source-line"><span class="line-number">18</span><code>from linear_bayes.simulate import simulate_student_t_linear</code></span>
+<span id="L19" class="source-line"><span class="line-number">19</span><code></code></span>
+<span id="L20" class="source-line"><span class="line-number">20</span><code></code></span>
+<span id="L21" class="source-line"><span class="line-number">21</span><code>BETA_TRUE = np.array([1.0, -0.5, 0.25])</code></span>
+<span id="L22" class="source-line"><span class="line-number">22</span><code>N = 120</code></span>
+<span id="L23" class="source-line"><span class="line-number">23</span><code>SEEDS = list(range(40))</code></span>
+<span id="L24" class="source-line"><span class="line-number">24</span><code>SIGMA = 1.0</code></span>
+<span id="L25" class="source-line"><span class="line-number">25</span><code>TAU = 10.0</code></span>
+<span id="L26" class="source-line"><span class="line-number">26</span><code>NU = 3.0</code></span>
+<span id="L27" class="source-line"><span class="line-number">27</span><code>SUMMARY_PATH = Path(&quot;results/student_t_change_summary.json&quot;)</code></span>
+<span id="L28" class="source-line"><span class="line-number">28</span><code>PLOT_PATH = Path(&quot;results/student_t_change_error.png&quot;)</code></span>
+<span id="L29" class="source-line"><span class="line-number">29</span><code></code></span>
+<span id="L30" class="source-line"><span class="line-number">30</span><code></code></span>
+<a class="source-anchor" id="main"></a><span id="L31" class="source-line highlighted"><span class="line-number">31</span><code>def main(</code></span>
+<span id="L32" class="source-line highlighted"><span class="line-number">32</span><code>    summary_path: Path = SUMMARY_PATH,</code></span>
+<span id="L33" class="source-line highlighted"><span class="line-number">33</span><code>    plot_path: Path = PLOT_PATH,</code></span>
+<span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>) -&gt; None:</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>    &quot;&quot;&quot;Run and save outputs for graph node `experiment.student_t_change`.&quot;&quot;&quot;</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>    gaussian_errors: list[float] = []</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code>    student_t_errors: list[float] = []</code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code></code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>    for seed in SEEDS:</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>        X, y = simulate_student_t_linear(</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code>            n=N,</code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code>            d=BETA_TRUE.size,</code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code>            beta=BETA_TRUE,</code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code>            sigma=SIGMA,</code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>            nu=NU,</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code>            seed=seed,</code></span>
+<span id="L47" class="source-line highlighted"><span class="line-number">47</span><code>        )</code></span>
+<span id="L48" class="source-line highlighted"><span class="line-number">48</span><code>        gaussian_beta = beta_map_closed_form(X=X, y=y, sigma=SIGMA, tau=TAU)</code></span>
+<span id="L49" class="source-line highlighted"><span class="line-number">49</span><code>        student_t_beta = student_t_map_numerical(X=X, y=y, sigma=SIGMA, tau=TAU, nu=NU)</code></span>
+<span id="L50" class="source-line highlighted"><span class="line-number">50</span><code>        gaussian_errors.append(float(np.linalg.norm(gaussian_beta - BETA_TRUE)))</code></span>
+<span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>        student_t_errors.append(float(np.linalg.norm(student_t_beta - BETA_TRUE)))</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code></code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code>    summary = {</code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>        &quot;beta_true&quot;: BETA_TRUE.tolist(),</code></span>
+<span id="L55" class="source-line highlighted"><span class="line-number">55</span><code>        &quot;n&quot;: N,</code></span>
+<span id="L56" class="source-line highlighted"><span class="line-number">56</span><code>        &quot;sigma&quot;: SIGMA,</code></span>
+<span id="L57" class="source-line highlighted"><span class="line-number">57</span><code>        &quot;tau&quot;: TAU,</code></span>
+<span id="L58" class="source-line highlighted"><span class="line-number">58</span><code>        &quot;nu&quot;: NU,</code></span>
+<span id="L59" class="source-line highlighted"><span class="line-number">59</span><code>        &quot;seeds&quot;: SEEDS,</code></span>
+<span id="L60" class="source-line highlighted"><span class="line-number">60</span><code>        &quot;gaussian_errors&quot;: gaussian_errors,</code></span>
+<span id="L61" class="source-line highlighted"><span class="line-number">61</span><code>        &quot;student_t_errors&quot;: student_t_errors,</code></span>
+<span id="L62" class="source-line highlighted"><span class="line-number">62</span><code>        &quot;mean_gaussian_error&quot;: float(np.mean(gaussian_errors)),</code></span>
+<span id="L63" class="source-line highlighted"><span class="line-number">63</span><code>        &quot;mean_student_t_error&quot;: float(np.mean(student_t_errors)),</code></span>
+<span id="L64" class="source-line highlighted"><span class="line-number">64</span><code>        &quot;median_gaussian_error&quot;: float(np.median(gaussian_errors)),</code></span>
+<span id="L65" class="source-line highlighted"><span class="line-number">65</span><code>        &quot;median_student_t_error&quot;: float(np.median(student_t_errors)),</code></span>
+<span id="L66" class="source-line highlighted"><span class="line-number">66</span><code>        &quot;student_t_better_fraction&quot;: float(</code></span>
+<span id="L67" class="source-line highlighted"><span class="line-number">67</span><code>            np.mean(np.asarray(student_t_errors) &lt; np.asarray(gaussian_errors))</code></span>
+<span id="L68" class="source-line highlighted"><span class="line-number">68</span><code>        ),</code></span>
+<span id="L69" class="source-line highlighted"><span class="line-number">69</span><code>    }</code></span>
+<span id="L70" class="source-line highlighted"><span class="line-number">70</span><code></code></span>
+<span id="L71" class="source-line highlighted"><span class="line-number">71</span><code>    summary_path.parent.mkdir(parents=True, exist_ok=True)</code></span>
+<span id="L72" class="source-line highlighted"><span class="line-number">72</span><code>    plot_path.parent.mkdir(parents=True, exist_ok=True)</code></span>
+<span id="L73" class="source-line highlighted"><span class="line-number">73</span><code>    summary_path.write_text(json.dumps(summary, indent=2), encoding=&quot;utf-8&quot;)</code></span>
+<span id="L74" class="source-line highlighted"><span class="line-number">74</span><code></code></span>
+<span id="L75" class="source-line highlighted"><span class="line-number">75</span><code>    fig, ax = plt.subplots(figsize=(7.0, 4.5), constrained_layout=True)</code></span>
+<span id="L76" class="source-line highlighted"><span class="line-number">76</span><code>    positions = np.array([0, 1], dtype=float)</code></span>
+<span id="L77" class="source-line highlighted"><span class="line-number">77</span><code>    ax.boxplot(</code></span>
+<span id="L78" class="source-line highlighted"><span class="line-number">78</span><code>        [gaussian_errors, student_t_errors],</code></span>
+<span id="L79" class="source-line highlighted"><span class="line-number">79</span><code>        positions=positions,</code></span>
+<span id="L80" class="source-line highlighted"><span class="line-number">80</span><code>        widths=0.45,</code></span>
+<span id="L81" class="source-line highlighted"><span class="line-number">81</span><code>        patch_artist=True,</code></span>
+<span id="L82" class="source-line highlighted"><span class="line-number">82</span><code>        boxprops={&quot;facecolor&quot;: &quot;#dbeafe&quot;, &quot;edgecolor&quot;: &quot;#2563eb&quot;},</code></span>
+<span id="L83" class="source-line highlighted"><span class="line-number">83</span><code>        medianprops={&quot;color&quot;: &quot;#111827&quot;, &quot;linewidth&quot;: 2.0},</code></span>
+<span id="L84" class="source-line highlighted"><span class="line-number">84</span><code>        whiskerprops={&quot;color&quot;: &quot;#64748b&quot;},</code></span>
+<span id="L85" class="source-line highlighted"><span class="line-number">85</span><code>        capprops={&quot;color&quot;: &quot;#64748b&quot;},</code></span>
+<span id="L86" class="source-line highlighted"><span class="line-number">86</span><code>    )</code></span>
+<span id="L87" class="source-line highlighted"><span class="line-number">87</span><code>    for index, values in enumerate([gaussian_errors, student_t_errors]):</code></span>
+<span id="L88" class="source-line highlighted"><span class="line-number">88</span><code>        jitter = np.linspace(-0.08, 0.08, num=len(values))</code></span>
+<span id="L89" class="source-line highlighted"><span class="line-number">89</span><code>        ax.scatter(</code></span>
+<span id="L90" class="source-line highlighted"><span class="line-number">90</span><code>            np.full(len(values), positions[index]) + jitter,</code></span>
+<span id="L91" class="source-line highlighted"><span class="line-number">91</span><code>            values,</code></span>
+<span id="L92" class="source-line highlighted"><span class="line-number">92</span><code>            s=18,</code></span>
+<span id="L93" class="source-line highlighted"><span class="line-number">93</span><code>            alpha=0.65,</code></span>
+<span id="L94" class="source-line highlighted"><span class="line-number">94</span><code>            color=&quot;#0f766e&quot; if index else &quot;#b45309&quot;,</code></span>
+<span id="L95" class="source-line highlighted"><span class="line-number">95</span><code>        )</code></span>
+<span id="L96" class="source-line highlighted"><span class="line-number">96</span><code>    ax.set_xticks(positions, [&quot;Gaussian MAP&quot;, &quot;Student-t MAP&quot;])</code></span>
+<span id="L97" class="source-line highlighted"><span class="line-number">97</span><code>    ax.set_ylabel(r&quot;$\|\hat{\beta} - \beta_0\|_2$&quot;)</code></span>
+<span id="L98" class="source-line highlighted"><span class="line-number">98</span><code>    ax.set_title(&quot;Student-t model-change recovery under heavy-tailed noise&quot;)</code></span>
+<span id="L99" class="source-line highlighted"><span class="line-number">99</span><code>    ax.grid(True, axis=&quot;y&quot;, alpha=0.3)</code></span>
+<span id="L100" class="source-line highlighted"><span class="line-number">100</span><code>    fig.savefig(plot_path, dpi=160)</code></span>
+<span id="L101" class="source-line highlighted"><span class="line-number">101</span><code>    plt.close(fig)</code></span>
+<span id="L102" class="source-line highlighted"><span class="line-number">102</span><code></code></span>
+<span id="L103" class="source-line highlighted"><span class="line-number">103</span><code>    print(f&quot;Wrote {summary_path}&quot;)</code></span>
+<span id="L104" class="source-line highlighted"><span class="line-number">104</span><code>    print(f&quot;Wrote {plot_path}&quot;)</code></span>
+<span id="L105" class="source-line highlighted"><span class="line-number">105</span><code>    print(</code></span>
+<span id="L106" class="source-line highlighted"><span class="line-number">106</span><code>        &quot;Mean coefficient error: &quot;</code></span>
+<span id="L107" class="source-line highlighted"><span class="line-number">107</span><code>        f&quot;Gaussian MAP {summary[&#x27;mean_gaussian_error&#x27;]:.4f}, &quot;</code></span>
+<span id="L108" class="source-line highlighted"><span class="line-number">108</span><code>        f&quot;Student-t MAP {summary[&#x27;mean_student_t_error&#x27;]:.4f}&quot;</code></span>
+<span id="L109" class="source-line highlighted"><span class="line-number">109</span><code>    )</code></span>
+<span id="L110" class="source-line"><span class="line-number">110</span><code></code></span>
+<span id="L111" class="source-line"><span class="line-number">111</span><code></code></span>
+<span id="L112" class="source-line"><span class="line-number">112</span><code>if __name__ == &quot;__main__&quot;:</code></span>
+<span id="L113" class="source-line"><span class="line-number">113</span><code>    main()</code></span></pre>
+  </body>
+</html>

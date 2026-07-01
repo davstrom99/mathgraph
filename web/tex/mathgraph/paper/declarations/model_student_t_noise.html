@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mathgraph/paper/declarations/model_student_t_noise.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], processEnvironments: true },
+        svg: { fontCache: "global" },
+        startup: {
+          ready() {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(() => document.documentElement.classList.add("math-ready"));
+          }
+        }
+      };
+      window.setTimeout(() => {
+        if (!document.documentElement.classList.contains("math-ready")) document.documentElement.classList.add("math-failed");
+      }, 8000);
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+      .math-document { visibility: hidden; }
+      .math-ready .math-document { visibility: visible; }
+      .render-failure { display: none; padding: 16px; border: 1px solid #dc2626; color: #991b1b; }
+      .math-failed .render-failure { display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="render-failure">Could not render this derivation locally or load the browser math renderer. A local TeX compiler was not available.</div>
+    <main class="math-document"><a class="anchor" id="model:student-t-noise"></a>
+<h2>Student-t Noise Model</h2>
+<h3>Input and Assumption Nodes</h3>
+<p>Inputs are <code>var.X</code>, <code>var.y</code>, <code>param.beta</code>, <code>var.epsilon</code>, <code>param.sigma</code>, and <code>param.nu</code>. This node is an alternative observation-model branch over shared variables.</p>
+<h3>Declaration</h3>
+<p>The Student-t observation model is</p>
+<div class="math">\[
+  y = X\beta + \epsilon,
+  \qquad
+  \epsilon_i \sim t_\nu(0,\sigma).
+\]</div>
+<h3>Result</h3>
+<p>The node <code>model.student_t_noise</code> represents a heavy-tailed observation-model branch.</p></main>
+  </body>
+</html>

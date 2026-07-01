@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/declarations/posterior_gaussian_conjugate.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Closed-Form Gaussian Posterior</h2>
+<a class="anchor" id="posterior:gaussian-conjugate"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input nodes: <code>likelihood.gaussian</code> and <code>prior.gaussian_beta</code>.</p>
+<h3>Declaration</h3>
+<p>The posterior is Gaussian:</p>
+<div class="math">\[
+  p(\beta\mid X,y)=\mathcal{N}(\mu_n,\Sigma_n).
+\]</div>
+<h3>Result</h3>
+<p>The node <code>posterior.gaussian_conjugate</code> returns \((\mu_n,\Sigma_n)\).</p>
+  </body>
+</html>

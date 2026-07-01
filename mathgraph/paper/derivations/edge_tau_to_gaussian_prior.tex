@@ -1,0 +1,14 @@
+\section{Prior Scale to Gaussian Prior}
+\label{edge:tau-to-gaussian-prior}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{param.tau}. Result node: \texttt{prior.gaussian\_beta}.
+
+\subsection{Derivation}
+The Gaussian prior uses the positive scale \(\tau\) in
+\[
+  \beta \sim \mathcal{N}(0,\tau^2 I_d).
+\]
+
+\subsection{Result}
+The scale parameter \(\tau\) is required to specify the Gaussian prior.

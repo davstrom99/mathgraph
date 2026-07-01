@@ -1,0 +1,16 @@
+\section{Student-t Noise Model}
+\label{model:student-t-noise}
+
+\subsection{Input and Assumption Nodes}
+Inputs are \texttt{var.X}, \texttt{var.y}, \texttt{param.beta}, \texttt{var.epsilon}, \texttt{param.sigma}, and \texttt{param.nu}. This node is an alternative observation-model branch over shared variables.
+
+\subsection{Declaration}
+The Student-t observation model is
+\[
+  y = X\beta + \epsilon,
+  \qquad
+  \epsilon_i \sim t_\nu(0,\sigma).
+\]
+
+\subsection{Result}
+The node \texttt{model.student\_t\_noise} represents a heavy-tailed observation-model branch.

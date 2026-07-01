@@ -1,0 +1,16 @@
+\section{Noise Vector to Student-t Model}
+\label{edge:epsilon-to-student-t-model}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{var.epsilon}. Result node: \texttt{model.student\_t\_noise}.
+
+\subsection{Derivation}
+The Student-t observation model uses the noise vector \(\epsilon\) in
+\[
+  y = X\beta + \epsilon,
+  \qquad
+  \epsilon_i \sim t_\nu(0,\sigma).
+\]
+
+\subsection{Result}
+The noise vector is a required object for the Student-t observation model.

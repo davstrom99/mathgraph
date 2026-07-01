@@ -1,0 +1,24 @@
+\section{Gaussian Posterior Derivation}
+\label{deriv:gaussian-posterior}
+
+\subsection{Input and Assumption Nodes}
+Input nodes: \texttt{likelihood.gaussian} and \texttt{prior.gaussian\_beta}.
+
+\subsection{Derivation}
+Combining likelihood and prior gives the exponent
+\[
+  -\frac{1}{2\sigma^2}\|y-X\beta\|_2^2
+  -
+  \frac{1}{2\tau^2}\|\beta\|_2^2.
+\]
+Completing the square yields
+\[
+  \Sigma_n =
+  \left(\frac{1}{\sigma^2}X^\top X+\frac{1}{\tau^2}I_d\right)^{-1},
+  \qquad
+  \mu_n = \Sigma_n\frac{1}{\sigma^2}X^\top y.
+\]
+
+\subsection{Result}
+The posterior node \texttt{posterior.gaussian\_conjugate} returns \(p(\beta\mid X,y)=\mathcal{N}(\mu_n,\Sigma_n)\).
+

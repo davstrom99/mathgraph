@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/derivations/gaussian_posterior.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Gaussian Posterior Derivation</h2>
+<a class="anchor" id="deriv:gaussian-posterior"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input nodes: <code>likelihood.gaussian</code> and <code>prior.gaussian_beta</code>.</p>
+<h3>Derivation</h3>
+<p>Combining likelihood and prior gives the exponent</p>
+<div class="math">\[
+  -\frac{1}{2\sigma^2}\|y-X\beta\|_2^2
+  -
+  \frac{1}{2\tau^2}\|\beta\|_2^2.
+\]</div>
+<p>Completing the square yields</p>
+<div class="math">\[
+  \Sigma_n =
+  \left(\frac{1}{\sigma^2}X^\top X+\frac{1}{\tau^2}I_d\right)^{-1},
+  \qquad
+  \mu_n = \Sigma_n\frac{1}{\sigma^2}X^\top y.
+\]</div>
+<h3>Result</h3>
+<p>The posterior node <code>posterior.gaussian_conjugate</code> returns \(p(\beta\mid X,y)=\mathcal{N}(\mu_n,\Sigma_n)\).</p>
+  </body>
+</html>

@@ -1,0 +1,595 @@
+project:
+  id: linear_bayes_demo
+  title: Linear Bayesian Regression Demo
+  tex_root: mathgraph/paper/main.tex
+  repo_root: .
+  code_roots:
+    - src/linear_bayes
+    - experiments
+    - tests/test_linear_gaussian_recovery.py
+    - tests/test_student_t_change.py
+
+nodes:
+  - id: var.X
+    kind: variable
+    title: Design matrix
+    display_label: "X ∈ ℝ^{n×d}"
+    symbol: X
+    statement: "Observed design matrix X in R^{n x d}."
+    tex:
+      file: mathgraph/paper/declarations/var_X.tex
+      label: def:design-matrix
+
+  - id: var.y
+    kind: variable
+    title: Response vector
+    display_label: "y ∈ ℝ^n"
+    symbol: y
+    statement: "Observed response vector y in R^n."
+    tex:
+      file: mathgraph/paper/declarations/var_y.tex
+      label: def:response-vector
+
+  - id: param.beta
+    kind: variable
+    title: Regression coefficients
+    display_label: "β ∈ ℝ^d"
+    symbol: "\\beta"
+    statement: "Unknown coefficient vector beta in R^d."
+    tex:
+      file: mathgraph/paper/declarations/param_beta.tex
+      label: def:beta
+
+  - id: var.epsilon
+    kind: variable
+    title: Noise vector
+    display_label: "ε ∈ ℝ^n"
+    symbol: "\\epsilon"
+    statement: "Noise vector epsilon in R^n."
+    tex:
+      file: mathgraph/paper/declarations/var_epsilon.tex
+      label: def:noise-vector
+
+  - id: param.sigma
+    kind: variable
+    title: Noise scale
+    display_label: "σ ∈ ℝ₊"
+    symbol: "\\sigma"
+    statement: "Positive noise scale sigma in R_{>0}."
+    tex:
+      file: mathgraph/paper/declarations/param_sigma.tex
+      label: def:sigma
+
+  - id: param.tau
+    kind: variable
+    title: Prior scale
+    display_label: "τ ∈ ℝ₊"
+    symbol: "\\tau"
+    statement: "Positive prior scale tau in R_{>0}."
+    tex:
+      file: mathgraph/paper/declarations/param_tau.tex
+      label: def:tau
+
+  - id: param.nu
+    kind: variable
+    title: Student-t degrees of freedom
+    display_label: "ν ∈ ℝ₊"
+    symbol: "\\nu"
+    statement: "Positive Student-t degrees of freedom nu in R_{>0}."
+    tex:
+      file: mathgraph/paper/declarations/param_nu.tex
+      label: def:nu
+
+  - id: model.gaussian_observation
+    kind: assumption
+    title: Gaussian linear observation model
+    display_label: "y = Xβ + ε, ε ~ N(0, σ²I)"
+    statement: "y = X beta + epsilon, epsilon ~ N(0, sigma^2 I)."
+    uses: [var.X, var.y, param.beta, var.epsilon, param.sigma]
+    tex:
+      file: mathgraph/paper/declarations/model_gaussian_observation.tex
+      label: model:gaussian-observation
+    code:
+      - path: src/linear_bayes/simulate.py
+        symbol: simulate_gaussian_linear
+
+  - id: prior.gaussian_beta
+    kind: assumption
+    title: Gaussian prior on beta
+    display_label: "β ~ N(0, τ²I)"
+    statement: "beta ~ N(0, tau^2 I_d)."
+    uses: [param.beta, param.tau]
+    tex:
+      file: mathgraph/paper/declarations/prior_gaussian_beta.tex
+      label: prior:gaussian-beta
+
+  - id: likelihood.gaussian
+    kind: assumption
+    title: Gaussian likelihood
+    display_label: "p(y | X, β, σ²)"
+    statement: "p(y | X, beta, sigma^2) under iid Gaussian noise."
+    uses: [var.X, var.y, param.beta, param.sigma]
+    tex:
+      file: mathgraph/paper/declarations/likelihood_gaussian.tex
+      label: likelihood:gaussian
+    code:
+      - path: src/linear_bayes/likelihoods.py
+        symbol: gaussian_log_likelihood
+
+  - id: posterior.gaussian_conjugate
+    kind: assumption
+    title: Closed-form Gaussian posterior
+    display_label: "β | X,y ~ N(μₙ, Σₙ)"
+    statement: "p(beta | X,y) = N(mu_n, Sigma_n)."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau]
+    tex:
+      file: mathgraph/paper/declarations/posterior_gaussian_conjugate.tex
+      label: posterior:gaussian-conjugate
+    code:
+      - path: src/linear_bayes/estimators.py
+        symbol: gaussian_posterior
+
+  - id: objective.gaussian_negative_log_posterior
+    kind: objective
+    title: Gaussian negative log posterior
+    display_label: "(1/(2σ²))‖y−Xβ‖² + (1/(2τ²))‖β‖²"
+    statement: "Quadratic objective equivalent to the Gaussian MAP estimator."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau]
+    tex:
+      file: mathgraph/paper/declarations/objective_gaussian_negative_log_posterior.tex
+      label: objective:gaussian-negative-log-posterior
+    code:
+      - path: src/linear_bayes/estimators.py
+        symbol: negative_log_posterior_gaussian
+
+  - id: estimator.beta_map
+    kind: estimator
+    title: MAP estimator for beta
+    display_label: "β̂_MAP = μₙ"
+    statement: "The MAP estimator minimizes the Gaussian negative log posterior and equals the posterior mean in the conjugate Gaussian model."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau]
+    tex:
+      file: mathgraph/paper/declarations/estimator_beta_map.tex
+      label: estimator:beta-map
+    code:
+      - path: src/linear_bayes/estimators.py
+        symbol: beta_map_closed_form
+      - path: tests/test_linear_gaussian_recovery.py
+        symbol: test_closed_form_map_equals_posterior_mean
+
+  - id: validation.synthetic_recovery
+    kind: validation
+    title: Synthetic recovery validation
+    display_label: "Synthetic recovery validation"
+    statement: "Empirical validation that posterior mean/MAP estimation error decreases as sample size increases under data generated from the Gaussian model."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau]
+    tex:
+      file: mathgraph/paper/declarations/validation_synthetic_recovery.tex
+      label: validation:synthetic-recovery
+    code:
+      - path: tests/test_linear_gaussian_recovery.py
+        symbol: test_recovery_improves_with_n
+      - path: src/linear_bayes/experiments.py
+        symbol: run_recovery_experiment
+
+  - id: experiment.gaussian_recovery
+    kind: experiment
+    title: Gaussian recovery experiment
+    display_label: "Gaussian recovery experiment"
+    statement: "Runs synthetic recovery experiment over multiple sample sizes and seeds."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau]
+    tex:
+      file: mathgraph/paper/declarations/experiment_gaussian_recovery.tex
+      label: experiment:gaussian-recovery
+    code:
+      - path: src/linear_bayes/experiments.py
+        symbol: run_recovery_experiment
+      - path: experiments/run_gaussian_recovery.py
+        symbol: main
+    outputs:
+      - path: results/gaussian_recovery_summary.json
+      - path: results/gaussian_recovery_error.png
+
+  - id: model.student_t_noise
+    kind: assumption
+    title: Student-t noise observation model
+    display_label: "y = Xβ + ε, ε ~ t_ν(0, σ)"
+    statement: "y = X beta + epsilon, epsilon ~ StudentT_nu(0, sigma)."
+    uses: [var.X, var.y, param.beta, var.epsilon, param.sigma, param.nu]
+    tex:
+      file: mathgraph/paper/declarations/model_student_t_noise.tex
+      label: model:student-t-noise
+    code:
+      - path: src/linear_bayes/simulate.py
+        symbol: simulate_student_t_linear
+      - path: tests/test_student_t_change.py
+        symbol: test_student_t_simulation_has_heavy_tailed_residuals
+
+  - id: likelihood.student_t
+    kind: assumption
+    title: Student-t likelihood
+    display_label: "∏ᵢ t_ν(yᵢ−xᵢᵀβ; 0, σ)"
+    statement: "Student-t likelihood for robust regression."
+    uses: [var.X, var.y, param.beta, param.sigma, param.nu]
+    tex:
+      file: mathgraph/paper/declarations/likelihood_student_t.tex
+      label: likelihood:student-t
+    code:
+      - path: src/linear_bayes/likelihoods.py
+        symbol: student_t_log_likelihood
+      - path: tests/test_student_t_change.py
+        symbol: test_student_t_log_likelihood_matches_scipy_density
+
+  - id: approx.student_t_map
+    kind: approximation
+    title: Numerical MAP approximation under Student-t noise
+    display_label: "Numerical Student-t MAP"
+    statement: "MAP objective optimized numerically using a Student-t likelihood and Gaussian prior; this is not a closed-form posterior."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau, param.nu]
+    tex:
+      file: mathgraph/paper/declarations/approx_student_t_map.tex
+      label: approx:student-t-map
+    code:
+      - path: src/linear_bayes/estimators.py
+        symbol: student_t_map_numerical
+      - path: tests/test_student_t_change.py
+        symbol: test_student_t_map_handles_outlier_better_than_gaussian_map
+
+  - id: experiment.student_t_change
+    kind: experiment
+    title: Student-t change experiment
+    display_label: "Student-t change experiment"
+    statement: "Compares Gaussian MAP and Student-t MAP under heavy-tailed noise."
+    uses: [var.X, var.y, param.beta, param.sigma, param.tau, param.nu]
+    tex:
+      file: mathgraph/paper/declarations/experiment_student_t_change.tex
+      label: experiment:student-t-change
+    code:
+      - path: experiments/run_student_t_change.py
+        symbol: main
+      - path: tests/test_student_t_change.py
+        symbol: test_student_t_change_script_writes_declared_outputs
+    outputs:
+      - path: results/student_t_change_summary.json
+      - path: results/student_t_change_error.png
+
+  - id: var.repository_files
+    kind: variable
+    title: \(F \in \mathcal{P}_{\mathrm{fin}}(\mathrm{Path})\)
+    display_label: "Repository evidence files F"
+    symbol: F
+    statement: "F is the finite set of repository paths considered during initialization."
+    tex:
+      file: mathgraph/paper/declarations/var_repository_files.tex
+      label: var:repository-files
+
+  - id: assumption.evidence_classification
+    kind: assumption
+    title: \(F=A\,\dot\cup\,G\,\dot\cup\,E\)
+    display_label: "Evidence authority classification"
+    statement: "Repository evidence is partitioned into authoritative files, aggregate generated families, and explicit exclusions using defaults plus project configuration."
+    uses: [var.repository_files]
+    tex:
+      file: mathgraph/paper/declarations/evidence_classification.tex
+      label: assumption:evidence-classification
+    code:
+      - {path: src/mathgraph_tool/discovery.py, symbol: load_discovery_config, line: 137, role: definition}
+      - {path: src/mathgraph_tool/discovery.py, symbol: discover_project_files, line: 157, role: definition}
+      - {path: src/mathgraph_tool/discovery.py, symbol: _classify, line: 222, role: definition}
+      - {path: tests/test_mathgraph_index.py, line: 243, role: test}
+
+  - id: dataset.init_evidence_index
+    kind: dataset
+    title: \(I=\mathcal{H}(A)\cup\mathcal{T}(G)\)
+    display_label: "Initialization evidence index"
+    statement: "The initialization index stores semantic records for authoritative evidence and hash/provenance manifests for aggregate families."
+    uses: [var.repository_files]
+    tex:
+      file: mathgraph/paper/declarations/init_evidence_index.tex
+      label: dataset:init-evidence-index
+    code:
+      - {path: src/mathgraph_tool/indexing.py, symbol: build_index, line: 76, role: definition}
+      - {path: src/mathgraph_tool/indexing.py, symbol: check_index, line: 182, role: definition}
+      - {path: src/mathgraph_tool/indexing.py, symbol: _family_record, line: 632, role: definition}
+      - {path: src/mathgraph_tool/init.py, symbol: initialize_mathgraph, line: 43, role: implementation}
+      - {path: tests/test_mathgraph_index.py, line: 217, role: test}
+      - {path: tests/test_mathgraph_init.py, line: 170, role: test}
+
+  - id: dataset.init_evidence_dossier
+    kind: dataset
+    title: \(D=\operatorname{compact}(I_A)\)
+    display_label: "Compact evidence dossier"
+    statement: "The dossier deduplicates equations, definitions, calls, tests, defaults, and identity candidates from authoritative evidence."
+    uses: [var.repository_files]
+    tex:
+      file: mathgraph/paper/declarations/init_evidence_dossier.tex
+      label: dataset:init-evidence-dossier
+    code:
+      - {path: src/mathgraph_tool/indexing.py, symbol: format_index_dossier, line: 345, role: definition}
+      - {path: src/mathgraph_tool/cli.py, line: 157, role: caller}
+      - {path: tests/test_mathgraph_index.py, line: 226, role: test}
+
+  - id: dataset.init_reference_draft
+    kind: dataset
+    title: \(R_s=\{(p,\ell,r):s\text{ occurs at }(p,\ell)\}\)
+    display_label: "Mechanical code-reference draft"
+    statement: "Reference drafting emits exhaustive authoritative path-line occurrences with deterministic semantic roles and graph candidates."
+    uses: [var.repository_files]
+    tex:
+      file: mathgraph/paper/declarations/init_reference_draft.tex
+      label: dataset:init-reference-draft
+    code:
+      - {path: src/mathgraph_tool/indexing.py, symbol: draft_code_refs, line: 410, role: definition}
+      - {path: src/mathgraph_tool/indexing.py, symbol: format_draft_refs, line: 445, role: definition}
+      - {path: src/mathgraph_tool/indexing.py, symbol: serialize_initial_draft, line: 449, role: definition}
+      - {path: tests/test_mathgraph_index.py, line: 259, role: test}
+
+  - id: validation.init_traceability
+    kind: validation
+    title: \(\operatorname{valid}(I)\iff\operatorname{current}(I)\land\operatorname{complete}(I_A)\)
+    display_label: "Initialization traceability validation"
+    statement: "Validation checks current hashes, complete authoritative coverage, grouped generated evidence, shared derivations, and render isolation."
+    uses: [var.repository_files]
+    tex:
+      file: mathgraph/paper/declarations/init_traceability_validation.tex
+      label: validation:init-traceability
+    code:
+      - {path: tests/test_mathgraph_index.py, line: 217, role: test}
+      - {path: tests/test_mathgraph_index.py, line: 243, role: test}
+      - {path: tests/test_mathgraph_index.py, line: 259, role: test}
+      - {path: tests/test_mathgraph_check.py, line: 321, role: test}
+      - {path: tests/test_mathgraph_check.py, line: 344, role: test}
+      - {path: tests/test_mathgraph_render.py, line: 8, role: test}
+
+  - id: figure.graph_view
+    kind: figure
+    title: \(V=\operatorname{render}(G_{\mathrm{mg}},L_{\mathrm{SCC}},B)\)
+    display_label: "Static graph viewer"
+    statement: "The graph viewer renders the validated mathgraph with SCC-aware layout, measured node boxes, and interactive traceability links."
+    uses: [var.repository_files]
+    tex:
+      file: mathgraph/paper/declarations/figure_graph_view.tex
+      label: figure:graph-view
+    code:
+      - {path: src/mathgraph_tool/render.py, symbol: render_static_site, line: 37, role: implementation}
+      - {path: src/mathgraph_tool/render.py, symbol: _graph_payload, line: 346, role: definition}
+      - {path: src/mathgraph_tool/render.py, symbol: _modern_app_js, line: 1227, role: definition}
+      - {path: tests/test_mathgraph_render.py, line: 8, role: test}
+
+edges:
+  - from: var.repository_files
+    to: assumption.evidence_classification
+    kind: defines
+    description: "The finite repository corpus is partitioned by authority and provenance."
+    tex: {file: mathgraph/paper/derivations/init_evidence_partition.tex, label: deriv:init-evidence-partition}
+
+  - from: assumption.evidence_classification
+    to: dataset.init_evidence_index
+    kind: generates
+    description: "Classification determines which records receive semantic extraction and which become aggregate manifests."
+    tex: {file: mathgraph/paper/derivations/init_evidence_partition.tex, label: deriv:init-evidence-partition}
+
+  - from: dataset.init_evidence_index
+    to: dataset.init_evidence_dossier
+    kind: generates
+    description: "The authoritative index records generate the compact dossier."
+    tex: {file: mathgraph/paper/derivations/init_index_products.tex, label: deriv:init-index-products}
+
+  - from: dataset.init_evidence_index
+    to: dataset.init_reference_draft
+    kind: generates
+    description: "Indexed scopes and occurrences generate exact role-classified references."
+    tex: {file: mathgraph/paper/derivations/init_index_products.tex, label: deriv:init-index-products}
+
+  - from: dataset.init_evidence_index
+    to: validation.init_traceability
+    kind: validates
+    description: "Hash and coverage checks validate initialization traceability."
+    tex: {file: mathgraph/paper/derivations/init_index_products.tex, label: deriv:init-index-products}
+
+  - from: validation.init_traceability
+    to: figure.graph_view
+    kind: generates
+    description: "Validated traceability data and render isolation generate the interactive static graph viewer."
+    tex: {file: mathgraph/paper/derivations/render_graph_view.tex, label: deriv:render-graph-view}
+
+  - from: var.X
+    to: model.gaussian_observation
+    kind: defines
+    description: "The Gaussian observation model uses X as the design matrix."
+    tex:
+      file: mathgraph/paper/derivations/edge_X_to_gaussian_model.tex
+      label: edge:X-to-gaussian-model
+
+  - from: var.y
+    to: model.gaussian_observation
+    kind: defines
+    description: "The Gaussian observation model defines the distribution of y."
+    tex:
+      file: mathgraph/paper/derivations/edge_y_to_gaussian_model.tex
+      label: edge:y-to-gaussian-model
+
+  - from: param.beta
+    to: model.gaussian_observation
+    kind: defines
+    description: "Beta is the unknown coefficient vector in the observation model."
+    tex:
+      file: mathgraph/paper/derivations/edge_beta_to_gaussian_model.tex
+      label: edge:beta-to-gaussian-model
+
+  - from: var.epsilon
+    to: model.gaussian_observation
+    kind: defines
+    description: "The Gaussian observation model assigns a Gaussian distribution to the noise vector epsilon."
+    tex:
+      file: mathgraph/paper/derivations/edge_epsilon_to_gaussian_model.tex
+      label: edge:epsilon-to-gaussian-model
+
+  - from: param.sigma
+    to: model.gaussian_observation
+    kind: defines
+    description: "The Gaussian observation model uses sigma as the positive noise scale."
+    tex:
+      file: mathgraph/paper/derivations/edge_sigma_to_gaussian_model.tex
+      label: edge:sigma-to-gaussian-model
+
+  - from: param.beta
+    to: prior.gaussian_beta
+    kind: defines
+    description: "The Gaussian prior is a distributional assumption on beta."
+    tex:
+      file: mathgraph/paper/derivations/edge_beta_to_gaussian_prior.tex
+      label: edge:beta-to-gaussian-prior
+
+  - from: param.tau
+    to: prior.gaussian_beta
+    kind: defines
+    description: "The Gaussian prior uses tau as its positive prior scale."
+    tex:
+      file: mathgraph/paper/derivations/edge_tau_to_gaussian_prior.tex
+      label: edge:tau-to-gaussian-prior
+
+  - from: model.gaussian_observation
+    to: likelihood.gaussian
+    kind: derives
+    description: "The Gaussian observation model implies the Gaussian likelihood."
+    tex:
+      file: mathgraph/paper/derivations/gaussian_likelihood.tex
+      label: deriv:gaussian-likelihood
+
+  - from: likelihood.gaussian
+    to: posterior.gaussian_conjugate
+    kind: derives
+    description: "Combining the Gaussian likelihood with the Gaussian prior yields the conjugate Gaussian posterior."
+    tex:
+      file: mathgraph/paper/derivations/gaussian_posterior.tex
+      label: deriv:gaussian-posterior
+
+  - from: prior.gaussian_beta
+    to: posterior.gaussian_conjugate
+    kind: derives
+    description: "The Gaussian prior is required for the closed-form posterior."
+    tex:
+      file: mathgraph/paper/derivations/gaussian_posterior.tex
+      label: deriv:gaussian-posterior
+
+  - from: posterior.gaussian_conjugate
+    to: objective.gaussian_negative_log_posterior
+    kind: derives
+    description: "The Gaussian posterior induces a quadratic negative log posterior objective."
+    tex:
+      file: mathgraph/paper/derivations/gaussian_negative_log_posterior.tex
+      label: deriv:gaussian-negative-log-posterior
+
+  - from: objective.gaussian_negative_log_posterior
+    to: estimator.beta_map
+    kind: derives
+    description: "Minimizing the Gaussian negative log posterior gives the MAP estimator."
+    tex:
+      file: mathgraph/paper/derivations/map_from_objective.tex
+      label: deriv:map-from-objective
+
+  - from: posterior.gaussian_conjugate
+    to: estimator.beta_map
+    kind: derives
+    description: "The MAP estimator is the posterior mode. For the Gaussian posterior it equals the posterior mean."
+    tex:
+      file: mathgraph/paper/derivations/map_from_posterior.tex
+      label: deriv:map-from-posterior
+
+  - from: estimator.beta_map
+    to: validation.synthetic_recovery
+    kind: validates
+    description: "The synthetic recovery validation checks whether the estimator approaches the true coefficient vector as n increases."
+    tex:
+      file: mathgraph/paper/derivations/synthetic_recovery_validation.tex
+      label: validation:synthetic-recovery
+
+  - from: validation.synthetic_recovery
+    to: experiment.gaussian_recovery
+    kind: tests
+    description: "The experiment executes the synthetic recovery validation."
+    tex:
+      file: mathgraph/paper/derivations/gaussian_recovery_experiment.tex
+      label: experiment:gaussian-recovery
+
+  - from: var.X
+    to: model.student_t_noise
+    kind: defines
+    description: "The Student-t observation model uses X as the design matrix."
+    tex:
+      file: mathgraph/paper/derivations/edge_X_to_student_t_model.tex
+      label: edge:X-to-student-t-model
+
+  - from: var.y
+    to: model.student_t_noise
+    kind: defines
+    description: "The Student-t observation model defines the conditional distribution of y."
+    tex:
+      file: mathgraph/paper/derivations/edge_y_to_student_t_model.tex
+      label: edge:y-to-student-t-model
+
+  - from: param.beta
+    to: model.student_t_noise
+    kind: defines
+    description: "Beta is the unknown coefficient vector in the Student-t observation model."
+    tex:
+      file: mathgraph/paper/derivations/edge_beta_to_student_t_model.tex
+      label: edge:beta-to-student-t-model
+
+  - from: var.epsilon
+    to: model.student_t_noise
+    kind: defines
+    description: "The Student-t observation model assigns a heavy-tailed distribution to the noise vector epsilon."
+    tex:
+      file: mathgraph/paper/derivations/edge_epsilon_to_student_t_model.tex
+      label: edge:epsilon-to-student-t-model
+
+  - from: param.sigma
+    to: model.student_t_noise
+    kind: defines
+    description: "The Student-t observation model uses sigma as the positive scale parameter."
+    tex:
+      file: mathgraph/paper/derivations/edge_sigma_to_student_t_model.tex
+      label: edge:sigma-to-student-t-model
+
+  - from: param.nu
+    to: model.student_t_noise
+    kind: defines
+    description: "The Student-t observation model uses nu as the positive degrees-of-freedom parameter."
+    tex:
+      file: mathgraph/paper/derivations/edge_nu_to_student_t_model.tex
+      label: edge:nu-to-student-t-model
+
+  - from: model.student_t_noise
+    to: likelihood.student_t
+    kind: derives
+    description: "The Student-t observation model implies the Student-t likelihood."
+    tex:
+      file: mathgraph/paper/derivations/student_t_likelihood.tex
+      label: deriv:student-t-likelihood
+
+  - from: likelihood.student_t
+    to: approx.student_t_map
+    kind: approximates
+    description: "Since conjugacy is not used here, the estimator is implemented as a numerical MAP approximation."
+    tex:
+      file: mathgraph/paper/derivations/student_t_map_objective.tex
+      label: deriv:student-t-map-objective
+
+  - from: prior.gaussian_beta
+    to: approx.student_t_map
+    kind: assumes
+    description: "The Student-t MAP approximation keeps the Gaussian prior on beta."
+    tex:
+      file: mathgraph/paper/derivations/student_t_map_objective.tex
+      label: deriv:student-t-map-objective
+
+  - from: approx.student_t_map
+    to: experiment.student_t_change
+    kind: tests
+    description: "The Student-t change experiment exercises the numerical MAP approximation."
+    tex:
+      file: mathgraph/paper/derivations/student_t_change_experiment.tex
+      label: deriv:student-t-change-experiment
+

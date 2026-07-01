@@ -1,0 +1,18 @@
+\section{Student-t Likelihood Derivation}
+\label{deriv:student-t-likelihood}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{model.student\_t\_noise}.
+
+\subsection{Derivation}
+With residual \(r_i=y_i-x_i^\top\beta\), the likelihood is the product of Student-t densities:
+\[
+  p(y\mid X,\beta,\sigma,\nu)
+  =
+  \prod_{i=1}^n
+  \frac{\Gamma((\nu+1)/2)}{\Gamma(\nu/2)\sqrt{\nu\pi}\sigma}
+  \left(1+\frac{r_i^2}{\nu\sigma^2}\right)^{-(\nu+1)/2}.
+\]
+
+\subsection{Result}
+The result node is \texttt{likelihood.student\_t}.

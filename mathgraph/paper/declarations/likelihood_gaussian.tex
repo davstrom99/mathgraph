@@ -1,0 +1,18 @@
+\section{Gaussian Likelihood}
+\label{likelihood:gaussian}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{model.gaussian\_observation}. The variance \(\sigma^2\) is known.
+
+\subsection{Declaration}
+The Gaussian likelihood is
+\[
+  p(y\mid X,\beta,\sigma^2)
+  =
+  (2\pi\sigma^2)^{-n/2}
+  \exp\left(-\frac{1}{2\sigma^2}\|y-X\beta\|_2^2\right).
+\]
+
+\subsection{Result}
+The node \texttt{likelihood.gaussian} evaluates the log likelihood for fixed \(X,y,\beta,\sigma\).
+

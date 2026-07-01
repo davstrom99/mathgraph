@@ -1,0 +1,15 @@
+\section{Synthetic Recovery Validation}
+\label{validation:synthetic-recovery}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{estimator.beta\_map}. Data are simulated from \texttt{model.gaussian\_observation}.
+
+\subsection{Declaration}
+For each sample size \(n\) and seed, the validation computes
+\[
+  \|\hat{\beta}_{MAP,n}-\beta_0\|_2.
+\]
+
+\subsection{Result}
+The node \texttt{validation.synthetic\_recovery} checks whether mean estimation error decreases as \(n\) increases.
+

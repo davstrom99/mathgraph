@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mathgraph/paper/declarations/validation_synthetic_recovery.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], processEnvironments: true },
+        svg: { fontCache: "global" },
+        startup: {
+          ready() {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(() => document.documentElement.classList.add("math-ready"));
+          }
+        }
+      };
+      window.setTimeout(() => {
+        if (!document.documentElement.classList.contains("math-ready")) document.documentElement.classList.add("math-failed");
+      }, 8000);
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+      .math-document { visibility: hidden; }
+      .math-ready .math-document { visibility: visible; }
+      .render-failure { display: none; padding: 16px; border: 1px solid #dc2626; color: #991b1b; }
+      .math-failed .render-failure { display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="render-failure">Could not render this derivation locally or load the browser math renderer. A local TeX compiler was not available.</div>
+    <main class="math-document"><a class="anchor" id="validation:synthetic-recovery"></a>
+<h2>Synthetic Recovery Validation</h2>
+<h3>Input and Assumption Nodes</h3>
+<p>Input node: <code>estimator.beta_map</code>. Data are simulated from <code>model.gaussian_observation</code>.</p>
+<h3>Declaration</h3>
+<p>For each sample size \(n\) and seed, the validation computes</p>
+<div class="math">\[
+  \|\hat{\beta}_{MAP,n}-\beta_0\|_2.
+\]</div>
+<h3>Result</h3>
+<p>The node <code>validation.synthetic_recovery</code> checks whether mean estimation error decreases as \(n\) increases.</p></main>
+  </body>
+</html>

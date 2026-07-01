@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>tests/test_mathgraph_check.py</title>
+    <link rel="stylesheet" href="../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>tests/test_mathgraph_check.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>from mathgraph_tool.checks import format_check_result, run_checks</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code></code></span>
+<a class="source-anchor" id="test_mathgraph_check_has_no_errors"></a><span id="L4" class="source-line highlighted"><span class="line-number">4</span><code>def test_mathgraph_check_has_no_errors():</code></span>
+<span id="L5" class="source-line highlighted"><span class="line-number">5</span><code>    result = run_checks()</code></span>
+<span id="L6" class="source-line highlighted"><span class="line-number">6</span><code></code></span>
+<span id="L7" class="source-line highlighted"><span class="line-number">7</span><code>    assert result.passed, format_check_result(result)</code></span>
+<span id="L8" class="source-line highlighted"><span class="line-number">8</span><code>    assert result.graph is not None</code></span>
+<span id="L9" class="source-line highlighted"><span class="line-number">9</span><code>    assert len(result.graph.nodes) == 26</code></span>
+<span id="L10" class="source-line highlighted"><span class="line-number">10</span><code>    assert len(result.graph.edges) == 31</code></span>
+<span id="L11" class="source-line"><span class="line-number">11</span><code></code></span>
+<span id="L12" class="source-line"><span class="line-number">12</span><code></code></span>
+<a class="source-anchor" id="test_non_variable_nodes_must_have_incoming_dependencies"></a><span id="L13" class="source-line highlighted"><span class="line-number">13</span><code>def test_non_variable_nodes_must_have_incoming_dependencies(tmp_path):</code></span>
+<span id="L14" class="source-line highlighted"><span class="line-number">14</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L15" class="source-line highlighted"><span class="line-number">15</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L16" class="source-line highlighted"><span class="line-number">16</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L17" class="source-line highlighted"><span class="line-number">17</span><code>    graph_path.write_text(</code></span>
+<span id="L18" class="source-line highlighted"><span class="line-number">18</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L19" class="source-line highlighted"><span class="line-number">19</span><code>project:</code></span>
+<span id="L20" class="source-line highlighted"><span class="line-number">20</span><code>  id: bad</code></span>
+<span id="L21" class="source-line highlighted"><span class="line-number">21</span><code>  title: Bad Graph</code></span>
+<span id="L22" class="source-line highlighted"><span class="line-number">22</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L23" class="source-line highlighted"><span class="line-number">23</span><code></code></span>
+<span id="L24" class="source-line highlighted"><span class="line-number">24</span><code>nodes:</code></span>
+<span id="L25" class="source-line highlighted"><span class="line-number">25</span><code>  - id: var.x</code></span>
+<span id="L26" class="source-line highlighted"><span class="line-number">26</span><code>    kind: variable</code></span>
+<span id="L27" class="source-line highlighted"><span class="line-number">27</span><code>    title: Variable x</code></span>
+<span id="L28" class="source-line highlighted"><span class="line-number">28</span><code>    symbol: x</code></span>
+<span id="L29" class="source-line highlighted"><span class="line-number">29</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L30" class="source-line highlighted"><span class="line-number">30</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L31" class="source-line highlighted"><span class="line-number">31</span><code>  - id: model.bad</code></span>
+<span id="L32" class="source-line highlighted"><span class="line-number">32</span><code>    kind: assumption</code></span>
+<span id="L33" class="source-line highlighted"><span class="line-number">33</span><code>    title: Bad primitive assumption</code></span>
+<span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>    statement: &quot;x has a property.&quot;</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>    uses: [var.x]</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code></code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code>edges: []</code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code>    )</code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code></code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code></code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>    assert not result.passed</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code>    assert &quot;non-variable node has no incoming dependencies: model.bad&quot; in format_check_result(result)</code></span>
+<span id="L47" class="source-line"><span class="line-number">47</span><code></code></span>
+<span id="L48" class="source-line"><span class="line-number">48</span><code></code></span>
+<a class="source-anchor" id="test_undefined_variable_uses_are_reported"></a><span id="L49" class="source-line highlighted"><span class="line-number">49</span><code>def test_undefined_variable_uses_are_reported(tmp_path):</code></span>
+<span id="L50" class="source-line highlighted"><span class="line-number">50</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code>    graph_path.write_text(</code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L55" class="source-line highlighted"><span class="line-number">55</span><code>project:</code></span>
+<span id="L56" class="source-line highlighted"><span class="line-number">56</span><code>  id: bad</code></span>
+<span id="L57" class="source-line highlighted"><span class="line-number">57</span><code>  title: Bad Graph</code></span>
+<span id="L58" class="source-line highlighted"><span class="line-number">58</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L59" class="source-line highlighted"><span class="line-number">59</span><code></code></span>
+<span id="L60" class="source-line highlighted"><span class="line-number">60</span><code>nodes:</code></span>
+<span id="L61" class="source-line highlighted"><span class="line-number">61</span><code>  - id: var.x</code></span>
+<span id="L62" class="source-line highlighted"><span class="line-number">62</span><code>    kind: variable</code></span>
+<span id="L63" class="source-line highlighted"><span class="line-number">63</span><code>    title: Variable x</code></span>
+<span id="L64" class="source-line highlighted"><span class="line-number">64</span><code>    symbol: x</code></span>
+<span id="L65" class="source-line highlighted"><span class="line-number">65</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L66" class="source-line highlighted"><span class="line-number">66</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L67" class="source-line highlighted"><span class="line-number">67</span><code>  - id: model.bad</code></span>
+<span id="L68" class="source-line highlighted"><span class="line-number">68</span><code>    kind: assumption</code></span>
+<span id="L69" class="source-line highlighted"><span class="line-number">69</span><code>    title: Bad assumption</code></span>
+<span id="L70" class="source-line highlighted"><span class="line-number">70</span><code>    statement: &quot;z = x.&quot;</code></span>
+<span id="L71" class="source-line highlighted"><span class="line-number">71</span><code>    uses: [z]</code></span>
+<span id="L72" class="source-line highlighted"><span class="line-number">72</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L73" class="source-line highlighted"><span class="line-number">73</span><code></code></span>
+<span id="L74" class="source-line highlighted"><span class="line-number">74</span><code>edges:</code></span>
+<span id="L75" class="source-line highlighted"><span class="line-number">75</span><code>  - from: var.x</code></span>
+<span id="L76" class="source-line highlighted"><span class="line-number">76</span><code>    to: model.bad</code></span>
+<span id="L77" class="source-line highlighted"><span class="line-number">77</span><code>    kind: defines</code></span>
+<span id="L78" class="source-line highlighted"><span class="line-number">78</span><code>    description: &quot;x specifies the bad model.&quot;</code></span>
+<span id="L79" class="source-line highlighted"><span class="line-number">79</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L80" class="source-line highlighted"><span class="line-number">80</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L81" class="source-line highlighted"><span class="line-number">81</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L82" class="source-line highlighted"><span class="line-number">82</span><code>    )</code></span>
+<span id="L83" class="source-line highlighted"><span class="line-number">83</span><code></code></span>
+<span id="L84" class="source-line highlighted"><span class="line-number">84</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L85" class="source-line highlighted"><span class="line-number">85</span><code></code></span>
+<span id="L86" class="source-line highlighted"><span class="line-number">86</span><code>    assert not result.passed</code></span>
+<span id="L87" class="source-line highlighted"><span class="line-number">87</span><code>    assert &quot;model.bad uses undefined variable symbol: z&quot; in format_check_result(result)</code></span>
+<span id="L88" class="source-line"><span class="line-number">88</span><code></code></span>
+<span id="L89" class="source-line"><span class="line-number">89</span><code></code></span>
+<a class="source-anchor" id="test_statement_parser_finds_variable_used_before_definition"></a><span id="L90" class="source-line highlighted"><span class="line-number">90</span><code>def test_statement_parser_finds_variable_used_before_definition(tmp_path):</code></span>
+<span id="L91" class="source-line highlighted"><span class="line-number">91</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L92" class="source-line highlighted"><span class="line-number">92</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L93" class="source-line highlighted"><span class="line-number">93</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L94" class="source-line highlighted"><span class="line-number">94</span><code>    graph_path.write_text(</code></span>
+<span id="L95" class="source-line highlighted"><span class="line-number">95</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L96" class="source-line highlighted"><span class="line-number">96</span><code>project:</code></span>
+<span id="L97" class="source-line highlighted"><span class="line-number">97</span><code>  id: bad</code></span>
+<span id="L98" class="source-line highlighted"><span class="line-number">98</span><code>  title: Bad Graph</code></span>
+<span id="L99" class="source-line highlighted"><span class="line-number">99</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L100" class="source-line highlighted"><span class="line-number">100</span><code></code></span>
+<span id="L101" class="source-line highlighted"><span class="line-number">101</span><code>nodes:</code></span>
+<span id="L102" class="source-line highlighted"><span class="line-number">102</span><code>  - id: var.x</code></span>
+<span id="L103" class="source-line highlighted"><span class="line-number">103</span><code>    kind: variable</code></span>
+<span id="L104" class="source-line highlighted"><span class="line-number">104</span><code>    title: Variable x</code></span>
+<span id="L105" class="source-line highlighted"><span class="line-number">105</span><code>    symbol: x</code></span>
+<span id="L106" class="source-line highlighted"><span class="line-number">106</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L107" class="source-line highlighted"><span class="line-number">107</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L108" class="source-line highlighted"><span class="line-number">108</span><code>  - id: var.z</code></span>
+<span id="L109" class="source-line highlighted"><span class="line-number">109</span><code>    kind: variable</code></span>
+<span id="L110" class="source-line highlighted"><span class="line-number">110</span><code>    title: Variable z</code></span>
+<span id="L111" class="source-line highlighted"><span class="line-number">111</span><code>    symbol: z</code></span>
+<span id="L112" class="source-line highlighted"><span class="line-number">112</span><code>    statement: &quot;z in R.&quot;</code></span>
+<span id="L113" class="source-line highlighted"><span class="line-number">113</span><code>    tex: {file: paper/main.tex, label: def:z}</code></span>
+<span id="L114" class="source-line highlighted"><span class="line-number">114</span><code>  - id: model.bad</code></span>
+<span id="L115" class="source-line highlighted"><span class="line-number">115</span><code>    kind: assumption</code></span>
+<span id="L116" class="source-line highlighted"><span class="line-number">116</span><code>    title: Bad assumption</code></span>
+<span id="L117" class="source-line highlighted"><span class="line-number">117</span><code>    statement: &quot;z = x.&quot;</code></span>
+<span id="L118" class="source-line highlighted"><span class="line-number">118</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L119" class="source-line highlighted"><span class="line-number">119</span><code></code></span>
+<span id="L120" class="source-line highlighted"><span class="line-number">120</span><code>edges:</code></span>
+<span id="L121" class="source-line highlighted"><span class="line-number">121</span><code>  - from: var.x</code></span>
+<span id="L122" class="source-line highlighted"><span class="line-number">122</span><code>    to: model.bad</code></span>
+<span id="L123" class="source-line highlighted"><span class="line-number">123</span><code>    kind: defines</code></span>
+<span id="L124" class="source-line highlighted"><span class="line-number">124</span><code>    description: &quot;x specifies the bad model.&quot;</code></span>
+<span id="L125" class="source-line highlighted"><span class="line-number">125</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L126" class="source-line highlighted"><span class="line-number">126</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L127" class="source-line highlighted"><span class="line-number">127</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L128" class="source-line highlighted"><span class="line-number">128</span><code>    )</code></span>
+<span id="L129" class="source-line highlighted"><span class="line-number">129</span><code></code></span>
+<span id="L130" class="source-line highlighted"><span class="line-number">130</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L131" class="source-line highlighted"><span class="line-number">131</span><code></code></span>
+<span id="L132" class="source-line highlighted"><span class="line-number">132</span><code>    assert not result.passed</code></span>
+<span id="L133" class="source-line highlighted"><span class="line-number">133</span><code>    assert &quot;model.bad uses var.z, but that variable is not upstream&quot; in format_check_result(result)</code></span>
+<span id="L134" class="source-line"><span class="line-number">134</span><code></code></span>
+<span id="L135" class="source-line"><span class="line-number">135</span><code></code></span>
+<a class="source-anchor" id="test_statement_parser_reports_unknown_symbol_without_uses"></a><span id="L136" class="source-line highlighted"><span class="line-number">136</span><code>def test_statement_parser_reports_unknown_symbol_without_uses(tmp_path):</code></span>
+<span id="L137" class="source-line highlighted"><span class="line-number">137</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L138" class="source-line highlighted"><span class="line-number">138</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L139" class="source-line highlighted"><span class="line-number">139</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L140" class="source-line highlighted"><span class="line-number">140</span><code>    graph_path.write_text(</code></span>
+<span id="L141" class="source-line highlighted"><span class="line-number">141</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L142" class="source-line highlighted"><span class="line-number">142</span><code>project:</code></span>
+<span id="L143" class="source-line highlighted"><span class="line-number">143</span><code>  id: bad</code></span>
+<span id="L144" class="source-line highlighted"><span class="line-number">144</span><code>  title: Bad Graph</code></span>
+<span id="L145" class="source-line highlighted"><span class="line-number">145</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L146" class="source-line highlighted"><span class="line-number">146</span><code></code></span>
+<span id="L147" class="source-line highlighted"><span class="line-number">147</span><code>nodes:</code></span>
+<span id="L148" class="source-line highlighted"><span class="line-number">148</span><code>  - id: var.x</code></span>
+<span id="L149" class="source-line highlighted"><span class="line-number">149</span><code>    kind: variable</code></span>
+<span id="L150" class="source-line highlighted"><span class="line-number">150</span><code>    title: Variable x</code></span>
+<span id="L151" class="source-line highlighted"><span class="line-number">151</span><code>    symbol: x</code></span>
+<span id="L152" class="source-line highlighted"><span class="line-number">152</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L153" class="source-line highlighted"><span class="line-number">153</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L154" class="source-line highlighted"><span class="line-number">154</span><code>  - id: model.bad</code></span>
+<span id="L155" class="source-line highlighted"><span class="line-number">155</span><code>    kind: assumption</code></span>
+<span id="L156" class="source-line highlighted"><span class="line-number">156</span><code>    title: Bad assumption</code></span>
+<span id="L157" class="source-line highlighted"><span class="line-number">157</span><code>    statement: &quot;z = x.&quot;</code></span>
+<span id="L158" class="source-line highlighted"><span class="line-number">158</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L159" class="source-line highlighted"><span class="line-number">159</span><code></code></span>
+<span id="L160" class="source-line highlighted"><span class="line-number">160</span><code>edges:</code></span>
+<span id="L161" class="source-line highlighted"><span class="line-number">161</span><code>  - from: var.x</code></span>
+<span id="L162" class="source-line highlighted"><span class="line-number">162</span><code>    to: model.bad</code></span>
+<span id="L163" class="source-line highlighted"><span class="line-number">163</span><code>    kind: defines</code></span>
+<span id="L164" class="source-line highlighted"><span class="line-number">164</span><code>    description: &quot;x specifies the bad model.&quot;</code></span>
+<span id="L165" class="source-line highlighted"><span class="line-number">165</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L166" class="source-line highlighted"><span class="line-number">166</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L167" class="source-line highlighted"><span class="line-number">167</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L168" class="source-line highlighted"><span class="line-number">168</span><code>    )</code></span>
+<span id="L169" class="source-line highlighted"><span class="line-number">169</span><code></code></span>
+<span id="L170" class="source-line highlighted"><span class="line-number">170</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L171" class="source-line highlighted"><span class="line-number">171</span><code></code></span>
+<span id="L172" class="source-line highlighted"><span class="line-number">172</span><code>    assert not result.passed</code></span>
+<span id="L173" class="source-line highlighted"><span class="line-number">173</span><code>    assert &quot;model.bad uses undefined variable symbol: z&quot; in format_check_result(result)</code></span>
+<span id="L174" class="source-line"><span class="line-number">174</span><code></code></span>
+<span id="L175" class="source-line"><span class="line-number">175</span><code></code></span>
+<a class="source-anchor" id="test_replaces_edge_kind_is_not_allowed"></a><span id="L176" class="source-line highlighted"><span class="line-number">176</span><code>def test_replaces_edge_kind_is_not_allowed(tmp_path):</code></span>
+<span id="L177" class="source-line highlighted"><span class="line-number">177</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L178" class="source-line highlighted"><span class="line-number">178</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L179" class="source-line highlighted"><span class="line-number">179</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L180" class="source-line highlighted"><span class="line-number">180</span><code>    graph_path.write_text(</code></span>
+<span id="L181" class="source-line highlighted"><span class="line-number">181</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L182" class="source-line highlighted"><span class="line-number">182</span><code>project:</code></span>
+<span id="L183" class="source-line highlighted"><span class="line-number">183</span><code>  id: bad</code></span>
+<span id="L184" class="source-line highlighted"><span class="line-number">184</span><code>  title: Bad Graph</code></span>
+<span id="L185" class="source-line highlighted"><span class="line-number">185</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L186" class="source-line highlighted"><span class="line-number">186</span><code></code></span>
+<span id="L187" class="source-line highlighted"><span class="line-number">187</span><code>nodes:</code></span>
+<span id="L188" class="source-line highlighted"><span class="line-number">188</span><code>  - id: var.x</code></span>
+<span id="L189" class="source-line highlighted"><span class="line-number">189</span><code>    kind: variable</code></span>
+<span id="L190" class="source-line highlighted"><span class="line-number">190</span><code>    title: Variable x</code></span>
+<span id="L191" class="source-line highlighted"><span class="line-number">191</span><code>    symbol: x</code></span>
+<span id="L192" class="source-line highlighted"><span class="line-number">192</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L193" class="source-line highlighted"><span class="line-number">193</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L194" class="source-line highlighted"><span class="line-number">194</span><code>  - id: model.a</code></span>
+<span id="L195" class="source-line highlighted"><span class="line-number">195</span><code>    kind: assumption</code></span>
+<span id="L196" class="source-line highlighted"><span class="line-number">196</span><code>    title: Model A</code></span>
+<span id="L197" class="source-line highlighted"><span class="line-number">197</span><code>    statement: &quot;x has property A.&quot;</code></span>
+<span id="L198" class="source-line highlighted"><span class="line-number">198</span><code>    uses: [var.x]</code></span>
+<span id="L199" class="source-line highlighted"><span class="line-number">199</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L200" class="source-line highlighted"><span class="line-number">200</span><code>  - id: model.b</code></span>
+<span id="L201" class="source-line highlighted"><span class="line-number">201</span><code>    kind: assumption</code></span>
+<span id="L202" class="source-line highlighted"><span class="line-number">202</span><code>    title: Model B</code></span>
+<span id="L203" class="source-line highlighted"><span class="line-number">203</span><code>    statement: &quot;x has property B.&quot;</code></span>
+<span id="L204" class="source-line highlighted"><span class="line-number">204</span><code>    uses: [var.x]</code></span>
+<span id="L205" class="source-line highlighted"><span class="line-number">205</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L206" class="source-line highlighted"><span class="line-number">206</span><code></code></span>
+<span id="L207" class="source-line highlighted"><span class="line-number">207</span><code>edges:</code></span>
+<span id="L208" class="source-line highlighted"><span class="line-number">208</span><code>  - from: var.x</code></span>
+<span id="L209" class="source-line highlighted"><span class="line-number">209</span><code>    to: model.a</code></span>
+<span id="L210" class="source-line highlighted"><span class="line-number">210</span><code>    kind: defines</code></span>
+<span id="L211" class="source-line highlighted"><span class="line-number">211</span><code>    description: &quot;x specifies model A.&quot;</code></span>
+<span id="L212" class="source-line highlighted"><span class="line-number">212</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L213" class="source-line highlighted"><span class="line-number">213</span><code>  - from: var.x</code></span>
+<span id="L214" class="source-line highlighted"><span class="line-number">214</span><code>    to: model.b</code></span>
+<span id="L215" class="source-line highlighted"><span class="line-number">215</span><code>    kind: defines</code></span>
+<span id="L216" class="source-line highlighted"><span class="line-number">216</span><code>    description: &quot;x specifies model B.&quot;</code></span>
+<span id="L217" class="source-line highlighted"><span class="line-number">217</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L218" class="source-line highlighted"><span class="line-number">218</span><code>  - from: model.a</code></span>
+<span id="L219" class="source-line highlighted"><span class="line-number">219</span><code>    to: model.b</code></span>
+<span id="L220" class="source-line highlighted"><span class="line-number">220</span><code>    kind: replaces</code></span>
+<span id="L221" class="source-line highlighted"><span class="line-number">221</span><code>    description: &quot;Disallowed replacement edge.&quot;</code></span>
+<span id="L222" class="source-line highlighted"><span class="line-number">222</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L223" class="source-line highlighted"><span class="line-number">223</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L224" class="source-line highlighted"><span class="line-number">224</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L225" class="source-line highlighted"><span class="line-number">225</span><code>    )</code></span>
+<span id="L226" class="source-line highlighted"><span class="line-number">226</span><code></code></span>
+<span id="L227" class="source-line highlighted"><span class="line-number">227</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L228" class="source-line highlighted"><span class="line-number">228</span><code></code></span>
+<span id="L229" class="source-line highlighted"><span class="line-number">229</span><code>    assert not result.passed</code></span>
+<span id="L230" class="source-line highlighted"><span class="line-number">230</span><code>    assert &quot;schema validation failed&quot; in format_check_result(result)</code></span>
+<span id="L231" class="source-line highlighted"><span class="line-number">231</span><code>    assert &quot;replaces&quot; in format_check_result(result)</code></span>
+<span id="L232" class="source-line"><span class="line-number">232</span><code></code></span>
+<span id="L233" class="source-line"><span class="line-number">233</span><code></code></span>
+<a class="source-anchor" id="test_code_line_reference_must_exist"></a><span id="L234" class="source-line highlighted"><span class="line-number">234</span><code>def test_code_line_reference_must_exist(tmp_path):</code></span>
+<span id="L235" class="source-line highlighted"><span class="line-number">235</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L236" class="source-line highlighted"><span class="line-number">236</span><code>    (tmp_path / &quot;model.py&quot;).write_text(&quot;x = 1\n&quot;, encoding=&quot;utf-8&quot;)</code></span>
+<span id="L237" class="source-line highlighted"><span class="line-number">237</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L238" class="source-line highlighted"><span class="line-number">238</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L239" class="source-line highlighted"><span class="line-number">239</span><code>    graph_path.write_text(</code></span>
+<span id="L240" class="source-line highlighted"><span class="line-number">240</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L241" class="source-line highlighted"><span class="line-number">241</span><code>project:</code></span>
+<span id="L242" class="source-line highlighted"><span class="line-number">242</span><code>  id: bad</code></span>
+<span id="L243" class="source-line highlighted"><span class="line-number">243</span><code>  title: Bad Graph</code></span>
+<span id="L244" class="source-line highlighted"><span class="line-number">244</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L245" class="source-line highlighted"><span class="line-number">245</span><code></code></span>
+<span id="L246" class="source-line highlighted"><span class="line-number">246</span><code>nodes:</code></span>
+<span id="L247" class="source-line highlighted"><span class="line-number">247</span><code>  - id: var.x</code></span>
+<span id="L248" class="source-line highlighted"><span class="line-number">248</span><code>    kind: variable</code></span>
+<span id="L249" class="source-line highlighted"><span class="line-number">249</span><code>    title: &quot;x in R&quot;</code></span>
+<span id="L250" class="source-line highlighted"><span class="line-number">250</span><code>    symbol: x</code></span>
+<span id="L251" class="source-line highlighted"><span class="line-number">251</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L252" class="source-line highlighted"><span class="line-number">252</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L253" class="source-line highlighted"><span class="line-number">253</span><code>    code:</code></span>
+<span id="L254" class="source-line highlighted"><span class="line-number">254</span><code>      - {path: model.py, line: 2}</code></span>
+<span id="L255" class="source-line highlighted"><span class="line-number">255</span><code></code></span>
+<span id="L256" class="source-line highlighted"><span class="line-number">256</span><code>edges: []</code></span>
+<span id="L257" class="source-line highlighted"><span class="line-number">257</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L258" class="source-line highlighted"><span class="line-number">258</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L259" class="source-line highlighted"><span class="line-number">259</span><code>    )</code></span>
+<span id="L260" class="source-line highlighted"><span class="line-number">260</span><code></code></span>
+<span id="L261" class="source-line highlighted"><span class="line-number">261</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L262" class="source-line highlighted"><span class="line-number">262</span><code></code></span>
+<span id="L263" class="source-line highlighted"><span class="line-number">263</span><code>    assert not result.passed</code></span>
+<span id="L264" class="source-line highlighted"><span class="line-number">264</span><code>    assert &quot;code line missing: node var.x: model.py:2&quot; in format_check_result(result)</code></span>
+<span id="L265" class="source-line"><span class="line-number">265</span><code></code></span>
+<span id="L266" class="source-line"><span class="line-number">266</span><code></code></span>
+<a class="source-anchor" id="test_derivation_file_must_not_collect_distinct_derivations"></a><span id="L267" class="source-line highlighted"><span class="line-number">267</span><code>def test_derivation_file_must_not_collect_distinct_derivations(tmp_path):</code></span>
+<span id="L268" class="source-line highlighted"><span class="line-number">268</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L269" class="source-line highlighted"><span class="line-number">269</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L270" class="source-line highlighted"><span class="line-number">270</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L271" class="source-line highlighted"><span class="line-number">271</span><code>    graph_path.write_text(</code></span>
+<span id="L272" class="source-line highlighted"><span class="line-number">272</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L273" class="source-line highlighted"><span class="line-number">273</span><code>project:</code></span>
+<span id="L274" class="source-line highlighted"><span class="line-number">274</span><code>  id: bad</code></span>
+<span id="L275" class="source-line highlighted"><span class="line-number">275</span><code>  title: Bad Graph</code></span>
+<span id="L276" class="source-line highlighted"><span class="line-number">276</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L277" class="source-line highlighted"><span class="line-number">277</span><code></code></span>
+<span id="L278" class="source-line highlighted"><span class="line-number">278</span><code>nodes:</code></span>
+<span id="L279" class="source-line highlighted"><span class="line-number">279</span><code>  - id: var.x</code></span>
+<span id="L280" class="source-line highlighted"><span class="line-number">280</span><code>    kind: variable</code></span>
+<span id="L281" class="source-line highlighted"><span class="line-number">281</span><code>    title: &quot;x in R&quot;</code></span>
+<span id="L282" class="source-line highlighted"><span class="line-number">282</span><code>    symbol: x</code></span>
+<span id="L283" class="source-line highlighted"><span class="line-number">283</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L284" class="source-line highlighted"><span class="line-number">284</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L285" class="source-line highlighted"><span class="line-number">285</span><code>  - id: model.a</code></span>
+<span id="L286" class="source-line highlighted"><span class="line-number">286</span><code>    kind: assumption</code></span>
+<span id="L287" class="source-line highlighted"><span class="line-number">287</span><code>    title: Model A</code></span>
+<span id="L288" class="source-line highlighted"><span class="line-number">288</span><code>    statement: &quot;x has property A.&quot;</code></span>
+<span id="L289" class="source-line highlighted"><span class="line-number">289</span><code>    uses: [var.x]</code></span>
+<span id="L290" class="source-line highlighted"><span class="line-number">290</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L291" class="source-line highlighted"><span class="line-number">291</span><code>  - id: model.b</code></span>
+<span id="L292" class="source-line highlighted"><span class="line-number">292</span><code>    kind: assumption</code></span>
+<span id="L293" class="source-line highlighted"><span class="line-number">293</span><code>    title: Model B</code></span>
+<span id="L294" class="source-line highlighted"><span class="line-number">294</span><code>    statement: &quot;x has property B.&quot;</code></span>
+<span id="L295" class="source-line highlighted"><span class="line-number">295</span><code>    uses: [var.x]</code></span>
+<span id="L296" class="source-line highlighted"><span class="line-number">296</span><code>    tex: {file: paper/main.tex, label: model:bad}</code></span>
+<span id="L297" class="source-line highlighted"><span class="line-number">297</span><code></code></span>
+<span id="L298" class="source-line highlighted"><span class="line-number">298</span><code>edges:</code></span>
+<span id="L299" class="source-line highlighted"><span class="line-number">299</span><code>  - from: var.x</code></span>
+<span id="L300" class="source-line highlighted"><span class="line-number">300</span><code>    to: model.a</code></span>
+<span id="L301" class="source-line highlighted"><span class="line-number">301</span><code>    kind: defines</code></span>
+<span id="L302" class="source-line highlighted"><span class="line-number">302</span><code>    description: &quot;x specifies model A.&quot;</code></span>
+<span id="L303" class="source-line highlighted"><span class="line-number">303</span><code>    tex: {file: paper/main.tex, label: edge:x-to-bad}</code></span>
+<span id="L304" class="source-line highlighted"><span class="line-number">304</span><code>  - from: var.x</code></span>
+<span id="L305" class="source-line highlighted"><span class="line-number">305</span><code>    to: model.b</code></span>
+<span id="L306" class="source-line highlighted"><span class="line-number">306</span><code>    kind: defines</code></span>
+<span id="L307" class="source-line highlighted"><span class="line-number">307</span><code>    description: &quot;x specifies model B.&quot;</code></span>
+<span id="L308" class="source-line highlighted"><span class="line-number">308</span><code>    tex: {file: paper/main.tex, label: edge:x-to-other}</code></span>
+<span id="L309" class="source-line highlighted"><span class="line-number">309</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L310" class="source-line highlighted"><span class="line-number">310</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L311" class="source-line highlighted"><span class="line-number">311</span><code>    )</code></span>
+<span id="L312" class="source-line highlighted"><span class="line-number">312</span><code>    with (tmp_path / &quot;paper/main.tex&quot;).open(&quot;a&quot;, encoding=&quot;utf-8&quot;) as tex:</code></span>
+<span id="L313" class="source-line highlighted"><span class="line-number">313</span><code>        tex.write(&quot;\\label{edge:x-to-other}\n&quot;)</code></span>
+<span id="L314" class="source-line highlighted"><span class="line-number">314</span><code></code></span>
+<span id="L315" class="source-line highlighted"><span class="line-number">315</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L316" class="source-line highlighted"><span class="line-number">316</span><code></code></span>
+<span id="L317" class="source-line highlighted"><span class="line-number">317</span><code>    assert not result.passed</code></span>
+<span id="L318" class="source-line highlighted"><span class="line-number">318</span><code>    assert &quot;derivation file contains multiple referenced derivations&quot; in format_check_result(result)</code></span>
+<span id="L319" class="source-line"><span class="line-number">319</span><code></code></span>
+<span id="L320" class="source-line"><span class="line-number">320</span><code></code></span>
+<a class="source-anchor" id="test_multiple_edges_may_share_one_derivation"></a><span id="L321" class="source-line highlighted"><span class="line-number">321</span><code>def test_multiple_edges_may_share_one_derivation(tmp_path):</code></span>
+<span id="L322" class="source-line highlighted"><span class="line-number">322</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L323" class="source-line highlighted"><span class="line-number">323</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L324" class="source-line highlighted"><span class="line-number">324</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L325" class="source-line highlighted"><span class="line-number">325</span><code>    graph_path.write_text(</code></span>
+<span id="L326" class="source-line highlighted"><span class="line-number">326</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L327" class="source-line highlighted"><span class="line-number">327</span><code>project: {id: shared, title: Shared, tex_root: paper/main.tex}</code></span>
+<span id="L328" class="source-line highlighted"><span class="line-number">328</span><code>nodes:</code></span>
+<span id="L329" class="source-line highlighted"><span class="line-number">329</span><code>  - {id: var.x, kind: variable, title: &quot;x in R&quot;, symbol: x, statement: &quot;x in R.&quot;, tex: {file: paper/main.tex, label: &quot;def:x&quot;}}</code></span>
+<span id="L330" class="source-line highlighted"><span class="line-number">330</span><code>  - {id: model.a, kind: assumption, title: A, statement: A, uses: [var.x], tex: {file: paper/main.tex, label: &quot;model:bad&quot;}}</code></span>
+<span id="L331" class="source-line highlighted"><span class="line-number">331</span><code>  - {id: model.b, kind: assumption, title: B, statement: B, uses: [var.x], tex: {file: paper/main.tex, label: &quot;model:bad&quot;}}</code></span>
+<span id="L332" class="source-line highlighted"><span class="line-number">332</span><code>edges:</code></span>
+<span id="L333" class="source-line highlighted"><span class="line-number">333</span><code>  - {from: var.x, to: model.a, kind: defines, description: shared, tex: {file: paper/main.tex, label: &quot;edge:x-to-bad&quot;}}</code></span>
+<span id="L334" class="source-line highlighted"><span class="line-number">334</span><code>  - {from: var.x, to: model.b, kind: defines, description: shared, tex: {file: paper/main.tex, label: &quot;edge:x-to-bad&quot;}}</code></span>
+<span id="L335" class="source-line highlighted"><span class="line-number">335</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L336" class="source-line highlighted"><span class="line-number">336</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L337" class="source-line highlighted"><span class="line-number">337</span><code>    )</code></span>
+<span id="L338" class="source-line highlighted"><span class="line-number">338</span><code></code></span>
+<span id="L339" class="source-line highlighted"><span class="line-number">339</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L340" class="source-line highlighted"><span class="line-number">340</span><code></code></span>
+<span id="L341" class="source-line highlighted"><span class="line-number">341</span><code>    assert result.passed, format_check_result(result)</code></span>
+<span id="L342" class="source-line"><span class="line-number">342</span><code></code></span>
+<span id="L343" class="source-line"><span class="line-number">343</span><code></code></span>
+<a class="source-anchor" id="test_amsmath_equation_rejects_multiple_labels"></a><span id="L344" class="source-line highlighted"><span class="line-number">344</span><code>def test_amsmath_equation_rejects_multiple_labels(tmp_path):</code></span>
+<span id="L345" class="source-line highlighted"><span class="line-number">345</span><code>    _write_minimal_tex(tmp_path)</code></span>
+<span id="L346" class="source-line highlighted"><span class="line-number">346</span><code>    with (tmp_path / &quot;paper/main.tex&quot;).open(&quot;a&quot;, encoding=&quot;utf-8&quot;) as tex:</code></span>
+<span id="L347" class="source-line highlighted"><span class="line-number">347</span><code>        tex.write(&quot;\\begin{equation}x=1\\label{eq:one}\\label{eq:two}\\end{equation}\n&quot;)</code></span>
+<span id="L348" class="source-line highlighted"><span class="line-number">348</span><code>    graph_path = tmp_path / &quot;mathgraph&quot; / &quot;graph.yaml&quot;</code></span>
+<span id="L349" class="source-line highlighted"><span class="line-number">349</span><code>    graph_path.parent.mkdir()</code></span>
+<span id="L350" class="source-line highlighted"><span class="line-number">350</span><code>    graph_path.write_text(</code></span>
+<span id="L351" class="source-line highlighted"><span class="line-number">351</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L352" class="source-line highlighted"><span class="line-number">352</span><code>project: {id: labels, title: Labels, tex_root: paper/main.tex}</code></span>
+<span id="L353" class="source-line highlighted"><span class="line-number">353</span><code>nodes: []</code></span>
+<span id="L354" class="source-line highlighted"><span class="line-number">354</span><code>edges: []</code></span>
+<span id="L355" class="source-line highlighted"><span class="line-number">355</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L356" class="source-line highlighted"><span class="line-number">356</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L357" class="source-line highlighted"><span class="line-number">357</span><code>    )</code></span>
+<span id="L358" class="source-line highlighted"><span class="line-number">358</span><code></code></span>
+<span id="L359" class="source-line highlighted"><span class="line-number">359</span><code>    result = run_checks(graph_path, repo_root=tmp_path)</code></span>
+<span id="L360" class="source-line highlighted"><span class="line-number">360</span><code></code></span>
+<span id="L361" class="source-line highlighted"><span class="line-number">361</span><code>    assert &quot;amsmath equation has multiple labels&quot; in format_check_result(result)</code></span>
+<span id="L362" class="source-line"><span class="line-number">362</span><code></code></span>
+<span id="L363" class="source-line"><span class="line-number">363</span><code></code></span>
+<a class="source-anchor" id="_write_minimal_tex"></a><span id="L364" class="source-line highlighted"><span class="line-number">364</span><code>def _write_minimal_tex(tmp_path):</code></span>
+<span id="L365" class="source-line highlighted"><span class="line-number">365</span><code>    paper = tmp_path / &quot;paper&quot;</code></span>
+<span id="L366" class="source-line highlighted"><span class="line-number">366</span><code>    paper.mkdir()</code></span>
+<span id="L367" class="source-line highlighted"><span class="line-number">367</span><code>    (paper / &quot;main.tex&quot;).write_text(</code></span>
+<span id="L368" class="source-line highlighted"><span class="line-number">368</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L369" class="source-line highlighted"><span class="line-number">369</span><code>\\section{Definitions}</code></span>
+<span id="L370" class="source-line highlighted"><span class="line-number">370</span><code>\\label{def:x}</code></span>
+<span id="L371" class="source-line highlighted"><span class="line-number">371</span><code>\\label{def:z}</code></span>
+<span id="L372" class="source-line highlighted"><span class="line-number">372</span><code>\\label{model:bad}</code></span>
+<span id="L373" class="source-line highlighted"><span class="line-number">373</span><code>\\label{edge:x-to-bad}</code></span>
+<span id="L374" class="source-line highlighted"><span class="line-number">374</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L375" class="source-line highlighted"><span class="line-number">375</span><code>        encoding=&quot;utf-8&quot;,</code></span>
+<span id="L376" class="source-line highlighted"><span class="line-number">376</span><code>    )</code></span></pre>
+  </body>
+</html>

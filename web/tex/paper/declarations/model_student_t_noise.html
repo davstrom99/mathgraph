@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/declarations/model_student_t_noise.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Student-t Noise Model</h2>
+<a class="anchor" id="model:student-t-noise"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Inputs are <code>var.X</code>, <code>var.y</code>, <code>param.beta</code>, <code>var.epsilon</code>, <code>param.sigma</code>, and <code>param.nu</code>. This node is an alternative observation-model branch over shared variables.</p>
+<h3>Declaration</h3>
+<p>The Student-t observation model is</p>
+<div class="math">\[
+  y = X\beta + \epsilon,
+  \qquad
+  \epsilon_i \sim t_\nu(0,\sigma).
+\]</div>
+<h3>Result</h3>
+<p>The node <code>model.student_t_noise</code> represents a heavy-tailed observation-model branch.</p>
+  </body>
+</html>

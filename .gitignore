@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+.codex_tmp_elk.js
+*.lnk
+mathgraph/paper/*.aux
+mathgraph/paper/*.fdb_latexmk
+mathgraph/paper/*.fls
+mathgraph/paper/*.log
+mathgraph/paper/*.pdf
+mathgraph/paper/*.synctex.gz
+results/*.json
+results/*.png
+!results/.gitkeep
+web/refs/

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>src/linear_bayes/simulate.py</title>
+    <link rel="stylesheet" href="../../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>src/linear_bayes/simulate.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>&quot;&quot;&quot;Simulation routines attached to graph assumption nodes.&quot;&quot;&quot;</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>from __future__ import annotations</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code></code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>import numpy as np</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code></code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code></code></span>
+<a class="source-anchor" id="simulate_gaussian_linear"></a><span id="L8" class="source-line highlighted"><span class="line-number">8</span><code>def simulate_gaussian_linear(</code></span>
+<span id="L9" class="source-line highlighted"><span class="line-number">9</span><code>    n: int,</code></span>
+<span id="L10" class="source-line highlighted"><span class="line-number">10</span><code>    d: int,</code></span>
+<span id="L11" class="source-line highlighted"><span class="line-number">11</span><code>    beta: np.ndarray,</code></span>
+<span id="L12" class="source-line highlighted"><span class="line-number">12</span><code>    sigma: float,</code></span>
+<span id="L13" class="source-line highlighted"><span class="line-number">13</span><code>    seed: int | None = None,</code></span>
+<span id="L14" class="source-line highlighted"><span class="line-number">14</span><code>) -&gt; tuple[np.ndarray, np.ndarray]:</code></span>
+<span id="L15" class="source-line highlighted"><span class="line-number">15</span><code>    &quot;&quot;&quot;Simulate data attached to graph node `model.gaussian_observation`.&quot;&quot;&quot;</code></span>
+<span id="L16" class="source-line highlighted"><span class="line-number">16</span><code>    beta = np.asarray(beta, dtype=float)</code></span>
+<span id="L17" class="source-line highlighted"><span class="line-number">17</span><code>    if n &lt;= 0:</code></span>
+<span id="L18" class="source-line highlighted"><span class="line-number">18</span><code>        raise ValueError(&quot;n must be positive&quot;)</code></span>
+<span id="L19" class="source-line highlighted"><span class="line-number">19</span><code>    if d &lt;= 0:</code></span>
+<span id="L20" class="source-line highlighted"><span class="line-number">20</span><code>        raise ValueError(&quot;d must be positive&quot;)</code></span>
+<span id="L21" class="source-line highlighted"><span class="line-number">21</span><code>    if beta.shape != (d,):</code></span>
+<span id="L22" class="source-line highlighted"><span class="line-number">22</span><code>        raise ValueError(f&quot;beta must have shape ({d},)&quot;)</code></span>
+<span id="L23" class="source-line highlighted"><span class="line-number">23</span><code>    if sigma &lt;= 0:</code></span>
+<span id="L24" class="source-line highlighted"><span class="line-number">24</span><code>        raise ValueError(&quot;sigma must be positive&quot;)</code></span>
+<span id="L25" class="source-line highlighted"><span class="line-number">25</span><code></code></span>
+<span id="L26" class="source-line highlighted"><span class="line-number">26</span><code>    rng = np.random.default_rng(seed)</code></span>
+<span id="L27" class="source-line highlighted"><span class="line-number">27</span><code>    X = rng.normal(size=(n, d))</code></span>
+<span id="L28" class="source-line highlighted"><span class="line-number">28</span><code>    noise = rng.normal(loc=0.0, scale=sigma, size=n)</code></span>
+<span id="L29" class="source-line highlighted"><span class="line-number">29</span><code>    y = X @ beta + noise</code></span>
+<span id="L30" class="source-line highlighted"><span class="line-number">30</span><code>    return X, y</code></span>
+<span id="L31" class="source-line"><span class="line-number">31</span><code></code></span>
+<span id="L32" class="source-line"><span class="line-number">32</span><code></code></span>
+<a class="source-anchor" id="simulate_student_t_linear"></a><span id="L33" class="source-line highlighted"><span class="line-number">33</span><code>def simulate_student_t_linear(</code></span>
+<span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>    n: int,</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>    d: int,</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>    beta: np.ndarray,</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code>    sigma: float,</code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code>    nu: float,</code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>    seed: int | None = None,</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>) -&gt; tuple[np.ndarray, np.ndarray]:</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code>    &quot;&quot;&quot;Simulate data attached to graph node `model.student_t_noise`.&quot;&quot;&quot;</code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code>    beta = np.asarray(beta, dtype=float)</code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code>    if n &lt;= 0:</code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code>        raise ValueError(&quot;n must be positive&quot;)</code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>    if d &lt;= 0:</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code>        raise ValueError(&quot;d must be positive&quot;)</code></span>
+<span id="L47" class="source-line highlighted"><span class="line-number">47</span><code>    if beta.shape != (d,):</code></span>
+<span id="L48" class="source-line highlighted"><span class="line-number">48</span><code>        raise ValueError(f&quot;beta must have shape ({d},)&quot;)</code></span>
+<span id="L49" class="source-line highlighted"><span class="line-number">49</span><code>    if sigma &lt;= 0:</code></span>
+<span id="L50" class="source-line highlighted"><span class="line-number">50</span><code>        raise ValueError(&quot;sigma must be positive&quot;)</code></span>
+<span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>    if nu &lt;= 0:</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code>        raise ValueError(&quot;nu must be positive&quot;)</code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code></code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>    rng = np.random.default_rng(seed)</code></span>
+<span id="L55" class="source-line highlighted"><span class="line-number">55</span><code>    X = rng.normal(size=(n, d))</code></span>
+<span id="L56" class="source-line highlighted"><span class="line-number">56</span><code>    noise = sigma * rng.standard_t(df=nu, size=n)</code></span>
+<span id="L57" class="source-line highlighted"><span class="line-number">57</span><code>    y = X @ beta + noise</code></span>
+<span id="L58" class="source-line highlighted"><span class="line-number">58</span><code>    return X, y</code></span></pre>
+  </body>
+</html>

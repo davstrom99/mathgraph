@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mathgraph</title>
+    <link rel="icon" href="data:,">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <link rel="stylesheet" href="style.css?v=elk-layout-1">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1 id="project-title">Mathgraph</h1>
+      </div>
+    </header>
+    <main class="layout">
+      <section class="graph-pane" aria-label="Graph">
+        <svg id="graph-view" role="img" aria-label="Mathgraph dependency graph"></svg>
+      </section>
+      <section id="detail" class="detail-pane" aria-live="polite"></section>
+    </main>
+    <noscript>
+      <main class="noscript">
+        <h2>Graph Data</h2>
+        <p><a href="graph.json">Open graph.json</a></p>
+      </main>
+    </noscript>
+    <script src="vendor/elk.bundled.js?v=elk-layout-1"></script>
+    <script src="app.js?v=elk-layout-1"></script>
+  </body>
+</html>

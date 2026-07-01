@@ -1,0 +1,22 @@
+\section{Student-t Numerical MAP Approximation}
+\label{approx:student-t-map}
+
+\subsection{Input and Assumption Nodes}
+Input nodes: \texttt{likelihood.student\_t} and \texttt{prior.gaussian\_beta}.
+
+\subsection{Declaration}
+The approximation minimizes the Student-t negative log likelihood plus the Gaussian prior penalty:
+\[
+  \widehat{\beta}_{t}
+  =
+  \arg\min_{\beta}
+  \left\{
+  -\log p_t(y\mid X,\beta,\sigma,\nu)
+  +
+  \frac{1}{2\tau^2}\|\beta\|_2^2
+  \right\}.
+\]
+This objective is optimized numerically; no closed-form conjugate posterior is claimed.
+
+\subsection{Result}
+The node \texttt{approx.student\_t\_map} is an optimization-based MAP approximation, not a conjugate posterior.

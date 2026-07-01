@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mathgraph Centered Research"
+  short_description: "Maintain math/code traceability efficiently"
+  default_prompt: "Use $mathgraph-centered-research to initialize or update a mathgraph with source-focused evidence review."

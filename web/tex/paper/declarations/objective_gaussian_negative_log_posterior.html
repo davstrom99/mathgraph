@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/declarations/objective_gaussian_negative_log_posterior.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Gaussian Negative Log Posterior</h2>
+<a class="anchor" id="objective:gaussian-negative-log-posterior"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input node: <code>posterior.gaussian_conjugate</code>. Constants independent of \(\beta\) are omitted.</p>
+<h3>Declaration</h3>
+<p>The objective is</p>
+<div class="math">\[
+  \frac{1}{2\sigma^2}\|y-X\beta\|_2^2
+  +
+  \frac{1}{2\tau^2}\|\beta\|_2^2.
+\]</div>
+<h3>Result</h3>
+<p>The node <code>objective.gaussian_negative_log_posterior</code> is the scalar objective minimized by the Gaussian MAP estimator.</p>
+  </body>
+</html>

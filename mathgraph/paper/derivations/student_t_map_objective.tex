@@ -1,0 +1,17 @@
+\section{Student-t MAP Objective Derivation}
+\label{deriv:student-t-map-objective}
+
+\subsection{Input and Assumption Nodes}
+Input nodes: \texttt{likelihood.student\_t} and \texttt{prior.gaussian\_beta}.
+
+\subsection{Derivation}
+The Student-t MAP approximation minimizes
+\[
+  -\sum_{i=1}^n \log t_\nu(y_i-x_i^\top\beta;0,\sigma)
+  +
+  \frac{1}{2\tau^2}\|\beta\|_2^2.
+\]
+The Student-t likelihood is not conjugate to the Gaussian prior in this workflow, so the result is an optimization-based approximation node rather than a closed-form posterior node.
+
+\subsection{Result}
+The result node is \texttt{approx.student\_t\_map}.

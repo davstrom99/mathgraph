@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/derivations/student_t_change_experiment.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Student-t Change Experiment Derivation</h2>
+<a class="anchor" id="deriv:student-t-change-experiment"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input node: <code>approx.student_t_map</code>.</p>
+<h3>Derivation</h3>
+<p>The experiment compares coefficient recovery under Gaussian MAP and Student-t MAP when data are generated with heavy-tailed residuals:</p>
+<div class="math">\[
+  \|\widehat{\beta}_{G}-\beta_0\|_2
+  \quad\text{versus}\quad
+  \|\widehat{\beta}_{t}-\beta_0\|_2.
+\]</div>
+<h3>Result</h3>
+<p>The experiment will generate <code>results/student_t_change_summary.json</code> and <code>results/student_t_change_error.png</code>.</p>
+  </body>
+</html>

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>src/mathgraph_tool/discovery.py</title>
+    <link rel="stylesheet" href="../../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>src/mathgraph_tool/discovery.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>&quot;&quot;&quot;Repository file discovery for mathgraph initialization.&quot;&quot;&quot;</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>from __future__ import annotations</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code></code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>import os</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code>import fnmatch</code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code>try:</code></span>
+<span id="L8" class="source-line"><span class="line-number">8</span><code>    import tomllib</code></span>
+<span id="L9" class="source-line"><span class="line-number">9</span><code>except ModuleNotFoundError:  # Python 3.10</code></span>
+<span id="L10" class="source-line"><span class="line-number">10</span><code>    import tomli as tomllib</code></span>
+<span id="L11" class="source-line"><span class="line-number">11</span><code>from dataclasses import dataclass</code></span>
+<span id="L12" class="source-line"><span class="line-number">12</span><code>from pathlib import Path</code></span>
+<span id="L13" class="source-line"><span class="line-number">13</span><code></code></span>
+<span id="L14" class="source-line"><span class="line-number">14</span><code></code></span>
+<span id="L15" class="source-line"><span class="line-number">15</span><code>CODE_EXTENSIONS = {</code></span>
+<span id="L16" class="source-line"><span class="line-number">16</span><code>    &quot;.c&quot;,</code></span>
+<span id="L17" class="source-line"><span class="line-number">17</span><code>    &quot;.cc&quot;,</code></span>
+<span id="L18" class="source-line"><span class="line-number">18</span><code>    &quot;.cpp&quot;,</code></span>
+<span id="L19" class="source-line"><span class="line-number">19</span><code>    &quot;.cs&quot;,</code></span>
+<span id="L20" class="source-line"><span class="line-number">20</span><code>    &quot;.cxx&quot;,</code></span>
+<span id="L21" class="source-line"><span class="line-number">21</span><code>    &quot;.f&quot;,</code></span>
+<span id="L22" class="source-line"><span class="line-number">22</span><code>    &quot;.f90&quot;,</code></span>
+<span id="L23" class="source-line"><span class="line-number">23</span><code>    &quot;.f95&quot;,</code></span>
+<span id="L24" class="source-line"><span class="line-number">24</span><code>    &quot;.go&quot;,</code></span>
+<span id="L25" class="source-line"><span class="line-number">25</span><code>    &quot;.h&quot;,</code></span>
+<span id="L26" class="source-line"><span class="line-number">26</span><code>    &quot;.hpp&quot;,</code></span>
+<span id="L27" class="source-line"><span class="line-number">27</span><code>    &quot;.ipynb&quot;,</code></span>
+<span id="L28" class="source-line"><span class="line-number">28</span><code>    &quot;.java&quot;,</code></span>
+<span id="L29" class="source-line"><span class="line-number">29</span><code>    &quot;.jl&quot;,</code></span>
+<span id="L30" class="source-line"><span class="line-number">30</span><code>    &quot;.js&quot;,</code></span>
+<span id="L31" class="source-line"><span class="line-number">31</span><code>    &quot;.jsx&quot;,</code></span>
+<span id="L32" class="source-line"><span class="line-number">32</span><code>    &quot;.kt&quot;,</code></span>
+<span id="L33" class="source-line"><span class="line-number">33</span><code>    &quot;.lua&quot;,</code></span>
+<span id="L34" class="source-line"><span class="line-number">34</span><code>    &quot;.m&quot;,</code></span>
+<span id="L35" class="source-line"><span class="line-number">35</span><code>    &quot;.nim&quot;,</code></span>
+<span id="L36" class="source-line"><span class="line-number">36</span><code>    &quot;.php&quot;,</code></span>
+<span id="L37" class="source-line"><span class="line-number">37</span><code>    &quot;.ps1&quot;,</code></span>
+<span id="L38" class="source-line"><span class="line-number">38</span><code>    &quot;.py&quot;,</code></span>
+<span id="L39" class="source-line"><span class="line-number">39</span><code>    &quot;.r&quot;,</code></span>
+<span id="L40" class="source-line"><span class="line-number">40</span><code>    &quot;.R&quot;,</code></span>
+<span id="L41" class="source-line"><span class="line-number">41</span><code>    &quot;.rb&quot;,</code></span>
+<span id="L42" class="source-line"><span class="line-number">42</span><code>    &quot;.rs&quot;,</code></span>
+<span id="L43" class="source-line"><span class="line-number">43</span><code>    &quot;.scala&quot;,</code></span>
+<span id="L44" class="source-line"><span class="line-number">44</span><code>    &quot;.sh&quot;,</code></span>
+<span id="L45" class="source-line"><span class="line-number">45</span><code>    &quot;.sql&quot;,</code></span>
+<span id="L46" class="source-line"><span class="line-number">46</span><code>    &quot;.stan&quot;,</code></span>
+<span id="L47" class="source-line"><span class="line-number">47</span><code>    &quot;.swift&quot;,</code></span>
+<span id="L48" class="source-line"><span class="line-number">48</span><code>    &quot;.ts&quot;,</code></span>
+<span id="L49" class="source-line"><span class="line-number">49</span><code>    &quot;.tsx&quot;,</code></span>
+<span id="L50" class="source-line"><span class="line-number">50</span><code>}</code></span>
+<span id="L51" class="source-line"><span class="line-number">51</span><code></code></span>
+<span id="L52" class="source-line"><span class="line-number">52</span><code>DOCUMENT_EXTENSIONS = {</code></span>
+<span id="L53" class="source-line"><span class="line-number">53</span><code>    &quot;.adoc&quot;,</code></span>
+<span id="L54" class="source-line"><span class="line-number">54</span><code>    &quot;.bib&quot;,</code></span>
+<span id="L55" class="source-line"><span class="line-number">55</span><code>    &quot;.csv&quot;,</code></span>
+<span id="L56" class="source-line"><span class="line-number">56</span><code>    &quot;.docx&quot;,</code></span>
+<span id="L57" class="source-line"><span class="line-number">57</span><code>    &quot;.json&quot;,</code></span>
+<span id="L58" class="source-line"><span class="line-number">58</span><code>    &quot;.md&quot;,</code></span>
+<span id="L59" class="source-line"><span class="line-number">59</span><code>    &quot;.odt&quot;,</code></span>
+<span id="L60" class="source-line"><span class="line-number">60</span><code>    &quot;.org&quot;,</code></span>
+<span id="L61" class="source-line"><span class="line-number">61</span><code>    &quot;.pdf&quot;,</code></span>
+<span id="L62" class="source-line"><span class="line-number">62</span><code>    &quot;.qmd&quot;,</code></span>
+<span id="L63" class="source-line"><span class="line-number">63</span><code>    &quot;.rmd&quot;,</code></span>
+<span id="L64" class="source-line"><span class="line-number">64</span><code>    &quot;.rst&quot;,</code></span>
+<span id="L65" class="source-line"><span class="line-number">65</span><code>    &quot;.tex&quot;,</code></span>
+<span id="L66" class="source-line"><span class="line-number">66</span><code>    &quot;.toml&quot;,</code></span>
+<span id="L67" class="source-line"><span class="line-number">67</span><code>    &quot;.tsv&quot;,</code></span>
+<span id="L68" class="source-line"><span class="line-number">68</span><code>    &quot;.txt&quot;,</code></span>
+<span id="L69" class="source-line"><span class="line-number">69</span><code>    &quot;.typ&quot;,</code></span>
+<span id="L70" class="source-line"><span class="line-number">70</span><code>    &quot;.yaml&quot;,</code></span>
+<span id="L71" class="source-line"><span class="line-number">71</span><code>    &quot;.yml&quot;,</code></span>
+<span id="L72" class="source-line"><span class="line-number">72</span><code>}</code></span>
+<span id="L73" class="source-line"><span class="line-number">73</span><code></code></span>
+<span id="L74" class="source-line"><span class="line-number">74</span><code>BINARY_EXTENSIONS = {&quot;.docx&quot;, &quot;.gif&quot;, &quot;.jpeg&quot;, &quot;.jpg&quot;, &quot;.mat&quot;, &quot;.npy&quot;, &quot;.npz&quot;, &quot;.odt&quot;, &quot;.pdf&quot;, &quot;.png&quot;, &quot;.xlsx&quot;}</code></span>
+<span id="L75" class="source-line"><span class="line-number">75</span><code></code></span>
+<span id="L76" class="source-line"><span class="line-number">76</span><code>EXCLUDED_DIR_NAMES = {</code></span>
+<span id="L77" class="source-line"><span class="line-number">77</span><code>    &quot;.git&quot;,</code></span>
+<span id="L78" class="source-line"><span class="line-number">78</span><code>    &quot;.hg&quot;,</code></span>
+<span id="L79" class="source-line"><span class="line-number">79</span><code>    &quot;.mypy_cache&quot;,</code></span>
+<span id="L80" class="source-line"><span class="line-number">80</span><code>    &quot;.next&quot;,</code></span>
+<span id="L81" class="source-line"><span class="line-number">81</span><code>    &quot;.pytest_cache&quot;,</code></span>
+<span id="L82" class="source-line"><span class="line-number">82</span><code>    &quot;.ruff_cache&quot;,</code></span>
+<span id="L83" class="source-line"><span class="line-number">83</span><code>    &quot;.tox&quot;,</code></span>
+<span id="L84" class="source-line"><span class="line-number">84</span><code>    &quot;.venv&quot;,</code></span>
+<span id="L85" class="source-line"><span class="line-number">85</span><code>    &quot;env&quot;,</code></span>
+<span id="L86" class="source-line"><span class="line-number">86</span><code>    &quot;mathgraph&quot;,</code></span>
+<span id="L87" class="source-line"><span class="line-number">87</span><code>    &quot;node_modules&quot;,</code></span>
+<span id="L88" class="source-line"><span class="line-number">88</span><code>    &quot;target&quot;,</code></span>
+<span id="L89" class="source-line"><span class="line-number">89</span><code>    &quot;venv&quot;,</code></span>
+<span id="L90" class="source-line"><span class="line-number">90</span><code>}</code></span>
+<span id="L91" class="source-line"><span class="line-number">91</span><code></code></span>
+<span id="L92" class="source-line"><span class="line-number">92</span><code>DEFAULT_CLASSIFICATION_PATTERNS = {</code></span>
+<span id="L93" class="source-line"><span class="line-number">93</span><code>    &quot;cache&quot;: (&quot;graphify-out/cache/**&quot;, &quot;**/__pycache__/**&quot;),</code></span>
+<span id="L94" class="source-line"><span class="line-number">94</span><code>    &quot;rendered&quot;: (&quot;web/**&quot;,),</code></span>
+<span id="L95" class="source-line"><span class="line-number">95</span><code>    &quot;output&quot;: (&quot;results/**&quot;,),</code></span>
+<span id="L96" class="source-line"><span class="line-number">96</span><code>    &quot;generated&quot;: (&quot;graphify-out/**&quot;, &quot;build/**&quot;, &quot;dist/**&quot;, &quot;**/*.egg-info/**&quot;),</code></span>
+<span id="L97" class="source-line"><span class="line-number">97</span><code>    &quot;vendored&quot;: (&quot;vendor/**&quot;, &quot;third_party/**&quot;),</code></span>
+<span id="L98" class="source-line"><span class="line-number">98</span><code>}</code></span>
+<span id="L99" class="source-line"><span class="line-number">99</span><code></code></span>
+<span id="L100" class="source-line"><span class="line-number">100</span><code>EXCLUDED_FILE_SUFFIXES = {</code></span>
+<span id="L101" class="source-line"><span class="line-number">101</span><code>    &quot;.aux&quot;,</code></span>
+<span id="L102" class="source-line"><span class="line-number">102</span><code>    &quot;.bbl&quot;,</code></span>
+<span id="L103" class="source-line"><span class="line-number">103</span><code>    &quot;.bcf&quot;,</code></span>
+<span id="L104" class="source-line"><span class="line-number">104</span><code>    &quot;.blg&quot;,</code></span>
+<span id="L105" class="source-line"><span class="line-number">105</span><code>    &quot;.fls&quot;,</code></span>
+<span id="L106" class="source-line"><span class="line-number">106</span><code>    &quot;.fdb_latexmk&quot;,</code></span>
+<span id="L107" class="source-line"><span class="line-number">107</span><code>    &quot;.idx&quot;,</code></span>
+<span id="L108" class="source-line"><span class="line-number">108</span><code>    &quot;.ilg&quot;,</code></span>
+<span id="L109" class="source-line"><span class="line-number">109</span><code>    &quot;.ind&quot;,</code></span>
+<span id="L110" class="source-line"><span class="line-number">110</span><code>    &quot;.lof&quot;,</code></span>
+<span id="L111" class="source-line"><span class="line-number">111</span><code>    &quot;.log&quot;,</code></span>
+<span id="L112" class="source-line"><span class="line-number">112</span><code>    &quot;.lot&quot;,</code></span>
+<span id="L113" class="source-line"><span class="line-number">113</span><code>    &quot;.out&quot;,</code></span>
+<span id="L114" class="source-line"><span class="line-number">114</span><code>    &quot;.synctex.gz&quot;,</code></span>
+<span id="L115" class="source-line"><span class="line-number">115</span><code>    &quot;.toc&quot;,</code></span>
+<span id="L116" class="source-line"><span class="line-number">116</span><code>}</code></span>
+<span id="L117" class="source-line"><span class="line-number">117</span><code></code></span>
+<span id="L118" class="source-line"><span class="line-number">118</span><code>EXCLUDED_FILE_NAMES = {&quot;AGENTS.md&quot;}</code></span>
+<span id="L119" class="source-line"><span class="line-number">119</span><code></code></span>
+<span id="L120" class="source-line"><span class="line-number">120</span><code></code></span>
+<span id="L121" class="source-line"><span class="line-number">121</span><code>@dataclass(frozen=True)</code></span>
+<a class="source-anchor" id="DiscoveredFile"></a><span id="L122" class="source-line highlighted"><span class="line-number">122</span><code>class DiscoveredFile:</code></span>
+<span id="L123" class="source-line highlighted"><span class="line-number">123</span><code>    path: Path</code></span>
+<span id="L124" class="source-line highlighted"><span class="line-number">124</span><code>    category: str</code></span>
+<span id="L125" class="source-line highlighted"><span class="line-number">125</span><code>    evidence_class: str = &quot;authoritative&quot;</code></span>
+<span id="L126" class="source-line highlighted"><span class="line-number">126</span><code>    family: str | None = None</code></span>
+<span id="L127" class="source-line"><span class="line-number">127</span><code></code></span>
+<span id="L128" class="source-line"><span class="line-number">128</span><code></code></span>
+<span id="L129" class="source-line"><span class="line-number">129</span><code>@dataclass(frozen=True)</code></span>
+<a class="source-anchor" id="DiscoveryConfig"></a><span id="L130" class="source-line highlighted"><span class="line-number">130</span><code>class DiscoveryConfig:</code></span>
+<span id="L131" class="source-line highlighted"><span class="line-number">131</span><code>    include: tuple[str, ...] = ()</code></span>
+<span id="L132" class="source-line highlighted"><span class="line-number">132</span><code>    exclude: tuple[str, ...] = ()</code></span>
+<span id="L133" class="source-line highlighted"><span class="line-number">133</span><code>    authoritative: tuple[str, ...] = ()</code></span>
+<span id="L134" class="source-line highlighted"><span class="line-number">134</span><code>    generated: tuple[str, ...] = ()</code></span>
+<span id="L135" class="source-line"><span class="line-number">135</span><code></code></span>
+<span id="L136" class="source-line"><span class="line-number">136</span><code></code></span>
+<a class="source-anchor" id="load_discovery_config"></a><span id="L137" class="source-line highlighted"><span class="line-number">137</span><code>def load_discovery_config(root: Path) -&gt; DiscoveryConfig:</code></span>
+<span id="L138" class="source-line highlighted"><span class="line-number">138</span><code>    &quot;&quot;&quot;Load optional source-classification rules from pyproject.toml.&quot;&quot;&quot;</code></span>
+<span id="L139" class="source-line highlighted"><span class="line-number">139</span><code>    path = root.resolve() / &quot;pyproject.toml&quot;</code></span>
+<span id="L140" class="source-line highlighted"><span class="line-number">140</span><code>    if not path.exists():</code></span>
+<span id="L141" class="source-line highlighted"><span class="line-number">141</span><code>        return DiscoveryConfig()</code></span>
+<span id="L142" class="source-line highlighted"><span class="line-number">142</span><code>    try:</code></span>
+<span id="L143" class="source-line highlighted"><span class="line-number">143</span><code>        data = tomllib.loads(path.read_text(encoding=&quot;utf-8&quot;))</code></span>
+<span id="L144" class="source-line highlighted"><span class="line-number">144</span><code>    except (OSError, tomllib.TOMLDecodeError):</code></span>
+<span id="L145" class="source-line highlighted"><span class="line-number">145</span><code>        return DiscoveryConfig()</code></span>
+<span id="L146" class="source-line highlighted"><span class="line-number">146</span><code>    values = data.get(&quot;tool&quot;, {}).get(&quot;mathgraph&quot;, {}).get(&quot;init&quot;, {})</code></span>
+<span id="L147" class="source-line highlighted"><span class="line-number">147</span><code>    if not isinstance(values, dict):</code></span>
+<span id="L148" class="source-line highlighted"><span class="line-number">148</span><code>        return DiscoveryConfig()</code></span>
+<span id="L149" class="source-line highlighted"><span class="line-number">149</span><code>    return DiscoveryConfig(</code></span>
+<span id="L150" class="source-line highlighted"><span class="line-number">150</span><code>        include=_string_tuple(values.get(&quot;include&quot;)),</code></span>
+<span id="L151" class="source-line highlighted"><span class="line-number">151</span><code>        exclude=_string_tuple(values.get(&quot;exclude&quot;)),</code></span>
+<span id="L152" class="source-line highlighted"><span class="line-number">152</span><code>        authoritative=_string_tuple(values.get(&quot;authoritative&quot;)),</code></span>
+<span id="L153" class="source-line highlighted"><span class="line-number">153</span><code>        generated=_string_tuple(values.get(&quot;generated&quot;)),</code></span>
+<span id="L154" class="source-line highlighted"><span class="line-number">154</span><code>    )</code></span>
+<span id="L155" class="source-line"><span class="line-number">155</span><code></code></span>
+<span id="L156" class="source-line"><span class="line-number">156</span><code></code></span>
+<a class="source-anchor" id="discover_project_files"></a><span id="L157" class="source-line highlighted"><span class="line-number">157</span><code>def discover_project_files(</code></span>
+<span id="L158" class="source-line highlighted"><span class="line-number">158</span><code>    root: Path,</code></span>
+<span id="L159" class="source-line highlighted"><span class="line-number">159</span><code>    *,</code></span>
+<span id="L160" class="source-line highlighted"><span class="line-number">160</span><code>    include_extensions: set[str] | None = None,</code></span>
+<span id="L161" class="source-line highlighted"><span class="line-number">161</span><code>    exclude_dirs: set[str] | None = None,</code></span>
+<span id="L162" class="source-line highlighted"><span class="line-number">162</span><code>) -&gt; list[DiscoveredFile]:</code></span>
+<span id="L163" class="source-line highlighted"><span class="line-number">163</span><code>    &quot;&quot;&quot;Return eligible files for Codex-led graph initialization.&quot;&quot;&quot;</code></span>
+<span id="L164" class="source-line highlighted"><span class="line-number">164</span><code>    root = root.resolve()</code></span>
+<span id="L165" class="source-line highlighted"><span class="line-number">165</span><code>    includes = {_normalize_extension(value) for value in include_extensions} if include_extensions else (CODE_EXTENSIONS | DOCUMENT_EXTENSIONS)</code></span>
+<span id="L166" class="source-line highlighted"><span class="line-number">166</span><code>    excluded = EXCLUDED_DIR_NAMES</code></span>
+<span id="L167" class="source-line highlighted"><span class="line-number">167</span><code>    config = load_discovery_config(root)</code></span>
+<span id="L168" class="source-line highlighted"><span class="line-number">168</span><code>    explicit_excludes = tuple(config.exclude) + tuple(f&quot;**/{name}/**&quot; for name in sorted(exclude_dirs or set()))</code></span>
+<span id="L169" class="source-line highlighted"><span class="line-number">169</span><code>    discovered: list[DiscoveredFile] = []</code></span>
+<span id="L170" class="source-line highlighted"><span class="line-number">170</span><code></code></span>
+<span id="L171" class="source-line highlighted"><span class="line-number">171</span><code>    for path in _walk_files(root, excluded):</code></span>
+<span id="L172" class="source-line highlighted"><span class="line-number">172</span><code>        relative = path.relative_to(root)</code></span>
+<span id="L173" class="source-line highlighted"><span class="line-number">173</span><code>        if _is_excluded(relative, excluded):</code></span>
+<span id="L174" class="source-line highlighted"><span class="line-number">174</span><code>            continue</code></span>
+<span id="L175" class="source-line highlighted"><span class="line-number">175</span><code>        suffix = _normalized_suffix(path)</code></span>
+<span id="L176" class="source-line highlighted"><span class="line-number">176</span><code>        evidence_class, family = _classify(relative, config, explicit_excludes)</code></span>
+<span id="L177" class="source-line highlighted"><span class="line-number">177</span><code>        explicitly_included = _matches_any(relative.as_posix(), config.include)</code></span>
+<span id="L178" class="source-line highlighted"><span class="line-number">178</span><code>        if suffix in BINARY_EXTENSIONS and not explicitly_included and not _matches_any(relative.as_posix(), config.authoritative):</code></span>
+<span id="L179" class="source-line highlighted"><span class="line-number">179</span><code>            evidence_class, family = &quot;binary&quot;, &quot;binary artifacts&quot;</code></span>
+<span id="L180" class="source-line highlighted"><span class="line-number">180</span><code>        if suffix not in includes and evidence_class == &quot;authoritative&quot; and not explicitly_included:</code></span>
+<span id="L181" class="source-line highlighted"><span class="line-number">181</span><code>            continue</code></span>
+<span id="L182" class="source-line highlighted"><span class="line-number">182</span><code>        category = &quot;code&quot; if suffix in CODE_EXTENSIONS else &quot;document&quot;</code></span>
+<span id="L183" class="source-line highlighted"><span class="line-number">183</span><code>        if suffix not in includes:</code></span>
+<span id="L184" class="source-line highlighted"><span class="line-number">184</span><code>            category = &quot;binary&quot;</code></span>
+<span id="L185" class="source-line highlighted"><span class="line-number">185</span><code>        discovered.append(DiscoveredFile(relative, category, evidence_class, family))</code></span>
+<span id="L186" class="source-line highlighted"><span class="line-number">186</span><code>    return discovered</code></span>
+<span id="L187" class="source-line"><span class="line-number">187</span><code></code></span>
+<span id="L188" class="source-line"><span class="line-number">188</span><code></code></span>
+<a class="source-anchor" id="_walk_files"></a><span id="L189" class="source-line highlighted"><span class="line-number">189</span><code>def _walk_files(root: Path, excluded_dirs: set[str]) -&gt; list[Path]:</code></span>
+<span id="L190" class="source-line highlighted"><span class="line-number">190</span><code>    files: list[Path] = []</code></span>
+<span id="L191" class="source-line highlighted"><span class="line-number">191</span><code>    for current, dirs, filenames in os.walk(root, topdown=True, followlinks=False, onerror=lambda _: None):</code></span>
+<span id="L192" class="source-line highlighted"><span class="line-number">192</span><code>        dirs[:] = sorted(directory for directory in dirs if directory not in excluded_dirs)</code></span>
+<span id="L193" class="source-line highlighted"><span class="line-number">193</span><code>        current_path = Path(current)</code></span>
+<span id="L194" class="source-line highlighted"><span class="line-number">194</span><code>        for filename in sorted(filenames):</code></span>
+<span id="L195" class="source-line highlighted"><span class="line-number">195</span><code>            files.append(current_path / filename)</code></span>
+<span id="L196" class="source-line highlighted"><span class="line-number">196</span><code>    return files</code></span>
+<span id="L197" class="source-line"><span class="line-number">197</span><code></code></span>
+<span id="L198" class="source-line"><span class="line-number">198</span><code></code></span>
+<a class="source-anchor" id="_is_excluded"></a><span id="L199" class="source-line highlighted"><span class="line-number">199</span><code>def _is_excluded(relative: Path, excluded_dirs: set[str]) -&gt; bool:</code></span>
+<span id="L200" class="source-line highlighted"><span class="line-number">200</span><code>    if any(part in excluded_dirs for part in relative.parts[:-1]):</code></span>
+<span id="L201" class="source-line highlighted"><span class="line-number">201</span><code>        return True</code></span>
+<span id="L202" class="source-line highlighted"><span class="line-number">202</span><code>    name = relative.name</code></span>
+<span id="L203" class="source-line highlighted"><span class="line-number">203</span><code>    if name in EXCLUDED_FILE_NAMES:</code></span>
+<span id="L204" class="source-line highlighted"><span class="line-number">204</span><code>        return True</code></span>
+<span id="L205" class="source-line highlighted"><span class="line-number">205</span><code>    if name.startswith(&quot;.&quot;) and name not in {&quot;.env.example&quot;}:</code></span>
+<span id="L206" class="source-line highlighted"><span class="line-number">206</span><code>        return True</code></span>
+<span id="L207" class="source-line highlighted"><span class="line-number">207</span><code>    return any(name.endswith(suffix) for suffix in EXCLUDED_FILE_SUFFIXES)</code></span>
+<span id="L208" class="source-line"><span class="line-number">208</span><code></code></span>
+<span id="L209" class="source-line"><span class="line-number">209</span><code></code></span>
+<a class="source-anchor" id="_normalized_suffix"></a><span id="L210" class="source-line highlighted"><span class="line-number">210</span><code>def _normalized_suffix(path: Path) -&gt; str:</code></span>
+<span id="L211" class="source-line highlighted"><span class="line-number">211</span><code>    name = path.name</code></span>
+<span id="L212" class="source-line highlighted"><span class="line-number">212</span><code>    for suffix in EXCLUDED_FILE_SUFFIXES:</code></span>
+<span id="L213" class="source-line highlighted"><span class="line-number">213</span><code>        if name.endswith(suffix):</code></span>
+<span id="L214" class="source-line highlighted"><span class="line-number">214</span><code>            return suffix</code></span>
+<span id="L215" class="source-line highlighted"><span class="line-number">215</span><code>    return path.suffix</code></span>
+<span id="L216" class="source-line"><span class="line-number">216</span><code></code></span>
+<span id="L217" class="source-line"><span class="line-number">217</span><code></code></span>
+<a class="source-anchor" id="_normalize_extension"></a><span id="L218" class="source-line highlighted"><span class="line-number">218</span><code>def _normalize_extension(value: str) -&gt; str:</code></span>
+<span id="L219" class="source-line highlighted"><span class="line-number">219</span><code>    return value if value.startswith(&quot;.&quot;) else f&quot;.{value}&quot;</code></span>
+<span id="L220" class="source-line"><span class="line-number">220</span><code></code></span>
+<span id="L221" class="source-line"><span class="line-number">221</span><code></code></span>
+<a class="source-anchor" id="_classify"></a><span id="L222" class="source-line highlighted"><span class="line-number">222</span><code>def _classify(relative: Path, config: DiscoveryConfig, explicit_excludes: tuple[str, ...]) -&gt; tuple[str, str | None]:</code></span>
+<span id="L223" class="source-line highlighted"><span class="line-number">223</span><code>    value = relative.as_posix()</code></span>
+<span id="L224" class="source-line highlighted"><span class="line-number">224</span><code>    if _matches_any(value, config.authoritative) or _matches_any(value, config.include):</code></span>
+<span id="L225" class="source-line highlighted"><span class="line-number">225</span><code>        return &quot;authoritative&quot;, None</code></span>
+<span id="L226" class="source-line highlighted"><span class="line-number">226</span><code>    if _matches_any(value, explicit_excludes):</code></span>
+<span id="L227" class="source-line highlighted"><span class="line-number">227</span><code>        pattern = next(pattern for pattern in explicit_excludes if _matches(value, pattern))</code></span>
+<span id="L228" class="source-line highlighted"><span class="line-number">228</span><code>        return &quot;excluded&quot;, _family_name(pattern, value)</code></span>
+<span id="L229" class="source-line highlighted"><span class="line-number">229</span><code>    if _matches_any(value, config.generated):</code></span>
+<span id="L230" class="source-line highlighted"><span class="line-number">230</span><code>        pattern = next(pattern for pattern in config.generated if _matches(value, pattern))</code></span>
+<span id="L231" class="source-line highlighted"><span class="line-number">231</span><code>        return &quot;generated&quot;, _family_name(pattern, value)</code></span>
+<span id="L232" class="source-line highlighted"><span class="line-number">232</span><code>    for evidence_class, patterns in DEFAULT_CLASSIFICATION_PATTERNS.items():</code></span>
+<span id="L233" class="source-line highlighted"><span class="line-number">233</span><code>        for pattern in patterns:</code></span>
+<span id="L234" class="source-line highlighted"><span class="line-number">234</span><code>            if _matches(value, pattern):</code></span>
+<span id="L235" class="source-line highlighted"><span class="line-number">235</span><code>                return evidence_class, _family_name(pattern, value)</code></span>
+<span id="L236" class="source-line highlighted"><span class="line-number">236</span><code>    return &quot;authoritative&quot;, None</code></span>
+<span id="L237" class="source-line"><span class="line-number">237</span><code></code></span>
+<span id="L238" class="source-line"><span class="line-number">238</span><code></code></span>
+<a class="source-anchor" id="_matches_any"></a><span id="L239" class="source-line highlighted"><span class="line-number">239</span><code>def _matches_any(value: str, patterns: tuple[str, ...]) -&gt; bool:</code></span>
+<span id="L240" class="source-line highlighted"><span class="line-number">240</span><code>    return any(_matches(value, pattern) for pattern in patterns)</code></span>
+<span id="L241" class="source-line"><span class="line-number">241</span><code></code></span>
+<span id="L242" class="source-line"><span class="line-number">242</span><code></code></span>
+<a class="source-anchor" id="_matches"></a><span id="L243" class="source-line highlighted"><span class="line-number">243</span><code>def _matches(value: str, pattern: str) -&gt; bool:</code></span>
+<span id="L244" class="source-line highlighted"><span class="line-number">244</span><code>    normalized = pattern.replace(&quot;\\&quot;, &quot;/&quot;).lstrip(&quot;./&quot;)</code></span>
+<span id="L245" class="source-line highlighted"><span class="line-number">245</span><code>    return fnmatch.fnmatch(value, normalized) or Path(value).match(normalized)</code></span>
+<span id="L246" class="source-line"><span class="line-number">246</span><code></code></span>
+<span id="L247" class="source-line"><span class="line-number">247</span><code></code></span>
+<a class="source-anchor" id="_family_name"></a><span id="L248" class="source-line highlighted"><span class="line-number">248</span><code>def _family_name(pattern: str, value: str) -&gt; str:</code></span>
+<span id="L249" class="source-line highlighted"><span class="line-number">249</span><code>    prefix = pattern.replace(&quot;\\&quot;, &quot;/&quot;).split(&quot;*&quot;)[0].rstrip(&quot;/&quot;)</code></span>
+<span id="L250" class="source-line highlighted"><span class="line-number">250</span><code>    if prefix.startswith(&quot;**/&quot;) or not prefix:</code></span>
+<span id="L251" class="source-line highlighted"><span class="line-number">251</span><code>        parts = value.split(&quot;/&quot;)</code></span>
+<span id="L252" class="source-line highlighted"><span class="line-number">252</span><code>        if &quot;.egg-info&quot; in value:</code></span>
+<span id="L253" class="source-line highlighted"><span class="line-number">253</span><code>            return next((&quot;/&quot;.join(parts[: index + 1]) for index, part in enumerate(parts) if part.endswith(&quot;.egg-info&quot;)), parts[0])</code></span>
+<span id="L254" class="source-line highlighted"><span class="line-number">254</span><code>        if &quot;__pycache__&quot; in parts:</code></span>
+<span id="L255" class="source-line highlighted"><span class="line-number">255</span><code>            index = parts.index(&quot;__pycache__&quot;)</code></span>
+<span id="L256" class="source-line highlighted"><span class="line-number">256</span><code>            return &quot;/&quot;.join(parts[: index + 1])</code></span>
+<span id="L257" class="source-line highlighted"><span class="line-number">257</span><code>        return parts[0]</code></span>
+<span id="L258" class="source-line highlighted"><span class="line-number">258</span><code>    return prefix</code></span>
+<span id="L259" class="source-line"><span class="line-number">259</span><code></code></span>
+<span id="L260" class="source-line"><span class="line-number">260</span><code></code></span>
+<a class="source-anchor" id="_string_tuple"></a><span id="L261" class="source-line highlighted"><span class="line-number">261</span><code>def _string_tuple(value: object) -&gt; tuple[str, ...]:</code></span>
+<span id="L262" class="source-line highlighted"><span class="line-number">262</span><code>    if isinstance(value, list) and all(isinstance(item, str) for item in value):</code></span>
+<span id="L263" class="source-line highlighted"><span class="line-number">263</span><code>        return tuple(value)</code></span>
+<span id="L264" class="source-line highlighted"><span class="line-number">264</span><code>    return ()</code></span></pre>
+  </body>
+</html>

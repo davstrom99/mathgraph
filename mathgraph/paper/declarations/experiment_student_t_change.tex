@@ -1,0 +1,17 @@
+\section{Student-t Change Experiment}
+\label{experiment:student-t-change}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{approx.student\_t\_map}. The experiment compares Gaussian and Student-t MAP behavior.
+
+\subsection{Declaration}
+The experiment simulates heavy-tailed data from \texttt{model.student\_t\_noise}, then compares
+\[
+  \|\widehat{\beta}_{G}-\beta_0\|_2
+  \quad\text{and}\quad
+  \|\widehat{\beta}_{t}-\beta_0\|_2
+\]
+across fixed random seeds.
+
+\subsection{Result}
+The node \texttt{experiment.student\_t\_change} generates a JSON summary and PNG plot.

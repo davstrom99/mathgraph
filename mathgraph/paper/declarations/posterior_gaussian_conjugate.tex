@@ -1,0 +1,15 @@
+\section{Closed-Form Gaussian Posterior}
+\label{posterior:gaussian-conjugate}
+
+\subsection{Input and Assumption Nodes}
+Input nodes: \texttt{likelihood.gaussian} and \texttt{prior.gaussian\_beta}.
+
+\subsection{Declaration}
+The posterior is Gaussian:
+\[
+  p(\beta\mid X,y)=\mathcal{N}(\mu_n,\Sigma_n).
+\]
+
+\subsection{Result}
+The node \texttt{posterior.gaussian\_conjugate} returns \((\mu_n,\Sigma_n)\).
+

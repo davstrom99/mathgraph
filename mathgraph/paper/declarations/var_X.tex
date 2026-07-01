@@ -1,0 +1,16 @@
+\section{Design Matrix Declaration}
+\label{def:design-matrix}
+
+\subsection{Input and Assumption Nodes}
+No upstream mathematical node is required. This declaration introduces the observed design matrix node \texttt{var.X}.
+
+\subsection{Declaration}
+The design matrix is
+\[
+  X \in \mathbb{R}^{n \times d}.
+\]
+Row \(x_i^\top\) contains the \(d\)-dimensional covariates for observation \(i\).
+
+\subsection{Result}
+The node \texttt{var.X} supplies the covariates used by the observation model.
+

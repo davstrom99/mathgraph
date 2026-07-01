@@ -1,0 +1,20 @@
+\section{MAP Estimator for Beta}
+\label{estimator:beta-map}
+
+\subsection{Input and Assumption Nodes}
+Input nodes: \texttt{objective.gaussian\_negative\_log\_posterior} and \texttt{posterior.gaussian\_conjugate}.
+
+\subsection{Declaration}
+The estimator is
+\[
+  \hat{\beta}_{MAP}
+  =
+  \arg\min_\beta
+  \frac{1}{2\sigma^2}\|y-X\beta\|_2^2
+  +
+  \frac{1}{2\tau^2}\|\beta\|_2^2.
+\]
+
+\subsection{Result}
+For the Gaussian conjugate model, the MAP estimator equals the posterior mean \(\mu_n\).
+

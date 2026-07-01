@@ -1,0 +1,17 @@
+\section{Gaussian Observation Model}
+\label{model:gaussian-observation}
+
+\subsection{Input and Assumption Nodes}
+Inputs are \texttt{var.X}, \texttt{var.y}, \texttt{param.beta}, \texttt{var.epsilon}, and \texttt{param.sigma}. The model assumes iid Gaussian observation noise.
+
+\subsection{Declaration}
+The observation model is
+\[
+  y = X\beta + \epsilon,
+  \qquad
+  \epsilon \sim \mathcal{N}(0,\sigma^2 I_n).
+\]
+The implementation samples rows of \(X\) from a standard normal distribution and then forms \(y=X\beta+\epsilon\).
+
+\subsection{Result}
+The node \texttt{model.gaussian\_observation} defines the data-generating Gaussian linear model.

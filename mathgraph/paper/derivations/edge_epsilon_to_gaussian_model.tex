@@ -1,0 +1,16 @@
+\section{Noise Vector to Gaussian Model}
+\label{edge:epsilon-to-gaussian-model}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{var.epsilon}. Result node: \texttt{model.gaussian\_observation}.
+
+\subsection{Derivation}
+The Gaussian observation model uses the noise vector \(\epsilon\) in
+\[
+  y = X\beta + \epsilon,
+  \qquad
+  \epsilon \sim \mathcal{N}(0,\sigma^2 I_n).
+\]
+
+\subsection{Result}
+The noise vector is a required object for the Gaussian observation model.

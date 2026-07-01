@@ -1,0 +1,14 @@
+\section{Degrees of Freedom to Student-t Model}
+\label{edge:nu-to-student-t-model}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{param.nu}. Result node: \texttt{model.student\_t\_noise}.
+
+\subsection{Derivation}
+The Student-t observation model uses the positive degrees of freedom \(\nu\) in
+\[
+  \epsilon_i \sim t_\nu(0,\sigma).
+\]
+
+\subsection{Result}
+The parameter \(\nu\) controls the tail heaviness of the Student-t noise distribution.

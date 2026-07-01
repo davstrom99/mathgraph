@@ -1,0 +1,18 @@
+\section{Student-t Likelihood}
+\label{likelihood:student-t}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{model.student\_t\_noise}. The scale \(\sigma\) and degrees of freedom \(\nu\) are known.
+
+\subsection{Declaration}
+The likelihood is the product of Student-t densities over residuals \(r_i=y_i-x_i^\top\beta\):
+\[
+  p(y\mid X,\beta,\sigma,\nu)
+  =
+  \prod_{i=1}^n
+  \frac{\Gamma((\nu+1)/2)}{\Gamma(\nu/2)\sqrt{\nu\pi}\sigma}
+  \left(1+\frac{r_i^2}{\nu\sigma^2}\right)^{-(\nu+1)/2}.
+\]
+
+\subsection{Result}
+The node \texttt{likelihood.student\_t} defines the robust likelihood used by the Student-t MAP approximation.

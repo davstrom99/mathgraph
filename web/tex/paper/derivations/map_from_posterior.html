@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/derivations/map_from_posterior.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>MAP from Gaussian Posterior</h2>
+<a class="anchor" id="deriv:map-from-posterior"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input node: <code>posterior.gaussian_conjugate</code>.</p>
+<h3>Derivation</h3>
+<p>For a Gaussian posterior \(p(\beta\mid X,y)=\mathcal{N}(\mu_n,\Sigma_n)\), the density is maximized at its mean:</p>
+<div class="math">\[
+  \hat{\beta}_{MAP} = \mu_n.
+\]</div>
+<h3>Result</h3>
+<p>The MAP estimator equals the posterior mean in <code>estimator.beta_map</code>.</p>
+  </body>
+</html>

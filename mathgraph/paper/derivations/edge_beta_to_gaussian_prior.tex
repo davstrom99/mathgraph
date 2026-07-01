@@ -1,0 +1,14 @@
+\section{Beta to Gaussian Prior}
+\label{edge:beta-to-gaussian-prior}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{param.beta}. Result node: \texttt{prior.gaussian\_beta}.
+
+\subsection{Derivation}
+The Gaussian prior is a distributional assumption on the existing coefficient vector:
+\[
+  \beta \sim \mathcal{N}(0,\tau^2 I_d).
+\]
+
+\subsection{Result}
+The coefficient vector \(\beta\) is the random variable governed by the Gaussian prior assumption.

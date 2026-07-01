@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/declarations/prior_gaussian_beta.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Gaussian Prior on Beta</h2>
+<a class="anchor" id="prior:gaussian-beta"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Inputs are <code>param.beta</code> and <code>param.tau</code>. The prior assumes the existing coefficient vector has Gaussian distribution with known positive scale.</p>
+<h3>Declaration</h3>
+<p>The prior is</p>
+<div class="math">\[
+  \beta \sim \mathcal{N}(0,\tau^2 I_d).
+\]</div>
+<h3>Result</h3>
+<p>The node <code>prior.gaussian_beta</code> supplies the quadratic prior penalty used by the posterior and MAP objective.</p>
+  </body>
+</html>

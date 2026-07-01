@@ -1,0 +1,43 @@
+node_kinds:
+  - variable
+  - assumption
+  - objective
+  - estimator
+  - approximation
+  - simulator
+  - validation
+  - experiment
+  - figure
+  - dataset
+  - test
+
+node_fields:
+  uses:
+    description: "Optional list of primitive variable node ids or symbols used by a non-variable node."
+    invariant: "Every listed variable must resolve to a variable node upstream of the node."
+  code:
+    description: "Code references; use path plus line for every exact use site and optional symbol references for implementation ownership."
+    invariant: "Every node references every source line where its mathematical object is used."
+  code.role:
+    description: "Optional deterministic role: definition, implementation, caller, test, experiment, or configuration."
+
+project_fields:
+  code_roots:
+    description: "Optional Python roots/files scanned by mathgraph orphans."
+  code_exclude:
+    description: "Optional path globs or path parts excluded by mathgraph orphans."
+  init_configuration:
+    description: "Configure initialization under [tool.mathgraph.init] in pyproject.toml with include, exclude, authoritative, and generated path globs."
+
+edge_kinds:
+  - defines
+  - assumes
+  - depends_on
+  - derives
+  - implements
+  - approximates
+  - validates
+  - tests
+  - generates
+  - uses
+  - affects

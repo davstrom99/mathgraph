@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>tests/test_mathgraph_index.py</title>
+    <link rel="stylesheet" href="../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>tests/test_mathgraph_index.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>from pathlib import Path</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>from mathgraph_tool.checks import format_check_result, run_checks</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code>from mathgraph_tool.discovery import discover_project_files</code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>from mathgraph_tool.indexing import (</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code>    build_index,</code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code>    check_index,</code></span>
+<span id="L8" class="source-line"><span class="line-number">8</span><code>    format_index_file,</code></span>
+<span id="L9" class="source-line"><span class="line-number">9</span><code>    format_index_dossier,</code></span>
+<span id="L10" class="source-line"><span class="line-number">10</span><code>    format_index_find,</code></span>
+<span id="L11" class="source-line"><span class="line-number">11</span><code>    format_index_summary,</code></span>
+<span id="L12" class="source-line"><span class="line-number">12</span><code>    draft_code_refs,</code></span>
+<span id="L13" class="source-line"><span class="line-number">13</span><code>    load_index,</code></span>
+<span id="L14" class="source-line"><span class="line-number">14</span><code>)</code></span>
+<span id="L15" class="source-line"><span class="line-number">15</span><code></code></span>
+<span id="L16" class="source-line"><span class="line-number">16</span><code></code></span>
+<a class="source-anchor" id="test_indexes_python_matlab_and_tex_evidence"></a><span id="L17" class="source-line highlighted"><span class="line-number">17</span><code>def test_indexes_python_matlab_and_tex_evidence(tmp_path):</code></span>
+<span id="L18" class="source-line highlighted"><span class="line-number">18</span><code>    _write(</code></span>
+<span id="L19" class="source-line highlighted"><span class="line-number">19</span><code>        tmp_path / &quot;model.py&quot;,</code></span>
+<span id="L20" class="source-line highlighted"><span class="line-number">20</span><code>        &#x27;&#x27;&#x27;import numpy as np</code></span>
+<span id="L21" class="source-line highlighted"><span class="line-number">21</span><code></code></span>
+<span id="L22" class="source-line highlighted"><span class="line-number">22</span><code>def estimate(x: float = 1.0):</code></span>
+<span id="L23" class="source-line highlighted"><span class="line-number">23</span><code>    &quot;&quot;&quot;Posterior MAP estimate under a Gaussian model.&quot;&quot;&quot;</code></span>
+<span id="L24" class="source-line highlighted"><span class="line-number">24</span><code>    assert x &gt; 0</code></span>
+<span id="L25" class="source-line highlighted"><span class="line-number">25</span><code>    sample = np.random.normal(0, x)</code></span>
+<span id="L26" class="source-line highlighted"><span class="line-number">26</span><code>    output = &quot;results/estimate.json&quot;</code></span>
+<span id="L27" class="source-line highlighted"><span class="line-number">27</span><code>    return sample, output</code></span>
+<span id="L28" class="source-line highlighted"><span class="line-number">28</span><code>&#x27;&#x27;&#x27;,</code></span>
+<span id="L29" class="source-line highlighted"><span class="line-number">29</span><code>    )</code></span>
+<span id="L30" class="source-line highlighted"><span class="line-number">30</span><code>    _write(</code></span>
+<span id="L31" class="source-line highlighted"><span class="line-number">31</span><code>        tmp_path / &quot;fit.m&quot;,</code></span>
+<span id="L32" class="source-line highlighted"><span class="line-number">32</span><code>        &quot;&quot;&quot;%% Gaussian estimator</code></span>
+<span id="L33" class="source-line highlighted"><span class="line-number">33</span><code>function [mu] = fit_model(X, y)</code></span>
+<span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>assert(size(X, 1) == numel(y));</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>noise = randn(size(y));</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>mu = (X&#x27; * X) \\ (X&#x27; * (y + noise));</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code>save(&#x27;results/fit.mat&#x27;, &#x27;mu&#x27;);</code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code>end</code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>    )</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code>    _write(</code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code>        tmp_path / &quot;model.tex&quot;,</code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code>        r&quot;&quot;&quot;\section{Model}</code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code>\newcommand{\betaMAP}{\hat\beta}</code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>The posterior estimator is</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code>\begin{equation}</code></span>
+<span id="L47" class="source-line highlighted"><span class="line-number">47</span><code>\betaMAP = (X^T X)^{-1}X^T y.</code></span>
+<span id="L48" class="source-line highlighted"><span class="line-number">48</span><code>\label{eq:map}</code></span>
+<span id="L49" class="source-line highlighted"><span class="line-number">49</span><code>\end{equation}</code></span>
+<span id="L50" class="source-line highlighted"><span class="line-number">50</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>    )</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code></code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code>    result = build_index(tmp_path)</code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>    _, records = load_index(tmp_path)</code></span>
+<span id="L55" class="source-line highlighted"><span class="line-number">55</span><code>    by_path = {record[&quot;path&quot;]: record for record in records}</code></span>
+<span id="L56" class="source-line highlighted"><span class="line-number">56</span><code></code></span>
+<span id="L57" class="source-line highlighted"><span class="line-number">57</span><code>    assert result.passed</code></span>
+<span id="L58" class="source-line highlighted"><span class="line-number">58</span><code>    assert by_path[&quot;model.py&quot;][&quot;parser&quot;] == &quot;python-ast-tokenize-v1&quot;</code></span>
+<span id="L59" class="source-line highlighted"><span class="line-number">59</span><code>    assert by_path[&quot;model.py&quot;][&quot;identifiers&quot;][&quot;sample&quot;] == [6, 8]</code></span>
+<span id="L60" class="source-line highlighted"><span class="line-number">60</span><code>    assert by_path[&quot;model.py&quot;][&quot;assertions&quot;] == [5]</code></span>
+<span id="L61" class="source-line highlighted"><span class="line-number">61</span><code>    assert by_path[&quot;model.py&quot;][&quot;defaults&quot;][0][&quot;name&quot;] == &quot;x&quot;</code></span>
+<span id="L62" class="source-line highlighted"><span class="line-number">62</span><code>    assert by_path[&quot;model.py&quot;][&quot;outputs&quot;] == [{&quot;line&quot;: 7, &quot;path&quot;: &quot;results/estimate.json&quot;}]</code></span>
+<span id="L63" class="source-line highlighted"><span class="line-number">63</span><code>    assert by_path[&quot;fit.m&quot;][&quot;symbols&quot;][0][&quot;name&quot;] == &quot;fit_model&quot;</code></span>
+<span id="L64" class="source-line highlighted"><span class="line-number">64</span><code>    assert by_path[&quot;fit.m&quot;][&quot;assertions&quot;] == [3]</code></span>
+<span id="L65" class="source-line highlighted"><span class="line-number">65</span><code>    assert any(region[&quot;kind&quot;] == &quot;mathematical-call&quot; for region in by_path[&quot;fit.m&quot;][&quot;regions&quot;])</code></span>
+<span id="L66" class="source-line highlighted"><span class="line-number">66</span><code>    assert any(item[&quot;name&quot;] == &quot;eq:map&quot; for item in by_path[&quot;model.tex&quot;][&quot;symbols&quot;])</code></span>
+<span id="L67" class="source-line highlighted"><span class="line-number">67</span><code>    assert any(region[&quot;kind&quot;] == &quot;equation&quot; and region[&quot;start_line&quot;] == 4 for region in by_path[&quot;model.tex&quot;][&quot;regions&quot;])</code></span>
+<span id="L68" class="source-line"><span class="line-number">68</span><code></code></span>
+<span id="L69" class="source-line"><span class="line-number">69</span><code></code></span>
+<a class="source-anchor" id="test_index_reuses_unchanged_records_and_detects_stale_files"></a><span id="L70" class="source-line highlighted"><span class="line-number">70</span><code>def test_index_reuses_unchanged_records_and_detects_stale_files(tmp_path):</code></span>
+<span id="L71" class="source-line highlighted"><span class="line-number">71</span><code>    _write(tmp_path / &quot;model.py&quot;, &quot;x = 1\n&quot;)</code></span>
+<span id="L72" class="source-line highlighted"><span class="line-number">72</span><code></code></span>
+<span id="L73" class="source-line highlighted"><span class="line-number">73</span><code>    first = build_index(tmp_path)</code></span>
+<span id="L74" class="source-line highlighted"><span class="line-number">74</span><code>    second = build_index(tmp_path)</code></span>
+<span id="L75" class="source-line highlighted"><span class="line-number">75</span><code>    _write(tmp_path / &quot;model.py&quot;, &quot;x = 2\n&quot;)</code></span>
+<span id="L76" class="source-line highlighted"><span class="line-number">76</span><code>    stale = check_index(tmp_path)</code></span>
+<span id="L77" class="source-line highlighted"><span class="line-number">77</span><code>    refreshed = build_index(tmp_path)</code></span>
+<span id="L78" class="source-line highlighted"><span class="line-number">78</span><code></code></span>
+<span id="L79" class="source-line highlighted"><span class="line-number">79</span><code>    assert first.reused == 0</code></span>
+<span id="L80" class="source-line highlighted"><span class="line-number">80</span><code>    assert second.reused == 1</code></span>
+<span id="L81" class="source-line highlighted"><span class="line-number">81</span><code>    assert not stale.passed</code></span>
+<span id="L82" class="source-line highlighted"><span class="line-number">82</span><code>    assert &quot;indexed file is stale: model.py&quot; in stale.errors</code></span>
+<span id="L83" class="source-line highlighted"><span class="line-number">83</span><code>    assert refreshed.reused == 0</code></span>
+<span id="L84" class="source-line highlighted"><span class="line-number">84</span><code>    assert check_index(tmp_path).passed</code></span>
+<span id="L85" class="source-line"><span class="line-number">85</span><code></code></span>
+<span id="L86" class="source-line"><span class="line-number">86</span><code></code></span>
+<a class="source-anchor" id="test_index_check_preserves_custom_discovery_scope"></a><span id="L87" class="source-line highlighted"><span class="line-number">87</span><code>def test_index_check_preserves_custom_discovery_scope(tmp_path):</code></span>
+<span id="L88" class="source-line highlighted"><span class="line-number">88</span><code>    _write(tmp_path / &quot;model.py&quot;, &quot;x = 1\n&quot;)</code></span>
+<span id="L89" class="source-line highlighted"><span class="line-number">89</span><code>    _write(tmp_path / &quot;notes.md&quot;, &quot;# Model notes\n&quot;)</code></span>
+<span id="L90" class="source-line highlighted"><span class="line-number">90</span><code></code></span>
+<span id="L91" class="source-line highlighted"><span class="line-number">91</span><code>    build_index(tmp_path, include_extensions={&quot;.py&quot;})</code></span>
+<span id="L92" class="source-line highlighted"><span class="line-number">92</span><code></code></span>
+<span id="L93" class="source-line highlighted"><span class="line-number">93</span><code>    assert check_index(tmp_path).passed</code></span>
+<span id="L94" class="source-line highlighted"><span class="line-number">94</span><code>    _, records = load_index(tmp_path)</code></span>
+<span id="L95" class="source-line highlighted"><span class="line-number">95</span><code>    assert [record[&quot;path&quot;] for record in records] == [&quot;model.py&quot;]</code></span>
+<span id="L96" class="source-line"><span class="line-number">96</span><code></code></span>
+<span id="L97" class="source-line"><span class="line-number">97</span><code></code></span>
+<a class="source-anchor" id="test_malformed_json_is_blocked"></a><span id="L98" class="source-line highlighted"><span class="line-number">98</span><code>def test_malformed_json_is_blocked(tmp_path):</code></span>
+<span id="L99" class="source-line highlighted"><span class="line-number">99</span><code>    _write(tmp_path / &quot;config.json&quot;, &quot;{not-json}\n&quot;)</code></span>
+<span id="L100" class="source-line highlighted"><span class="line-number">100</span><code></code></span>
+<span id="L101" class="source-line highlighted"><span class="line-number">101</span><code>    result = build_index(tmp_path)</code></span>
+<span id="L102" class="source-line highlighted"><span class="line-number">102</span><code></code></span>
+<span id="L103" class="source-line highlighted"><span class="line-number">103</span><code>    assert not result.passed</code></span>
+<span id="L104" class="source-line highlighted"><span class="line-number">104</span><code>    assert result.records[0][&quot;status&quot;] == &quot;blocked&quot;</code></span>
+<span id="L105" class="source-line"><span class="line-number">105</span><code></code></span>
+<span id="L106" class="source-line"><span class="line-number">106</span><code></code></span>
+<a class="source-anchor" id="test_python_utf8_bom_is_supported_without_shifting_lines"></a><span id="L107" class="source-line highlighted"><span class="line-number">107</span><code>def test_python_utf8_bom_is_supported_without_shifting_lines(tmp_path):</code></span>
+<span id="L108" class="source-line highlighted"><span class="line-number">108</span><code>    (tmp_path / &quot;model.py&quot;).write_bytes(b&quot;\xef\xbb\xbfx = 1\n&quot;)</code></span>
+<span id="L109" class="source-line highlighted"><span class="line-number">109</span><code></code></span>
+<span id="L110" class="source-line highlighted"><span class="line-number">110</span><code>    result = build_index(tmp_path)</code></span>
+<span id="L111" class="source-line highlighted"><span class="line-number">111</span><code></code></span>
+<span id="L112" class="source-line highlighted"><span class="line-number">112</span><code>    assert result.passed</code></span>
+<span id="L113" class="source-line highlighted"><span class="line-number">113</span><code>    assert result.records[0][&quot;identifiers&quot;][&quot;x&quot;] == [1]</code></span>
+<span id="L114" class="source-line"><span class="line-number">114</span><code></code></span>
+<span id="L115" class="source-line"><span class="line-number">115</span><code></code></span>
+<a class="source-anchor" id="test_unsupported_and_malformed_files_block_only_indexed_mode"></a><span id="L116" class="source-line highlighted"><span class="line-number">116</span><code>def test_unsupported_and_malformed_files_block_only_indexed_mode(tmp_path):</code></span>
+<span id="L117" class="source-line highlighted"><span class="line-number">117</span><code>    _write(tmp_path / &quot;broken.py&quot;, &quot;def broken(:\n&quot;)</code></span>
+<span id="L118" class="source-line highlighted"><span class="line-number">118</span><code>    (tmp_path / &quot;paper.pdf&quot;).write_bytes(b&quot;%PDF-1.4\n&quot;)</code></span>
+<span id="L119" class="source-line highlighted"><span class="line-number">119</span><code></code></span>
+<span id="L120" class="source-line highlighted"><span class="line-number">120</span><code>    indexed = build_index(tmp_path)</code></span>
+<span id="L121" class="source-line highlighted"><span class="line-number">121</span><code>    indexed_check = check_index(tmp_path)</code></span>
+<span id="L122" class="source-line highlighted"><span class="line-number">122</span><code>    full = build_index(tmp_path, full_review=True)</code></span>
+<span id="L123" class="source-line highlighted"><span class="line-number">123</span><code>    full_check = check_index(tmp_path)</code></span>
+<span id="L124" class="source-line highlighted"><span class="line-number">124</span><code></code></span>
+<span id="L125" class="source-line highlighted"><span class="line-number">125</span><code>    assert indexed.blocked == 1</code></span>
+<span id="L126" class="source-line highlighted"><span class="line-number">126</span><code>    assert not indexed.passed</code></span>
+<span id="L127" class="source-line highlighted"><span class="line-number">127</span><code>    assert not indexed_check.passed</code></span>
+<span id="L128" class="source-line highlighted"><span class="line-number">128</span><code>    assert full.passed</code></span>
+<span id="L129" class="source-line highlighted"><span class="line-number">129</span><code>    assert full_check.passed</code></span>
+<span id="L130" class="source-line highlighted"><span class="line-number">130</span><code>    assert len(full_check.warnings) == 2</code></span>
+<span id="L131" class="source-line"><span class="line-number">131</span><code></code></span>
+<span id="L132" class="source-line"><span class="line-number">132</span><code></code></span>
+<a class="source-anchor" id="test_index_queries_are_bounded_and_include_exact_source_lines"></a><span id="L133" class="source-line highlighted"><span class="line-number">133</span><code>def test_index_queries_are_bounded_and_include_exact_source_lines(tmp_path):</code></span>
+<span id="L134" class="source-line highlighted"><span class="line-number">134</span><code>    _write(tmp_path / &quot;model.py&quot;, &quot;beta = 1\nposterior = beta + 2\n&quot;)</code></span>
+<span id="L135" class="source-line highlighted"><span class="line-number">135</span><code>    build_index(tmp_path)</code></span>
+<span id="L136" class="source-line highlighted"><span class="line-number">136</span><code></code></span>
+<span id="L137" class="source-line highlighted"><span class="line-number">137</span><code>    summary = format_index_summary(tmp_path, limit=1)</code></span>
+<span id="L138" class="source-line highlighted"><span class="line-number">138</span><code>    shown = format_index_file(tmp_path, &quot;model.py&quot;, limit=1)</code></span>
+<span id="L139" class="source-line highlighted"><span class="line-number">139</span><code>    found = format_index_find(tmp_path, &quot;beta&quot;, limit=1)</code></span>
+<span id="L140" class="source-line highlighted"><span class="line-number">140</span><code>    found_second = format_index_find(tmp_path, &quot;beta&quot;, limit=1, offset=1)</code></span>
+<span id="L141" class="source-line highlighted"><span class="line-number">141</span><code></code></span>
+<span id="L142" class="source-line highlighted"><span class="line-number">142</span><code>    assert &quot;model.py [python/ok]&quot; in summary</code></span>
+<span id="L143" class="source-line highlighted"><span class="line-number">143</span><code>    assert shown.count(&quot;- assignment&quot;) == 1</code></span>
+<span id="L144" class="source-line highlighted"><span class="line-number">144</span><code>    assert &quot;... 1 more regions; rerun with `--offset 1`&quot; in shown</code></span>
+<span id="L145" class="source-line highlighted"><span class="line-number">145</span><code>    assert &quot;Occurrences: 2&quot; in found</code></span>
+<span id="L146" class="source-line highlighted"><span class="line-number">146</span><code>    assert &quot;model.py:1: beta = 1&quot; in found</code></span>
+<span id="L147" class="source-line highlighted"><span class="line-number">147</span><code>    assert &quot;... 1 more occurrences; rerun with `--offset 1`&quot; in found</code></span>
+<span id="L148" class="source-line highlighted"><span class="line-number">148</span><code>    assert &quot;model.py:2: posterior = beta + 2&quot; in found_second</code></span>
+<span id="L149" class="source-line"><span class="line-number">149</span><code></code></span>
+<span id="L150" class="source-line"><span class="line-number">150</span><code></code></span>
+<a class="source-anchor" id="test_indexed_regions_reduce_mixed_fixture_input_by_half"></a><span id="L151" class="source-line highlighted"><span class="line-number">151</span><code>def test_indexed_regions_reduce_mixed_fixture_input_by_half(tmp_path):</code></span>
+<span id="L152" class="source-line highlighted"><span class="line-number">152</span><code>    python_boilerplate = &quot;\n&quot;.join(&quot;# ordinary implementation detail&quot; for _ in range(120))</code></span>
+<span id="L153" class="source-line highlighted"><span class="line-number">153</span><code>    _write(</code></span>
+<span id="L154" class="source-line highlighted"><span class="line-number">154</span><code>        tmp_path / &quot;model.py&quot;,</code></span>
+<span id="L155" class="source-line highlighted"><span class="line-number">155</span><code>        f&quot;{python_boilerplate}\n\ndef posterior(beta=1.0):\n    assert beta &gt; 0\n    return beta\n&quot;,</code></span>
+<span id="L156" class="source-line highlighted"><span class="line-number">156</span><code>    )</code></span>
+<span id="L157" class="source-line highlighted"><span class="line-number">157</span><code>    matlab_boilerplate = &quot;\n&quot;.join(&quot;% ordinary implementation detail&quot; for _ in range(80))</code></span>
+<span id="L158" class="source-line highlighted"><span class="line-number">158</span><code>    _write(</code></span>
+<span id="L159" class="source-line highlighted"><span class="line-number">159</span><code>        tmp_path / &quot;fit.m&quot;,</code></span>
+<span id="L160" class="source-line highlighted"><span class="line-number">160</span><code>        f&quot;{matlab_boilerplate}\n%% MAP estimator\nfunction b = fit_map(X, y)\nb = X \\ y;\nend\n&quot;,</code></span>
+<span id="L161" class="source-line highlighted"><span class="line-number">161</span><code>    )</code></span>
+<span id="L162" class="source-line highlighted"><span class="line-number">162</span><code>    _write(</code></span>
+<span id="L163" class="source-line highlighted"><span class="line-number">163</span><code>        tmp_path / &quot;model.tex&quot;,</code></span>
+<span id="L164" class="source-line highlighted"><span class="line-number">164</span><code>        &quot;Prose.\n&quot; * 50 + &quot;\\begin{equation}\n\\hat\\beta = X^T y\n\\end{equation}\n&quot;,</code></span>
+<span id="L165" class="source-line highlighted"><span class="line-number">165</span><code>    )</code></span>
+<span id="L166" class="source-line highlighted"><span class="line-number">166</span><code></code></span>
+<span id="L167" class="source-line highlighted"><span class="line-number">167</span><code>    result = build_index(tmp_path)</code></span>
+<span id="L168" class="source-line highlighted"><span class="line-number">168</span><code>    raw_characters = sum((tmp_path / item.path).stat().st_size for item in discover_project_files(tmp_path))</code></span>
+<span id="L169" class="source-line highlighted"><span class="line-number">169</span><code>    reviewed_characters = 0</code></span>
+<span id="L170" class="source-line highlighted"><span class="line-number">170</span><code>    for record in result.records:</code></span>
+<span id="L171" class="source-line highlighted"><span class="line-number">171</span><code>        lines = (tmp_path / record[&quot;path&quot;]).read_text(encoding=&quot;utf-8&quot;).splitlines()</code></span>
+<span id="L172" class="source-line highlighted"><span class="line-number">172</span><code>        reviewed_lines = {</code></span>
+<span id="L173" class="source-line highlighted"><span class="line-number">173</span><code>            line</code></span>
+<span id="L174" class="source-line highlighted"><span class="line-number">174</span><code>            for region in record[&quot;regions&quot;]</code></span>
+<span id="L175" class="source-line highlighted"><span class="line-number">175</span><code>            for line in range(region[&quot;start_line&quot;], region[&quot;end_line&quot;] + 1)</code></span>
+<span id="L176" class="source-line highlighted"><span class="line-number">176</span><code>        }</code></span>
+<span id="L177" class="source-line highlighted"><span class="line-number">177</span><code>        reviewed_characters += sum(len(lines[line - 1]) + 1 for line in reviewed_lines)</code></span>
+<span id="L178" class="source-line highlighted"><span class="line-number">178</span><code></code></span>
+<span id="L179" class="source-line highlighted"><span class="line-number">179</span><code>    assert result.passed</code></span>
+<span id="L180" class="source-line highlighted"><span class="line-number">180</span><code>    assert reviewed_characters &lt;= raw_characters * 0.5</code></span>
+<span id="L181" class="source-line highlighted"><span class="line-number">181</span><code>    assert &quot;posterior&quot; in result.records[1][&quot;identifiers&quot;] or any(</code></span>
+<span id="L182" class="source-line highlighted"><span class="line-number">182</span><code>        &quot;posterior&quot; in record[&quot;identifiers&quot;] for record in result.records</code></span>
+<span id="L183" class="source-line highlighted"><span class="line-number">183</span><code>    )</code></span>
+<span id="L184" class="source-line"><span class="line-number">184</span><code></code></span>
+<span id="L185" class="source-line"><span class="line-number">185</span><code></code></span>
+<a class="source-anchor" id="test_mathgraph_check_rejects_exact_line_reference_outside_index"></a><span id="L186" class="source-line highlighted"><span class="line-number">186</span><code>def test_mathgraph_check_rejects_exact_line_reference_outside_index(tmp_path):</code></span>
+<span id="L187" class="source-line highlighted"><span class="line-number">187</span><code>    _write(tmp_path / &quot;model.py&quot;, &quot;x = 1\n&quot;)</code></span>
+<span id="L188" class="source-line highlighted"><span class="line-number">188</span><code>    _write(tmp_path / &quot;paper/main.tex&quot;, &quot;\\label{def:x}\n&quot;)</code></span>
+<span id="L189" class="source-line highlighted"><span class="line-number">189</span><code>    build_index(tmp_path)</code></span>
+<span id="L190" class="source-line highlighted"><span class="line-number">190</span><code>    _write(tmp_path / &quot;mathgraph/helper.py&quot;, &quot;x = 1\n&quot;)</code></span>
+<span id="L191" class="source-line highlighted"><span class="line-number">191</span><code>    _write(</code></span>
+<span id="L192" class="source-line highlighted"><span class="line-number">192</span><code>        tmp_path / &quot;mathgraph/graph.yaml&quot;,</code></span>
+<span id="L193" class="source-line highlighted"><span class="line-number">193</span><code>        &quot;&quot;&quot;</code></span>
+<span id="L194" class="source-line highlighted"><span class="line-number">194</span><code>project:</code></span>
+<span id="L195" class="source-line highlighted"><span class="line-number">195</span><code>  id: demo</code></span>
+<span id="L196" class="source-line highlighted"><span class="line-number">196</span><code>  title: Demo</code></span>
+<span id="L197" class="source-line highlighted"><span class="line-number">197</span><code>  tex_root: paper/main.tex</code></span>
+<span id="L198" class="source-line highlighted"><span class="line-number">198</span><code>nodes:</code></span>
+<span id="L199" class="source-line highlighted"><span class="line-number">199</span><code>  - id: var.x</code></span>
+<span id="L200" class="source-line highlighted"><span class="line-number">200</span><code>    kind: variable</code></span>
+<span id="L201" class="source-line highlighted"><span class="line-number">201</span><code>    title: &quot;x in R&quot;</code></span>
+<span id="L202" class="source-line highlighted"><span class="line-number">202</span><code>    symbol: x</code></span>
+<span id="L203" class="source-line highlighted"><span class="line-number">203</span><code>    statement: &quot;x in R.&quot;</code></span>
+<span id="L204" class="source-line highlighted"><span class="line-number">204</span><code>    tex: {file: paper/main.tex, label: def:x}</code></span>
+<span id="L205" class="source-line highlighted"><span class="line-number">205</span><code>    code:</code></span>
+<span id="L206" class="source-line highlighted"><span class="line-number">206</span><code>      - {path: mathgraph/helper.py, line: 1}</code></span>
+<span id="L207" class="source-line highlighted"><span class="line-number">207</span><code>edges: []</code></span>
+<span id="L208" class="source-line highlighted"><span class="line-number">208</span><code>&quot;&quot;&quot;,</code></span>
+<span id="L209" class="source-line highlighted"><span class="line-number">209</span><code>    )</code></span>
+<span id="L210" class="source-line highlighted"><span class="line-number">210</span><code></code></span>
+<span id="L211" class="source-line highlighted"><span class="line-number">211</span><code>    result = run_checks(repo_root=tmp_path)</code></span>
+<span id="L212" class="source-line highlighted"><span class="line-number">212</span><code></code></span>
+<span id="L213" class="source-line highlighted"><span class="line-number">213</span><code>    assert not result.passed</code></span>
+<span id="L214" class="source-line highlighted"><span class="line-number">214</span><code>    assert &quot;code reference is outside indexed evidence&quot; in format_check_result(result)</code></span>
+<span id="L215" class="source-line"><span class="line-number">215</span><code></code></span>
+<span id="L216" class="source-line"><span class="line-number">216</span><code></code></span>
+<a class="source-anchor" id="test_generated_cache_family_is_aggregated_and_dossier_is_compact"></a><span id="L217" class="source-line highlighted"><span class="line-number">217</span><code>def test_generated_cache_family_is_aggregated_and_dossier_is_compact(tmp_path):</code></span>
+<span id="L218" class="source-line highlighted"><span class="line-number">218</span><code>    for index in range(10):</code></span>
+<span id="L219" class="source-line highlighted"><span class="line-number">219</span><code>        _write(tmp_path / f&quot;src/model_{index}.py&quot;, f&quot;def estimate_{index}(x):\n    return x + {index}\n&quot;)</code></span>
+<span id="L220" class="source-line highlighted"><span class="line-number">220</span><code>    for index in range(76):</code></span>
+<span id="L221" class="source-line highlighted"><span class="line-number">221</span><code>        _write(tmp_path / f&quot;graphify-out/cache/item_{index}.json&quot;, &#x27;{&quot;cached&quot;: true}\n&#x27;)</code></span>
+<span id="L222" class="source-line highlighted"><span class="line-number">222</span><code></code></span>
+<span id="L223" class="source-line highlighted"><span class="line-number">223</span><code>    result = build_index(tmp_path)</code></span>
+<span id="L224" class="source-line highlighted"><span class="line-number">224</span><code>    families = [record for record in result.records if record[&quot;record_type&quot;] == &quot;family&quot;]</code></span>
+<span id="L225" class="source-line highlighted"><span class="line-number">225</span><code>    summary = format_index_summary(tmp_path)</code></span>
+<span id="L226" class="source-line highlighted"><span class="line-number">226</span><code>    dossier = format_index_dossier(tmp_path)</code></span>
+<span id="L227" class="source-line highlighted"><span class="line-number">227</span><code></code></span>
+<span id="L228" class="source-line highlighted"><span class="line-number">228</span><code>    assert len(families) == 1</code></span>
+<span id="L229" class="source-line highlighted"><span class="line-number">229</span><code>    assert families[0][&quot;family&quot;] == &quot;graphify-out/cache&quot;</code></span>
+<span id="L230" class="source-line highlighted"><span class="line-number">230</span><code>    assert families[0][&quot;file_count&quot;] == 76</code></span>
+<span id="L231" class="source-line highlighted"><span class="line-number">231</span><code>    assert &quot;item_0.json&quot; not in summary</code></span>
+<span id="L232" class="source-line highlighted"><span class="line-number">232</span><code>    assert &quot;graphify-out/cache: 76 files, hashes verified&quot; in dossier</code></span>
+<span id="L233" class="source-line highlighted"><span class="line-number">233</span><code></code></span>
+<span id="L234" class="source-line highlighted"><span class="line-number">234</span><code>    expanded = build_index(tmp_path, include_generated=True)</code></span>
+<span id="L235" class="source-line highlighted"><span class="line-number">235</span><code>    expanded_text = &quot;\n&quot;.join(</code></span>
+<span id="L236" class="source-line highlighted"><span class="line-number">236</span><code>        format_index_file(tmp_path, record[&quot;path&quot;])</code></span>
+<span id="L237" class="source-line highlighted"><span class="line-number">237</span><code>        for record in expanded.records</code></span>
+<span id="L238" class="source-line highlighted"><span class="line-number">238</span><code>        if record[&quot;record_type&quot;] == &quot;file&quot;</code></span>
+<span id="L239" class="source-line highlighted"><span class="line-number">239</span><code>    )</code></span>
+<span id="L240" class="source-line highlighted"><span class="line-number">240</span><code>    assert len(dossier) &lt; len(expanded_text) * 0.5</code></span>
+<span id="L241" class="source-line"><span class="line-number">241</span><code></code></span>
+<span id="L242" class="source-line"><span class="line-number">242</span><code></code></span>
+<a class="source-anchor" id="test_project_config_can_reclassify_generated_source"></a><span id="L243" class="source-line highlighted"><span class="line-number">243</span><code>def test_project_config_can_reclassify_generated_source(tmp_path):</code></span>
+<span id="L244" class="source-line highlighted"><span class="line-number">244</span><code>    _write(</code></span>
+<span id="L245" class="source-line highlighted"><span class="line-number">245</span><code>        tmp_path / &quot;pyproject.toml&quot;,</code></span>
+<span id="L246" class="source-line highlighted"><span class="line-number">246</span><code>        &#x27;[tool.mathgraph.init]\nauthoritative = [&quot;graphify-out/cache/keep.json&quot;]\n&#x27;,</code></span>
+<span id="L247" class="source-line highlighted"><span class="line-number">247</span><code>    )</code></span>
+<span id="L248" class="source-line highlighted"><span class="line-number">248</span><code>    _write(tmp_path / &quot;graphify-out/cache/keep.json&quot;, &#x27;{&quot;model&quot;: 1}\n&#x27;)</code></span>
+<span id="L249" class="source-line highlighted"><span class="line-number">249</span><code>    _write(tmp_path / &quot;graphify-out/cache/drop.json&quot;, &#x27;{&quot;cache&quot;: 1}\n&#x27;)</code></span>
+<span id="L250" class="source-line highlighted"><span class="line-number">250</span><code></code></span>
+<span id="L251" class="source-line highlighted"><span class="line-number">251</span><code>    result = build_index(tmp_path)</code></span>
+<span id="L252" class="source-line highlighted"><span class="line-number">252</span><code></code></span>
+<span id="L253" class="source-line highlighted"><span class="line-number">253</span><code>    files = [record for record in result.records if record[&quot;record_type&quot;] == &quot;file&quot;]</code></span>
+<span id="L254" class="source-line highlighted"><span class="line-number">254</span><code>    families = [record for record in result.records if record[&quot;record_type&quot;] == &quot;family&quot;]</code></span>
+<span id="L255" class="source-line highlighted"><span class="line-number">255</span><code>    assert any(record[&quot;path&quot;] == &quot;graphify-out/cache/keep.json&quot; for record in files)</code></span>
+<span id="L256" class="source-line highlighted"><span class="line-number">256</span><code>    assert families[0][&quot;file_count&quot;] == 1</code></span>
+<span id="L257" class="source-line"><span class="line-number">257</span><code></code></span>
+<span id="L258" class="source-line"><span class="line-number">258</span><code></code></span>
+<a class="source-anchor" id="test_draft_refs_classifies_definition_call_test_experiment_and_configuration"></a><span id="L259" class="source-line highlighted"><span class="line-number">259</span><code>def test_draft_refs_classifies_definition_call_test_experiment_and_configuration(tmp_path):</code></span>
+<span id="L260" class="source-line highlighted"><span class="line-number">260</span><code>    _write(tmp_path / &quot;src/model.py&quot;, &quot;def estimate(x):\n    return x\n\ndef run():\n    return estimate(1)\n&quot;)</code></span>
+<span id="L261" class="source-line highlighted"><span class="line-number">261</span><code>    _write(tmp_path / &quot;tests/test_model.py&quot;, &quot;from model import estimate\ndef test_estimate():\n    assert estimate(1) == 1\n&quot;)</code></span>
+<span id="L262" class="source-line highlighted"><span class="line-number">262</span><code>    _write(tmp_path / &quot;experiments/run.py&quot;, &quot;from model import estimate\nvalue = estimate(2)\n&quot;)</code></span>
+<span id="L263" class="source-line highlighted"><span class="line-number">263</span><code>    build_index(tmp_path)</code></span>
+<span id="L264" class="source-line highlighted"><span class="line-number">264</span><code></code></span>
+<span id="L265" class="source-line highlighted"><span class="line-number">265</span><code>    draft = draft_code_refs(tmp_path, &quot;estimate&quot;)</code></span>
+<span id="L266" class="source-line highlighted"><span class="line-number">266</span><code>    roles = {item[&quot;role&quot;] for item in draft[&quot;code&quot;]}</code></span>
+<span id="L267" class="source-line highlighted"><span class="line-number">267</span><code></code></span>
+<span id="L268" class="source-line highlighted"><span class="line-number">268</span><code>    assert {&quot;definition&quot;, &quot;caller&quot;, &quot;test&quot;, &quot;experiment&quot;} &lt;= roles</code></span>
+<span id="L269" class="source-line highlighted"><span class="line-number">269</span><code>    assert all(item[&quot;line&quot;] &gt;= 1 for item in draft[&quot;code&quot;])</code></span>
+<span id="L270" class="source-line highlighted"><span class="line-number">270</span><code>    assert all(&quot;path&quot; in item for item in draft[&quot;code&quot;])</code></span>
+<span id="L271" class="source-line"><span class="line-number">271</span><code></code></span>
+<span id="L272" class="source-line"><span class="line-number">272</span><code></code></span>
+<a class="source-anchor" id="_write"></a><span id="L273" class="source-line highlighted"><span class="line-number">273</span><code>def _write(path: Path, text: str) -&gt; None:</code></span>
+<span id="L274" class="source-line highlighted"><span class="line-number">274</span><code>    path.parent.mkdir(parents=True, exist_ok=True)</code></span>
+<span id="L275" class="source-line highlighted"><span class="line-number">275</span><code>    path.write_text(text, encoding=&quot;utf-8&quot;)</code></span></pre>
+  </body>
+</html>

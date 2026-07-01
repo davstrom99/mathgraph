@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>paper/declarations/experiment_gaussian_recovery.tex</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+      body { background: #fff; padding: 24px; max-width: 920px; margin: 0 auto; }
+      .math { overflow-x: auto; }
+      .anchor { scroll-margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <h2>Gaussian Recovery Experiment</h2>
+<a class="anchor" id="experiment:gaussian-recovery"></a>
+<h3>Input and Assumption Nodes</h3>
+<p>Input node: <code>validation.synthetic_recovery</code>. The experiment uses fixed sample sizes and random seeds.</p>
+<h3>Declaration</h3>
+<p>The experiment runs synthetic recovery for</p>
+<div class="math">\[
+  n\in\{20,50,100,250,500\}.
+\]</div>
+<h3>Result</h3>
+<p>The node <code>experiment.gaussian_recovery</code> generates a JSON summary and PNG error plot.</p>
+  </body>
+</html>

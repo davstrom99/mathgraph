@@ -1,0 +1,18 @@
+\section{Gaussian Likelihood Derivation}
+\label{deriv:gaussian-likelihood}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{model.gaussian\_observation}. Noise is iid \(\mathcal{N}(0,\sigma^2)\).
+
+\subsection{Derivation}
+From \(y=X\beta+\epsilon\), the residual vector \(y-X\beta\) is Gaussian with covariance \(\sigma^2 I_n\). Therefore
+\[
+  p(y\mid X,\beta,\sigma^2)
+  =
+  (2\pi\sigma^2)^{-n/2}
+  \exp\left(-\frac{1}{2\sigma^2}\|y-X\beta\|_2^2\right).
+\]
+
+\subsection{Result}
+The result node is \texttt{likelihood.gaussian}.
+

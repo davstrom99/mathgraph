@@ -1,0 +1,14 @@
+\section{Noise Scale to Student-t Model}
+\label{edge:sigma-to-student-t-model}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{param.sigma}. Result node: \texttt{model.student\_t\_noise}.
+
+\subsection{Derivation}
+The Student-t observation model uses the positive scale \(\sigma\) in
+\[
+  \epsilon_i \sim t_\nu(0,\sigma).
+\]
+
+\subsection{Result}
+The scale parameter \(\sigma\) is required to specify the Student-t noise distribution.

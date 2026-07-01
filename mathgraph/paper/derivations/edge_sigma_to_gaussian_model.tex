@@ -1,0 +1,14 @@
+\section{Noise Scale to Gaussian Model}
+\label{edge:sigma-to-gaussian-model}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{param.sigma}. Result node: \texttt{model.gaussian\_observation}.
+
+\subsection{Derivation}
+The Gaussian observation model uses the positive scale \(\sigma\) to set the covariance of the noise:
+\[
+  \epsilon \sim \mathcal{N}(0,\sigma^2 I_n).
+\]
+
+\subsection{Result}
+The scale parameter \(\sigma\) is required to specify the Gaussian noise distribution.

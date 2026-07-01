@@ -1,0 +1,15 @@
+\section{MAP from Gaussian Posterior}
+\label{deriv:map-from-posterior}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{posterior.gaussian\_conjugate}.
+
+\subsection{Derivation}
+For a Gaussian posterior \(p(\beta\mid X,y)=\mathcal{N}(\mu_n,\Sigma_n)\), the density is maximized at its mean:
+\[
+  \hat{\beta}_{MAP} = \mu_n.
+\]
+
+\subsection{Result}
+The MAP estimator equals the posterior mean in \texttt{estimator.beta\_map}.
+

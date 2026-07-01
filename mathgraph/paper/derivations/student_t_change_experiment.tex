@@ -1,0 +1,16 @@
+\section{Student-t Change Experiment Derivation}
+\label{deriv:student-t-change-experiment}
+
+\subsection{Input and Assumption Nodes}
+Input node: \texttt{approx.student\_t\_map}.
+
+\subsection{Derivation}
+The experiment compares coefficient recovery under Gaussian MAP and Student-t MAP when data are generated with heavy-tailed residuals:
+\[
+  \|\widehat{\beta}_{G}-\beta_0\|_2
+  \quad\text{versus}\quad
+  \|\widehat{\beta}_{t}-\beta_0\|_2.
+\]
+
+\subsection{Result}
+The experiment will generate \texttt{results/student\_t\_change\_summary.json} and \texttt{results/student\_t\_change\_error.png}.
