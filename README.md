@@ -52,23 +52,6 @@ python examples/linear_bayes_demo/experiments/run_gaussian_recovery.py
 python examples/linear_bayes_demo/experiments/run_student_t_change.py
 ```
 
-## Codex Skill
-
-This repo ships a Codex skill here:
-
-```text
-codex-skill/mathgraph-centered-research/
-```
-
-To install it for Codex locally:
-
-```bash
-mkdir -p ~/.codex/skills
-cp -R codex-skill/mathgraph-centered-research ~/.codex/skills/
-```
-
-Use `mathgraph-centered-research` whenever you want Codex to work graph-first: identify the affected math nodes, preserve TeX/code/test consistency, run impact analysis when assumptions change, and avoid orphan code.
-
 ## Commands
 
 - `mathgraph init`: bootstrap mathgraph files for an existing repository.
