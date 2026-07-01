@@ -16,4 +16,4 @@ results/*.png
 examples/linear_bayes_demo/results/*.json
 examples/linear_bayes_demo/results/*.png
 !examples/linear_bayes_demo/results/.gitkeep
-web/refs/
+web/
