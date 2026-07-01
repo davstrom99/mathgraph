@@ -52,7 +52,7 @@ python examples/linear_bayes_demo/experiments/run_gaussian_recovery.py
 python examples/linear_bayes_demo/experiments/run_student_t_change.py
 ```
 
-## Commands
+## CLI Commands
 
 - `mathgraph init`: bootstrap mathgraph files for an existing repository.
 - `mathgraph index build`: build the initialization evidence index used during onboarding and checking.
