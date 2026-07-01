@@ -19,17 +19,13 @@ pip install -e ".[dev]"
 It is easy to get started in an existing project:
 
 1. Install the Codex skill by copying `codex-skill/mathgraph-centered-research/` into `~/.codex/skills/`.
-2. In your project root, run `mathgraph init`.
-3. Ask Codex to use the `mathgraph-centered-research` skill and complete the graph initialization.
-4. Render the graph with `mathgraph render`.
-5. Open it locally with `python -m http.server 8000 --bind 127.0.0.1 -d web`.
-
-Then open [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+2. In your project root, prompt codex with /mathgraph init.
+3. Render the graph with `mathgraph render`.
 
 A good first Codex prompt to try is:
 
 ```text
-Use the mathgraph-centered-research skill. Run mathgraph init if needed, build the project graph, render it, and then explain the main model branches, missing validations, and the highest-impact next improvement.
+/mathgraph Explain the main model branches, missing validations, and the highest-impact next improvement.
 ```
 
 ## Example
