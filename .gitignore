@@ -13,5 +13,7 @@ mathgraph/paper/*.pdf
 mathgraph/paper/*.synctex.gz
 results/*.json
 results/*.png
-!results/.gitkeep
+examples/linear_bayes_demo/results/*.json
+examples/linear_bayes_demo/results/*.png
+!examples/linear_bayes_demo/results/.gitkeep
 web/refs/

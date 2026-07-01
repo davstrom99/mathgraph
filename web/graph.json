@@ -5,10 +5,10 @@
     "tex_root": "mathgraph/paper/main.tex",
     "repo_root": ".",
     "code_roots": [
-      "src/linear_bayes",
-      "experiments",
-      "tests/test_linear_gaussian_recovery.py",
-      "tests/test_student_t_change.py"
+      "examples/linear_bayes_demo/src/linear_bayes",
+      "examples/linear_bayes_demo/experiments",
+      "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py",
+      "examples/linear_bayes_demo/tests/test_student_t_change.py"
     ],
     "code_exclude": []
   },
@@ -402,13 +402,13 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/simulate.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/simulate.py",
           "symbol": "simulate_gaussian_linear",
-          "label": "src/linear_bayes/simulate.py::simulate_gaussian_linear",
-          "href": "code/src/linear_bayes/simulate.py.html#simulate_gaussian_linear",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/simulate.py:8",
-          "lineStart": 8,
-          "lineEnd": 30,
+          "label": "examples/linear_bayes_demo/src/linear_bayes/simulate.py::simulate_gaussian_linear",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/simulate.py.html#simulate_gaussian_linear",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/simulate.py:9",
+          "lineStart": 9,
+          "lineEnd": 21,
           "exists": true
         }
       ],
@@ -601,13 +601,13 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/likelihoods.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/likelihoods.py",
           "symbol": "gaussian_log_likelihood",
-          "label": "src/linear_bayes/likelihoods.py::gaussian_log_likelihood",
-          "href": "code/src/linear_bayes/likelihoods.py.html#gaussian_log_likelihood",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/likelihoods.py:9",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/likelihoods.py::gaussian_log_likelihood",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/likelihoods.py.html#gaussian_log_likelihood",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/likelihoods.py:9",
           "lineStart": 9,
-          "lineEnd": 28,
+          "lineEnd": 20,
           "exists": true
         }
       ],
@@ -672,11 +672,11 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/estimators.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/estimators.py",
           "symbol": "gaussian_posterior",
-          "label": "src/linear_bayes/estimators.py::gaussian_posterior",
-          "href": "code/src/linear_bayes/estimators.py.html#gaussian_posterior",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:11",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/estimators.py::gaussian_posterior",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/estimators.py.html#gaussian_posterior",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/estimators.py:11",
           "lineStart": 11,
           "lineEnd": 27,
           "exists": true
@@ -767,11 +767,11 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/estimators.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/estimators.py",
           "symbol": "negative_log_posterior_gaussian",
-          "label": "src/linear_bayes/estimators.py::negative_log_posterior_gaussian",
-          "href": "code/src/linear_bayes/estimators.py.html#negative_log_posterior_gaussian",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:30",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/estimators.py::negative_log_posterior_gaussian",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/estimators.py.html#negative_log_posterior_gaussian",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/estimators.py:30",
           "lineStart": 30,
           "lineEnd": 46,
           "exists": true
@@ -838,11 +838,11 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/estimators.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/estimators.py",
           "symbol": "beta_map_closed_form",
-          "label": "src/linear_bayes/estimators.py::beta_map_closed_form",
-          "href": "code/src/linear_bayes/estimators.py.html#beta_map_closed_form",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:49",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/estimators.py::beta_map_closed_form",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/estimators.py.html#beta_map_closed_form",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/estimators.py:49",
           "lineStart": 49,
           "lineEnd": 57,
           "exists": true
@@ -850,11 +850,11 @@
       ],
       "tests": [
         {
-          "path": "tests/test_linear_gaussian_recovery.py",
+          "path": "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py",
           "symbol": "test_closed_form_map_equals_posterior_mean",
-          "label": "tests/test_linear_gaussian_recovery.py::test_closed_form_map_equals_posterior_mean",
-          "href": "code/tests/test_linear_gaussian_recovery.py.html#test_closed_form_map_equals_posterior_mean",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_linear_gaussian_recovery.py:14",
+          "label": "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py::test_closed_form_map_equals_posterior_mean",
+          "href": "code/examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py.html#test_closed_form_map_equals_posterior_mean",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py:14",
           "lineStart": 14,
           "lineEnd": 28,
           "exists": true
@@ -932,11 +932,11 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/experiments.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/experiments.py",
           "symbol": "run_recovery_experiment",
-          "label": "src/linear_bayes/experiments.py::run_recovery_experiment",
-          "href": "code/src/linear_bayes/experiments.py.html#run_recovery_experiment",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/experiments.py:13",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/experiments.py::run_recovery_experiment",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/experiments.py.html#run_recovery_experiment",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/experiments.py:13",
           "lineStart": 13,
           "lineEnd": 53,
           "exists": true
@@ -944,11 +944,11 @@
       ],
       "tests": [
         {
-          "path": "tests/test_linear_gaussian_recovery.py",
+          "path": "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py",
           "symbol": "test_recovery_improves_with_n",
-          "label": "tests/test_linear_gaussian_recovery.py::test_recovery_improves_with_n",
-          "href": "code/tests/test_linear_gaussian_recovery.py.html#test_recovery_improves_with_n",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_linear_gaussian_recovery.py:31",
+          "label": "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py::test_recovery_improves_with_n",
+          "href": "code/examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py.html#test_recovery_improves_with_n",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py:31",
           "lineStart": 31,
           "lineEnd": 55,
           "exists": true
@@ -1014,37 +1014,37 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/experiments.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/experiments.py",
           "symbol": "run_recovery_experiment",
-          "label": "src/linear_bayes/experiments.py::run_recovery_experiment",
-          "href": "code/src/linear_bayes/experiments.py.html#run_recovery_experiment",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/experiments.py:13",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/experiments.py::run_recovery_experiment",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/experiments.py.html#run_recovery_experiment",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/experiments.py:13",
           "lineStart": 13,
           "lineEnd": 53,
           "exists": true
         },
         {
-          "path": "experiments/run_gaussian_recovery.py",
+          "path": "examples/linear_bayes_demo/experiments/run_gaussian_recovery.py",
           "symbol": "main",
-          "label": "experiments/run_gaussian_recovery.py::main",
-          "href": "code/experiments/run_gaussian_recovery.py.html#main",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/experiments/run_gaussian_recovery.py:29",
-          "lineStart": 29,
-          "lineEnd": 53,
+          "label": "examples/linear_bayes_demo/experiments/run_gaussian_recovery.py::main",
+          "href": "code/examples/linear_bayes_demo/experiments/run_gaussian_recovery.py.html#main",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/experiments/run_gaussian_recovery.py:30",
+          "lineStart": 30,
+          "lineEnd": 54,
           "exists": true
         }
       ],
       "tests": [],
       "outputs": [
         {
-          "path": "results/gaussian_recovery_summary.json",
-          "href": "refs/results/gaussian_recovery_summary.json",
-          "exists": true
+          "path": "examples/linear_bayes_demo/results/gaussian_recovery_summary.json",
+          "href": "refs/examples/linear_bayes_demo/results/gaussian_recovery_summary.json",
+          "exists": false
         },
         {
-          "path": "results/gaussian_recovery_error.png",
-          "href": "refs/results/gaussian_recovery_error.png",
-          "exists": true
+          "path": "examples/linear_bayes_demo/results/gaussian_recovery_error.png",
+          "href": "refs/examples/linear_bayes_demo/results/gaussian_recovery_error.png",
+          "exists": false
         }
       ],
       "incoming": [
@@ -1094,23 +1094,23 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/simulate.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/simulate.py",
           "symbol": "simulate_student_t_linear",
-          "label": "src/linear_bayes/simulate.py::simulate_student_t_linear",
-          "href": "code/src/linear_bayes/simulate.py.html#simulate_student_t_linear",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/simulate.py:33",
-          "lineStart": 33,
-          "lineEnd": 58,
+          "label": "examples/linear_bayes_demo/src/linear_bayes/simulate.py::simulate_student_t_linear",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/simulate.py.html#simulate_student_t_linear",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/simulate.py:24",
+          "lineStart": 24,
+          "lineEnd": 37,
           "exists": true
         }
       ],
       "tests": [
         {
-          "path": "tests/test_student_t_change.py",
+          "path": "examples/linear_bayes_demo/tests/test_student_t_change.py",
           "symbol": "test_student_t_simulation_has_heavy_tailed_residuals",
-          "label": "tests/test_student_t_change.py::test_student_t_simulation_has_heavy_tailed_residuals",
-          "href": "code/tests/test_student_t_change.py.html#test_student_t_simulation_has_heavy_tailed_residuals",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:15",
+          "label": "examples/linear_bayes_demo/tests/test_student_t_change.py::test_student_t_simulation_has_heavy_tailed_residuals",
+          "href": "code/examples/linear_bayes_demo/tests/test_student_t_change.py.html#test_student_t_simulation_has_heavy_tailed_residuals",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/tests/test_student_t_change.py:15",
           "lineStart": 15,
           "lineEnd": 31,
           "exists": true
@@ -1236,23 +1236,23 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/likelihoods.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/likelihoods.py",
           "symbol": "student_t_log_likelihood",
-          "label": "src/linear_bayes/likelihoods.py::student_t_log_likelihood",
-          "href": "code/src/linear_bayes/likelihoods.py.html#student_t_log_likelihood",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/likelihoods.py:44",
-          "lineStart": 44,
-          "lineEnd": 70,
+          "label": "examples/linear_bayes_demo/src/linear_bayes/likelihoods.py::student_t_log_likelihood",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/likelihoods.py.html#student_t_log_likelihood",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/likelihoods.py:23",
+          "lineStart": 23,
+          "lineEnd": 35,
           "exists": true
         }
       ],
       "tests": [
         {
-          "path": "tests/test_student_t_change.py",
+          "path": "examples/linear_bayes_demo/tests/test_student_t_change.py",
           "symbol": "test_student_t_log_likelihood_matches_scipy_density",
-          "label": "tests/test_student_t_change.py::test_student_t_log_likelihood_matches_scipy_density",
-          "href": "code/tests/test_student_t_change.py.html#test_student_t_log_likelihood_matches_scipy_density",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:34",
+          "label": "examples/linear_bayes_demo/tests/test_student_t_change.py::test_student_t_log_likelihood_matches_scipy_density",
+          "href": "code/examples/linear_bayes_demo/tests/test_student_t_change.py.html#test_student_t_log_likelihood_matches_scipy_density",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/tests/test_student_t_change.py:34",
           "lineStart": 34,
           "lineEnd": 48,
           "exists": true
@@ -1319,11 +1319,11 @@
       },
       "code": [
         {
-          "path": "src/linear_bayes/estimators.py",
+          "path": "examples/linear_bayes_demo/src/linear_bayes/estimators.py",
           "symbol": "student_t_map_numerical",
-          "label": "src/linear_bayes/estimators.py::student_t_map_numerical",
-          "href": "code/src/linear_bayes/estimators.py.html#student_t_map_numerical",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/src/linear_bayes/estimators.py:86",
+          "label": "examples/linear_bayes_demo/src/linear_bayes/estimators.py::student_t_map_numerical",
+          "href": "code/examples/linear_bayes_demo/src/linear_bayes/estimators.py.html#student_t_map_numerical",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/src/linear_bayes/estimators.py:86",
           "lineStart": 86,
           "lineEnd": 122,
           "exists": true
@@ -1331,11 +1331,11 @@
       ],
       "tests": [
         {
-          "path": "tests/test_student_t_change.py",
+          "path": "examples/linear_bayes_demo/tests/test_student_t_change.py",
           "symbol": "test_student_t_map_handles_outlier_better_than_gaussian_map",
-          "label": "tests/test_student_t_change.py::test_student_t_map_handles_outlier_better_than_gaussian_map",
-          "href": "code/tests/test_student_t_change.py.html#test_student_t_map_handles_outlier_better_than_gaussian_map",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:51",
+          "label": "examples/linear_bayes_demo/tests/test_student_t_change.py::test_student_t_map_handles_outlier_better_than_gaussian_map",
+          "href": "code/examples/linear_bayes_demo/tests/test_student_t_change.py.html#test_student_t_map_handles_outlier_better_than_gaussian_map",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/tests/test_student_t_change.py:51",
           "lineStart": 51,
           "lineEnd": 62,
           "exists": true
@@ -1414,23 +1414,23 @@
       },
       "code": [
         {
-          "path": "experiments/run_student_t_change.py",
+          "path": "examples/linear_bayes_demo/experiments/run_student_t_change.py",
           "symbol": "main",
-          "label": "experiments/run_student_t_change.py::main",
-          "href": "code/experiments/run_student_t_change.py.html#main",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/experiments/run_student_t_change.py:31",
-          "lineStart": 31,
-          "lineEnd": 109,
+          "label": "examples/linear_bayes_demo/experiments/run_student_t_change.py::main",
+          "href": "code/examples/linear_bayes_demo/experiments/run_student_t_change.py.html#main",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/experiments/run_student_t_change.py:32",
+          "lineStart": 32,
+          "lineEnd": 110,
           "exists": true
         }
       ],
       "tests": [
         {
-          "path": "tests/test_student_t_change.py",
+          "path": "examples/linear_bayes_demo/tests/test_student_t_change.py",
           "symbol": "test_student_t_change_script_writes_declared_outputs",
-          "label": "tests/test_student_t_change.py::test_student_t_change_script_writes_declared_outputs",
-          "href": "code/tests/test_student_t_change.py.html#test_student_t_change_script_writes_declared_outputs",
-          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/tests/test_student_t_change.py:65",
+          "label": "examples/linear_bayes_demo/tests/test_student_t_change.py::test_student_t_change_script_writes_declared_outputs",
+          "href": "code/examples/linear_bayes_demo/tests/test_student_t_change.py.html#test_student_t_change_script_writes_declared_outputs",
+          "vscodeHref": "vscode://file/C:/Users/davst/Documents/LU/random/mathgraph/examples/linear_bayes_demo/tests/test_student_t_change.py:65",
           "lineStart": 65,
           "lineEnd": 85,
           "exists": true
@@ -1438,14 +1438,14 @@
       ],
       "outputs": [
         {
-          "path": "results/student_t_change_summary.json",
-          "href": "refs/results/student_t_change_summary.json",
-          "exists": true
+          "path": "examples/linear_bayes_demo/results/student_t_change_summary.json",
+          "href": "refs/examples/linear_bayes_demo/results/student_t_change_summary.json",
+          "exists": false
         },
         {
-          "path": "results/student_t_change_error.png",
-          "href": "refs/results/student_t_change_error.png",
-          "exists": true
+          "path": "examples/linear_bayes_demo/results/student_t_change_error.png",
+          "href": "refs/examples/linear_bayes_demo/results/student_t_change_error.png",
+          "exists": false
         }
       ],
       "incoming": [

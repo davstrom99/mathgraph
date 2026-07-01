@@ -2,8 +2,8 @@
 
 Attached graph node: `experiment.gaussian_recovery`.
 Declared outputs:
-- results/gaussian_recovery_summary.json
-- results/gaussian_recovery_error.png
+- examples/linear_bayes_demo/results/gaussian_recovery_summary.json
+- examples/linear_bayes_demo/results/gaussian_recovery_error.png
 """
 
 from __future__ import annotations
@@ -17,13 +17,14 @@ import numpy as np
 from linear_bayes.experiments import run_recovery_experiment
 
 
+EXAMPLE_ROOT = Path(__file__).resolve().parent.parent
 BETA_TRUE = np.array([1.0, -0.5, 0.25])
 N_VALUES = [20, 50, 100, 250, 500]
 SEEDS = list(range(25))
 SIGMA = 1.0
 TAU = 10.0
-SUMMARY_PATH = Path("results/gaussian_recovery_summary.json")
-PLOT_PATH = Path("results/gaussian_recovery_error.png")
+SUMMARY_PATH = EXAMPLE_ROOT / "results" / "gaussian_recovery_summary.json"
+PLOT_PATH = EXAMPLE_ROOT / "results" / "gaussian_recovery_error.png"
 
 
 def main(

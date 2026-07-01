@@ -4,10 +4,10 @@ project:
   tex_root: mathgraph/paper/main.tex
   repo_root: .
   code_roots:
-    - src/linear_bayes
-    - experiments
-    - tests/test_linear_gaussian_recovery.py
-    - tests/test_student_t_change.py
+    - examples/linear_bayes_demo/src/linear_bayes
+    - examples/linear_bayes_demo/experiments
+    - examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py
+    - examples/linear_bayes_demo/tests/test_student_t_change.py
 
 nodes:
   - id: var.X
@@ -90,7 +90,7 @@ nodes:
       file: mathgraph/paper/declarations/model_gaussian_observation.tex
       label: model:gaussian-observation
     code:
-      - path: src/linear_bayes/simulate.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/simulate.py
         symbol: simulate_gaussian_linear
 
   - id: prior.gaussian_beta
@@ -113,7 +113,7 @@ nodes:
       file: mathgraph/paper/declarations/likelihood_gaussian.tex
       label: likelihood:gaussian
     code:
-      - path: src/linear_bayes/likelihoods.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/likelihoods.py
         symbol: gaussian_log_likelihood
 
   - id: posterior.gaussian_conjugate
@@ -126,7 +126,7 @@ nodes:
       file: mathgraph/paper/declarations/posterior_gaussian_conjugate.tex
       label: posterior:gaussian-conjugate
     code:
-      - path: src/linear_bayes/estimators.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/estimators.py
         symbol: gaussian_posterior
 
   - id: objective.gaussian_negative_log_posterior
@@ -139,7 +139,7 @@ nodes:
       file: mathgraph/paper/declarations/objective_gaussian_negative_log_posterior.tex
       label: objective:gaussian-negative-log-posterior
     code:
-      - path: src/linear_bayes/estimators.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/estimators.py
         symbol: negative_log_posterior_gaussian
 
   - id: estimator.beta_map
@@ -152,9 +152,9 @@ nodes:
       file: mathgraph/paper/declarations/estimator_beta_map.tex
       label: estimator:beta-map
     code:
-      - path: src/linear_bayes/estimators.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/estimators.py
         symbol: beta_map_closed_form
-      - path: tests/test_linear_gaussian_recovery.py
+      - path: examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py
         symbol: test_closed_form_map_equals_posterior_mean
 
   - id: validation.synthetic_recovery
@@ -167,9 +167,9 @@ nodes:
       file: mathgraph/paper/declarations/validation_synthetic_recovery.tex
       label: validation:synthetic-recovery
     code:
-      - path: tests/test_linear_gaussian_recovery.py
+      - path: examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py
         symbol: test_recovery_improves_with_n
-      - path: src/linear_bayes/experiments.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/experiments.py
         symbol: run_recovery_experiment
 
   - id: experiment.gaussian_recovery
@@ -182,13 +182,13 @@ nodes:
       file: mathgraph/paper/declarations/experiment_gaussian_recovery.tex
       label: experiment:gaussian-recovery
     code:
-      - path: src/linear_bayes/experiments.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/experiments.py
         symbol: run_recovery_experiment
-      - path: experiments/run_gaussian_recovery.py
+      - path: examples/linear_bayes_demo/experiments/run_gaussian_recovery.py
         symbol: main
     outputs:
-      - path: results/gaussian_recovery_summary.json
-      - path: results/gaussian_recovery_error.png
+      - path: examples/linear_bayes_demo/results/gaussian_recovery_summary.json
+      - path: examples/linear_bayes_demo/results/gaussian_recovery_error.png
 
   - id: model.student_t_noise
     kind: assumption
@@ -200,9 +200,9 @@ nodes:
       file: mathgraph/paper/declarations/model_student_t_noise.tex
       label: model:student-t-noise
     code:
-      - path: src/linear_bayes/simulate.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/simulate.py
         symbol: simulate_student_t_linear
-      - path: tests/test_student_t_change.py
+      - path: examples/linear_bayes_demo/tests/test_student_t_change.py
         symbol: test_student_t_simulation_has_heavy_tailed_residuals
 
   - id: likelihood.student_t
@@ -215,9 +215,9 @@ nodes:
       file: mathgraph/paper/declarations/likelihood_student_t.tex
       label: likelihood:student-t
     code:
-      - path: src/linear_bayes/likelihoods.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/likelihoods.py
         symbol: student_t_log_likelihood
-      - path: tests/test_student_t_change.py
+      - path: examples/linear_bayes_demo/tests/test_student_t_change.py
         symbol: test_student_t_log_likelihood_matches_scipy_density
 
   - id: approx.student_t_map
@@ -230,9 +230,9 @@ nodes:
       file: mathgraph/paper/declarations/approx_student_t_map.tex
       label: approx:student-t-map
     code:
-      - path: src/linear_bayes/estimators.py
+      - path: examples/linear_bayes_demo/src/linear_bayes/estimators.py
         symbol: student_t_map_numerical
-      - path: tests/test_student_t_change.py
+      - path: examples/linear_bayes_demo/tests/test_student_t_change.py
         symbol: test_student_t_map_handles_outlier_better_than_gaussian_map
 
   - id: experiment.student_t_change
@@ -245,13 +245,13 @@ nodes:
       file: mathgraph/paper/declarations/experiment_student_t_change.tex
       label: experiment:student-t-change
     code:
-      - path: experiments/run_student_t_change.py
+      - path: examples/linear_bayes_demo/experiments/run_student_t_change.py
         symbol: main
-      - path: tests/test_student_t_change.py
+      - path: examples/linear_bayes_demo/tests/test_student_t_change.py
         symbol: test_student_t_change_script_writes_declared_outputs
     outputs:
-      - path: results/student_t_change_summary.json
-      - path: results/student_t_change_error.png
+      - path: examples/linear_bayes_demo/results/student_t_change_summary.json
+      - path: examples/linear_bayes_demo/results/student_t_change_error.png
 
   - id: var.repository_files
     kind: variable

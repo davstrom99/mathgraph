@@ -64,7 +64,7 @@ def test_student_t_map_handles_outlier_better_than_gaussian_map():
 
 def test_student_t_change_script_writes_declared_outputs(tmp_path):
     """Validation attached to graph node `experiment.student_t_change`."""
-    script_path = Path("experiments/run_student_t_change.py").resolve()
+    script_path = Path("examples/linear_bayes_demo/experiments/run_student_t_change.py").resolve()
     spec = importlib.util.spec_from_file_location("run_student_t_change", script_path)
     assert spec is not None
     assert spec.loader is not None

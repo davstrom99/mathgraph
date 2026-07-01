@@ -27,7 +27,7 @@ dev = [
 mathgraph = "mathgraph_tool.cli:main"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["src", "examples/linear_bayes_demo/src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "examples/linear_bayes_demo/tests"]

@@ -33,17 +33,20 @@ def test_render_static_site_writes_graph_viewer(tmp_path):
     assert "<code>prior.gaussian_beta</code>" in (
         tmp_path / "tex/mathgraph/paper/declarations/prior_gaussian_beta.html"
     ).read_text(encoding="utf-8")
-    assert (tmp_path / "refs/src/linear_bayes/estimators.py.source.txt").exists()
-    assert (tmp_path / "code/src/linear_bayes/estimators.py.html").exists()
-    assert (tmp_path / "refs/tests/test_linear_gaussian_recovery.py.source.txt").exists()
+    assert (tmp_path / "refs/examples/linear_bayes_demo/src/linear_bayes/estimators.py.source.txt").exists()
+    assert (tmp_path / "code/examples/linear_bayes_demo/src/linear_bayes/estimators.py.html").exists()
+    assert (tmp_path / "refs/examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py.source.txt").exists()
     assert not list((tmp_path / "refs").rglob("test*.py"))
     assert not stale.exists()
-    assert any(ref["label"] == "src/linear_bayes/estimators.py::beta_map_closed_form" for ref in node["code"])
+    assert any(
+        ref["label"] == "examples/linear_bayes_demo/src/linear_bayes/estimators.py::beta_map_closed_form"
+        for ref in node["code"]
+    )
     assert all(ref["vscodeHref"].startswith("vscode://file/") for ref in node["code"])
     assert all(ref["href"].startswith("code/") for ref in node["code"])
     assert all(ref["lineStart"] is not None for ref in node["code"])
     assert any(
-        ref["label"] == "tests/test_linear_gaussian_recovery.py::test_closed_form_map_equals_posterior_mean"
+        ref["label"] == "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py::test_closed_form_map_equals_posterior_mean"
         for ref in node["tests"]
     )
     assert any(edge["tex"]["label"] == "deriv:map-from-posterior" for edge in node["incoming"])

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>examples/linear_bayes_demo/src/linear_bayes/estimators.py</title>
+    <link rel="stylesheet" href="../../../../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>examples/linear_bayes_demo/src/linear_bayes/estimators.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>&quot;&quot;&quot;Estimators and objectives attached to graph nodes.&quot;&quot;&quot;</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>from __future__ import annotations</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code></code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>import numpy as np</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code>from scipy.optimize import minimize</code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code></code></span>
+<span id="L8" class="source-line"><span class="line-number">8</span><code>from linear_bayes.likelihoods import student_t_log_likelihood</code></span>
+<span id="L9" class="source-line"><span class="line-number">9</span><code></code></span>
+<span id="L10" class="source-line"><span class="line-number">10</span><code></code></span>
+<a class="source-anchor" id="gaussian_posterior"></a><span id="L11" class="source-line highlighted"><span class="line-number">11</span><code>def gaussian_posterior(</code></span>
+<span id="L12" class="source-line highlighted"><span class="line-number">12</span><code>    X: np.ndarray,</code></span>
+<span id="L13" class="source-line highlighted"><span class="line-number">13</span><code>    y: np.ndarray,</code></span>
+<span id="L14" class="source-line highlighted"><span class="line-number">14</span><code>    sigma: float,</code></span>
+<span id="L15" class="source-line highlighted"><span class="line-number">15</span><code>    tau: float,</code></span>
+<span id="L16" class="source-line highlighted"><span class="line-number">16</span><code>) -&gt; tuple[np.ndarray, np.ndarray]:</code></span>
+<span id="L17" class="source-line highlighted"><span class="line-number">17</span><code>    &quot;&quot;&quot;Return (mu_n, Sigma_n) for graph node `posterior.gaussian_conjugate`.&quot;&quot;&quot;</code></span>
+<span id="L18" class="source-line highlighted"><span class="line-number">18</span><code>    X = np.asarray(X, dtype=float)</code></span>
+<span id="L19" class="source-line highlighted"><span class="line-number">19</span><code>    y = np.asarray(y, dtype=float)</code></span>
+<span id="L20" class="source-line highlighted"><span class="line-number">20</span><code>    _validate_posterior_inputs(X, y, sigma, tau)</code></span>
+<span id="L21" class="source-line highlighted"><span class="line-number">21</span><code></code></span>
+<span id="L22" class="source-line highlighted"><span class="line-number">22</span><code>    d = X.shape[1]</code></span>
+<span id="L23" class="source-line highlighted"><span class="line-number">23</span><code>    precision = (X.T @ X) / sigma**2 + np.eye(d) / tau**2</code></span>
+<span id="L24" class="source-line highlighted"><span class="line-number">24</span><code>    rhs = (X.T @ y) / sigma**2</code></span>
+<span id="L25" class="source-line highlighted"><span class="line-number">25</span><code>    sigma_n = np.linalg.inv(precision)</code></span>
+<span id="L26" class="source-line highlighted"><span class="line-number">26</span><code>    mu_n = np.linalg.solve(precision, rhs)</code></span>
+<span id="L27" class="source-line highlighted"><span class="line-number">27</span><code>    return mu_n, sigma_n</code></span>
+<span id="L28" class="source-line"><span class="line-number">28</span><code></code></span>
+<span id="L29" class="source-line"><span class="line-number">29</span><code></code></span>
+<a class="source-anchor" id="negative_log_posterior_gaussian"></a><span id="L30" class="source-line highlighted"><span class="line-number">30</span><code>def negative_log_posterior_gaussian(</code></span>
+<span id="L31" class="source-line highlighted"><span class="line-number">31</span><code>    beta: np.ndarray,</code></span>
+<span id="L32" class="source-line highlighted"><span class="line-number">32</span><code>    X: np.ndarray,</code></span>
+<span id="L33" class="source-line highlighted"><span class="line-number">33</span><code>    y: np.ndarray,</code></span>
+<span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>    sigma: float,</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>    tau: float,</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>) -&gt; float:</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code>    &quot;&quot;&quot;Evaluate the objective for graph node `objective.gaussian_negative_log_posterior`.&quot;&quot;&quot;</code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code>    X = np.asarray(X, dtype=float)</code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>    y = np.asarray(y, dtype=float)</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>    beta = np.asarray(beta, dtype=float)</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code>    _validate_posterior_inputs(X, y, sigma, tau, beta=beta)</code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code></code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code>    residual = y - X @ beta</code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code>    data_term = 0.5 * np.dot(residual, residual) / sigma**2</code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>    prior_term = 0.5 * np.dot(beta, beta) / tau**2</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code>    return float(data_term + prior_term)</code></span>
+<span id="L47" class="source-line"><span class="line-number">47</span><code></code></span>
+<span id="L48" class="source-line"><span class="line-number">48</span><code></code></span>
+<a class="source-anchor" id="beta_map_closed_form"></a><span id="L49" class="source-line highlighted"><span class="line-number">49</span><code>def beta_map_closed_form(</code></span>
+<span id="L50" class="source-line highlighted"><span class="line-number">50</span><code>    X: np.ndarray,</code></span>
+<span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>    y: np.ndarray,</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code>    sigma: float,</code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code>    tau: float,</code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>) -&gt; np.ndarray:</code></span>
+<span id="L55" class="source-line highlighted"><span class="line-number">55</span><code>    &quot;&quot;&quot;Return the closed-form MAP estimator for graph node `estimator.beta_map`.&quot;&quot;&quot;</code></span>
+<span id="L56" class="source-line highlighted"><span class="line-number">56</span><code>    mu_n, _ = gaussian_posterior(X, y, sigma, tau)</code></span>
+<span id="L57" class="source-line highlighted"><span class="line-number">57</span><code>    return mu_n</code></span>
+<span id="L58" class="source-line"><span class="line-number">58</span><code></code></span>
+<span id="L59" class="source-line"><span class="line-number">59</span><code></code></span>
+<a class="source-anchor" id="_validate_posterior_inputs"></a><span id="L60" class="source-line highlighted"><span class="line-number">60</span><code>def _validate_posterior_inputs(</code></span>
+<span id="L61" class="source-line highlighted"><span class="line-number">61</span><code>    X: np.ndarray,</code></span>
+<span id="L62" class="source-line highlighted"><span class="line-number">62</span><code>    y: np.ndarray,</code></span>
+<span id="L63" class="source-line highlighted"><span class="line-number">63</span><code>    sigma: float,</code></span>
+<span id="L64" class="source-line highlighted"><span class="line-number">64</span><code>    tau: float,</code></span>
+<span id="L65" class="source-line highlighted"><span class="line-number">65</span><code>    beta: np.ndarray | None = None,</code></span>
+<span id="L66" class="source-line highlighted"><span class="line-number">66</span><code>) -&gt; None:</code></span>
+<span id="L67" class="source-line highlighted"><span class="line-number">67</span><code>    if X.ndim != 2:</code></span>
+<span id="L68" class="source-line highlighted"><span class="line-number">68</span><code>        raise ValueError(&quot;X must be a two-dimensional array&quot;)</code></span>
+<span id="L69" class="source-line highlighted"><span class="line-number">69</span><code>    if y.ndim != 1:</code></span>
+<span id="L70" class="source-line highlighted"><span class="line-number">70</span><code>        raise ValueError(&quot;y must be a one-dimensional array&quot;)</code></span>
+<span id="L71" class="source-line highlighted"><span class="line-number">71</span><code>    if X.shape[0] != y.shape[0]:</code></span>
+<span id="L72" class="source-line highlighted"><span class="line-number">72</span><code>        raise ValueError(&quot;X and y must have the same number of rows&quot;)</code></span>
+<span id="L73" class="source-line highlighted"><span class="line-number">73</span><code>    if X.shape[1] == 0:</code></span>
+<span id="L74" class="source-line highlighted"><span class="line-number">74</span><code>        raise ValueError(&quot;X must have at least one column&quot;)</code></span>
+<span id="L75" class="source-line highlighted"><span class="line-number">75</span><code>    if sigma &lt;= 0:</code></span>
+<span id="L76" class="source-line highlighted"><span class="line-number">76</span><code>        raise ValueError(&quot;sigma must be positive&quot;)</code></span>
+<span id="L77" class="source-line highlighted"><span class="line-number">77</span><code>    if tau &lt;= 0:</code></span>
+<span id="L78" class="source-line highlighted"><span class="line-number">78</span><code>        raise ValueError(&quot;tau must be positive&quot;)</code></span>
+<span id="L79" class="source-line highlighted"><span class="line-number">79</span><code>    if beta is not None:</code></span>
+<span id="L80" class="source-line highlighted"><span class="line-number">80</span><code>        if beta.ndim != 1:</code></span>
+<span id="L81" class="source-line highlighted"><span class="line-number">81</span><code>            raise ValueError(&quot;beta must be a one-dimensional array&quot;)</code></span>
+<span id="L82" class="source-line highlighted"><span class="line-number">82</span><code>        if beta.shape[0] != X.shape[1]:</code></span>
+<span id="L83" class="source-line highlighted"><span class="line-number">83</span><code>            raise ValueError(&quot;beta length must match X columns&quot;)</code></span>
+<span id="L84" class="source-line"><span class="line-number">84</span><code></code></span>
+<span id="L85" class="source-line"><span class="line-number">85</span><code></code></span>
+<a class="source-anchor" id="student_t_map_numerical"></a><span id="L86" class="source-line highlighted"><span class="line-number">86</span><code>def student_t_map_numerical(</code></span>
+<span id="L87" class="source-line highlighted"><span class="line-number">87</span><code>    X: np.ndarray,</code></span>
+<span id="L88" class="source-line highlighted"><span class="line-number">88</span><code>    y: np.ndarray,</code></span>
+<span id="L89" class="source-line highlighted"><span class="line-number">89</span><code>    sigma: float,</code></span>
+<span id="L90" class="source-line highlighted"><span class="line-number">90</span><code>    tau: float,</code></span>
+<span id="L91" class="source-line highlighted"><span class="line-number">91</span><code>    nu: float,</code></span>
+<span id="L92" class="source-line highlighted"><span class="line-number">92</span><code>    initial_beta: np.ndarray | None = None,</code></span>
+<span id="L93" class="source-line highlighted"><span class="line-number">93</span><code>    maxiter: int = 1000,</code></span>
+<span id="L94" class="source-line highlighted"><span class="line-number">94</span><code>) -&gt; np.ndarray:</code></span>
+<span id="L95" class="source-line highlighted"><span class="line-number">95</span><code>    &quot;&quot;&quot;Return the numerical MAP approximation for graph node `approx.student_t_map`.&quot;&quot;&quot;</code></span>
+<span id="L96" class="source-line highlighted"><span class="line-number">96</span><code>    X = np.asarray(X, dtype=float)</code></span>
+<span id="L97" class="source-line highlighted"><span class="line-number">97</span><code>    y = np.asarray(y, dtype=float)</code></span>
+<span id="L98" class="source-line highlighted"><span class="line-number">98</span><code>    if initial_beta is None:</code></span>
+<span id="L99" class="source-line highlighted"><span class="line-number">99</span><code>        initial_beta = beta_map_closed_form(X=X, y=y, sigma=sigma, tau=tau)</code></span>
+<span id="L100" class="source-line highlighted"><span class="line-number">100</span><code>    initial_beta = np.asarray(initial_beta, dtype=float)</code></span>
+<span id="L101" class="source-line highlighted"><span class="line-number">101</span><code>    _validate_posterior_inputs(X, y, sigma, tau, beta=initial_beta)</code></span>
+<span id="L102" class="source-line highlighted"><span class="line-number">102</span><code>    if nu &lt;= 0:</code></span>
+<span id="L103" class="source-line highlighted"><span class="line-number">103</span><code>        raise ValueError(&quot;nu must be positive&quot;)</code></span>
+<span id="L104" class="source-line highlighted"><span class="line-number">104</span><code>    if maxiter &lt;= 0:</code></span>
+<span id="L105" class="source-line highlighted"><span class="line-number">105</span><code>        raise ValueError(&quot;maxiter must be positive&quot;)</code></span>
+<span id="L106" class="source-line highlighted"><span class="line-number">106</span><code></code></span>
+<span id="L107" class="source-line highlighted"><span class="line-number">107</span><code>    def objective(beta: np.ndarray) -&gt; float:</code></span>
+<span id="L108" class="source-line highlighted"><span class="line-number">108</span><code>        prior_penalty = 0.5 * np.dot(beta, beta) / tau**2</code></span>
+<span id="L109" class="source-line highlighted"><span class="line-number">109</span><code>        return float(</code></span>
+<span id="L110" class="source-line highlighted"><span class="line-number">110</span><code>            -student_t_log_likelihood(X=X, y=y, beta=beta, sigma=sigma, nu=nu)</code></span>
+<span id="L111" class="source-line highlighted"><span class="line-number">111</span><code>            + prior_penalty</code></span>
+<span id="L112" class="source-line highlighted"><span class="line-number">112</span><code>        )</code></span>
+<span id="L113" class="source-line highlighted"><span class="line-number">113</span><code></code></span>
+<span id="L114" class="source-line highlighted"><span class="line-number">114</span><code>    result = minimize(</code></span>
+<span id="L115" class="source-line highlighted"><span class="line-number">115</span><code>        objective,</code></span>
+<span id="L116" class="source-line highlighted"><span class="line-number">116</span><code>        initial_beta,</code></span>
+<span id="L117" class="source-line highlighted"><span class="line-number">117</span><code>        method=&quot;L-BFGS-B&quot;,</code></span>
+<span id="L118" class="source-line highlighted"><span class="line-number">118</span><code>        options={&quot;maxiter&quot;: int(maxiter), &quot;ftol&quot;: 1e-10, &quot;gtol&quot;: 1e-6},</code></span>
+<span id="L119" class="source-line highlighted"><span class="line-number">119</span><code>    )</code></span>
+<span id="L120" class="source-line highlighted"><span class="line-number">120</span><code>    if not result.success:</code></span>
+<span id="L121" class="source-line highlighted"><span class="line-number">121</span><code>        raise RuntimeError(f&quot;Student-t MAP optimization failed: {result.message}&quot;)</code></span>
+<span id="L122" class="source-line highlighted"><span class="line-number">122</span><code>    return np.asarray(result.x, dtype=float)</code></span></pre>
+  </body>
+</html>

@@ -11,7 +11,7 @@ def test_node_command_prints_node_card(capsys):
     assert "Incoming edges:" in output
     assert "Outgoing edges:" in output
     assert "deriv:map-from-posterior" in output
-    assert "src/linear_bayes/estimators.py::beta_map_closed_form" in output
+    assert "examples/linear_bayes_demo/src/linear_bayes/estimators.py::beta_map_closed_form" in output
 
 
 def test_impact_command_groups_downstream_references(capsys):
@@ -24,16 +24,16 @@ def test_impact_command_groups_downstream_references(capsys):
     assert "likelihood.gaussian" in output
     assert "posterior.gaussian_conjugate" in output
     assert "Affected code symbols:" in output
-    assert "src/linear_bayes/likelihoods.py::gaussian_log_likelihood" in output
+    assert "examples/linear_bayes_demo/src/linear_bayes/likelihoods.py::gaussian_log_likelihood" in output
     assert "Affected tests:" in output
-    assert "tests/test_linear_gaussian_recovery.py::test_recovery_improves_with_n" in output
+    assert "examples/linear_bayes_demo/tests/test_linear_gaussian_recovery.py::test_recovery_improves_with_n" in output
     assert "Affected experiments:" in output
     assert "experiment.gaussian_recovery" in output
     assert "Affected outputs:" in output
-    assert "results/gaussian_recovery_summary.json" in output
+    assert "examples/linear_bayes_demo/results/gaussian_recovery_summary.json" in output
     assert "model.student_t_noise" not in output
     assert "approx.student_t_map" not in output
-    assert "results/student_t_change_summary.json" not in output
+    assert "examples/linear_bayes_demo/results/student_t_change_summary.json" not in output
 
 
 def test_impact_from_shared_variable_reaches_both_model_branches(capsys):
@@ -46,8 +46,8 @@ def test_impact_from_shared_variable_reaches_both_model_branches(capsys):
     assert "model.student_t_noise" in output
     assert "likelihood.gaussian" in output
     assert "likelihood.student_t" in output
-    assert "results/gaussian_recovery_summary.json" in output
-    assert "results/student_t_change_summary.json" in output
+    assert "examples/linear_bayes_demo/results/gaussian_recovery_summary.json" in output
+    assert "examples/linear_bayes_demo/results/student_t_change_summary.json" in output
 
 
 def test_verbose_impact_command_prints_edge_paths(capsys):

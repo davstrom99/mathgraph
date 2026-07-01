@@ -2,8 +2,8 @@
 
 Attached graph node: `experiment.student_t_change`.
 Declared outputs:
-- results/student_t_change_summary.json
-- results/student_t_change_error.png
+- examples/linear_bayes_demo/results/student_t_change_summary.json
+- examples/linear_bayes_demo/results/student_t_change_error.png
 """
 
 from __future__ import annotations
@@ -18,14 +18,15 @@ from linear_bayes.estimators import beta_map_closed_form, student_t_map_numerica
 from linear_bayes.simulate import simulate_student_t_linear
 
 
+EXAMPLE_ROOT = Path(__file__).resolve().parent.parent
 BETA_TRUE = np.array([1.0, -0.5, 0.25])
 N = 120
 SEEDS = list(range(40))
 SIGMA = 1.0
 TAU = 10.0
 NU = 3.0
-SUMMARY_PATH = Path("results/student_t_change_summary.json")
-PLOT_PATH = Path("results/student_t_change_error.png")
+SUMMARY_PATH = EXAMPLE_ROOT / "results" / "student_t_change_summary.json"
+PLOT_PATH = EXAMPLE_ROOT / "results" / "student_t_change_error.png"
 
 
 def main(

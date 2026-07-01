@@ -319,11 +319,17 @@ def _dedupe_strings(items: Iterable[str]) -> list[str]:
 
 
 def _is_test_ref(ref: CodeRef) -> bool:
-    return ref.path.replace("\\", "/").startswith("tests/")
+    normalized = ref.path.replace("\\", "/")
+    return normalized.startswith("tests/") or "/tests/" in f"/{normalized}"
 
 
 def _is_experiment_ref(ref: CodeRef, node: Node) -> bool:
-    return node.kind == NodeKind.EXPERIMENT or ref.path.replace("\\", "/").startswith("experiments/")
+    normalized = ref.path.replace("\\", "/")
+    return (
+        node.kind == NodeKind.EXPERIMENT
+        or normalized.startswith("experiments/")
+        or "/experiments/" in f"/{normalized}"
+    )
 
 
 def _count_with_code(graph: GraphSpec, *kinds: NodeKind) -> str:

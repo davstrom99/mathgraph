@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>examples/linear_bayes_demo/tests/test_student_t_change.py</title>
+    <link rel="stylesheet" href="../../../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>examples/linear_bayes_demo/tests/test_student_t_change.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>&quot;&quot;&quot;Tests attached to Student-t alternative-branch graph nodes.&quot;&quot;&quot;</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>import json</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code>import importlib.util</code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>from pathlib import Path</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code></code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code>import numpy as np</code></span>
+<span id="L8" class="source-line"><span class="line-number">8</span><code>from scipy.stats import t</code></span>
+<span id="L9" class="source-line"><span class="line-number">9</span><code></code></span>
+<span id="L10" class="source-line"><span class="line-number">10</span><code>from linear_bayes.estimators import beta_map_closed_form, student_t_map_numerical</code></span>
+<span id="L11" class="source-line"><span class="line-number">11</span><code>from linear_bayes.likelihoods import student_t_log_likelihood</code></span>
+<span id="L12" class="source-line"><span class="line-number">12</span><code>from linear_bayes.simulate import simulate_student_t_linear</code></span>
+<span id="L13" class="source-line"><span class="line-number">13</span><code></code></span>
+<span id="L14" class="source-line"><span class="line-number">14</span><code></code></span>
+<a class="source-anchor" id="test_student_t_simulation_has_heavy_tailed_residuals"></a><span id="L15" class="source-line highlighted"><span class="line-number">15</span><code>def test_student_t_simulation_has_heavy_tailed_residuals():</code></span>
+<span id="L16" class="source-line highlighted"><span class="line-number">16</span><code>    &quot;&quot;&quot;Validation attached to graph node `model.student_t_noise`.&quot;&quot;&quot;</code></span>
+<span id="L17" class="source-line highlighted"><span class="line-number">17</span><code>    beta_true = np.array([1.0, -0.5, 0.25])</code></span>
+<span id="L18" class="source-line highlighted"><span class="line-number">18</span><code>    X, y = simulate_student_t_linear(</code></span>
+<span id="L19" class="source-line highlighted"><span class="line-number">19</span><code>        n=4000,</code></span>
+<span id="L20" class="source-line highlighted"><span class="line-number">20</span><code>        d=3,</code></span>
+<span id="L21" class="source-line highlighted"><span class="line-number">21</span><code>        beta=beta_true,</code></span>
+<span id="L22" class="source-line highlighted"><span class="line-number">22</span><code>        sigma=1.0,</code></span>
+<span id="L23" class="source-line highlighted"><span class="line-number">23</span><code>        nu=3.0,</code></span>
+<span id="L24" class="source-line highlighted"><span class="line-number">24</span><code>        seed=11,</code></span>
+<span id="L25" class="source-line highlighted"><span class="line-number">25</span><code>    )</code></span>
+<span id="L26" class="source-line highlighted"><span class="line-number">26</span><code></code></span>
+<span id="L27" class="source-line highlighted"><span class="line-number">27</span><code>    residual = y - X @ beta_true</code></span>
+<span id="L28" class="source-line highlighted"><span class="line-number">28</span><code></code></span>
+<span id="L29" class="source-line highlighted"><span class="line-number">29</span><code>    assert X.shape == (4000, 3)</code></span>
+<span id="L30" class="source-line highlighted"><span class="line-number">30</span><code>    assert y.shape == (4000,)</code></span>
+<span id="L31" class="source-line highlighted"><span class="line-number">31</span><code>    assert np.mean(np.abs(residual) &gt; 3.0) &gt; 0.02</code></span>
+<span id="L32" class="source-line"><span class="line-number">32</span><code></code></span>
+<span id="L33" class="source-line"><span class="line-number">33</span><code></code></span>
+<a class="source-anchor" id="test_student_t_log_likelihood_matches_scipy_density"></a><span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>def test_student_t_log_likelihood_matches_scipy_density():</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>    &quot;&quot;&quot;Validation attached to graph node `likelihood.student_t`.&quot;&quot;&quot;</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>    X = np.array([[1.0, 0.0], [1.0, 2.0], [-1.0, 1.0]])</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code>    y = np.array([0.5, 1.25, -0.25])</code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code>    beta = np.array([0.4, 0.2])</code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>    sigma = 0.7</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>    nu = 4.0</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code></code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code>    residual = y - X @ beta</code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code>    expected = float(np.sum(t.logpdf(residual / sigma, df=nu) - np.log(sigma)))</code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code></code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>    assert np.isclose(</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code>        student_t_log_likelihood(X=X, y=y, beta=beta, sigma=sigma, nu=nu),</code></span>
+<span id="L47" class="source-line highlighted"><span class="line-number">47</span><code>        expected,</code></span>
+<span id="L48" class="source-line highlighted"><span class="line-number">48</span><code>    )</code></span>
+<span id="L49" class="source-line"><span class="line-number">49</span><code></code></span>
+<span id="L50" class="source-line"><span class="line-number">50</span><code></code></span>
+<a class="source-anchor" id="test_student_t_map_handles_outlier_better_than_gaussian_map"></a><span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>def test_student_t_map_handles_outlier_better_than_gaussian_map():</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code>    &quot;&quot;&quot;Validation attached to graph node `approx.student_t_map`.&quot;&quot;&quot;</code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code>    beta_true = np.array([1.0])</code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>    X = np.ones((12, 1))</code></span>
+<span id="L55" class="source-line highlighted"><span class="line-number">55</span><code>    y = np.ones(12)</code></span>
+<span id="L56" class="source-line highlighted"><span class="line-number">56</span><code>    y[-1] = 30.0</code></span>
+<span id="L57" class="source-line highlighted"><span class="line-number">57</span><code></code></span>
+<span id="L58" class="source-line highlighted"><span class="line-number">58</span><code>    gaussian_beta = beta_map_closed_form(X=X, y=y, sigma=1.0, tau=10.0)</code></span>
+<span id="L59" class="source-line highlighted"><span class="line-number">59</span><code>    student_t_beta = student_t_map_numerical(X=X, y=y, sigma=1.0, tau=10.0, nu=3.0)</code></span>
+<span id="L60" class="source-line highlighted"><span class="line-number">60</span><code></code></span>
+<span id="L61" class="source-line highlighted"><span class="line-number">61</span><code>    assert abs(student_t_beta[0] - beta_true[0]) &lt; abs(gaussian_beta[0] - beta_true[0])</code></span>
+<span id="L62" class="source-line highlighted"><span class="line-number">62</span><code>    assert abs(student_t_beta[0] - beta_true[0]) &lt; 0.25</code></span>
+<span id="L63" class="source-line"><span class="line-number">63</span><code></code></span>
+<span id="L64" class="source-line"><span class="line-number">64</span><code></code></span>
+<a class="source-anchor" id="test_student_t_change_script_writes_declared_outputs"></a><span id="L65" class="source-line highlighted"><span class="line-number">65</span><code>def test_student_t_change_script_writes_declared_outputs(tmp_path):</code></span>
+<span id="L66" class="source-line highlighted"><span class="line-number">66</span><code>    &quot;&quot;&quot;Validation attached to graph node `experiment.student_t_change`.&quot;&quot;&quot;</code></span>
+<span id="L67" class="source-line highlighted"><span class="line-number">67</span><code>    script_path = Path(&quot;examples/linear_bayes_demo/experiments/run_student_t_change.py&quot;).resolve()</code></span>
+<span id="L68" class="source-line highlighted"><span class="line-number">68</span><code>    spec = importlib.util.spec_from_file_location(&quot;run_student_t_change&quot;, script_path)</code></span>
+<span id="L69" class="source-line highlighted"><span class="line-number">69</span><code>    assert spec is not None</code></span>
+<span id="L70" class="source-line highlighted"><span class="line-number">70</span><code>    assert spec.loader is not None</code></span>
+<span id="L71" class="source-line highlighted"><span class="line-number">71</span><code>    module = importlib.util.module_from_spec(spec)</code></span>
+<span id="L72" class="source-line highlighted"><span class="line-number">72</span><code>    spec.loader.exec_module(module)</code></span>
+<span id="L73" class="source-line highlighted"><span class="line-number">73</span><code></code></span>
+<span id="L74" class="source-line highlighted"><span class="line-number">74</span><code>    summary_path = tmp_path / &quot;student_t_change_summary.json&quot;</code></span>
+<span id="L75" class="source-line highlighted"><span class="line-number">75</span><code>    plot_path = tmp_path / &quot;student_t_change_error.png&quot;</code></span>
+<span id="L76" class="source-line highlighted"><span class="line-number">76</span><code>    module.main(summary_path=summary_path, plot_path=plot_path)</code></span>
+<span id="L77" class="source-line highlighted"><span class="line-number">77</span><code></code></span>
+<span id="L78" class="source-line highlighted"><span class="line-number">78</span><code>    assert summary_path.exists()</code></span>
+<span id="L79" class="source-line highlighted"><span class="line-number">79</span><code>    assert plot_path.exists()</code></span>
+<span id="L80" class="source-line highlighted"><span class="line-number">80</span><code>    assert plot_path.stat().st_size &gt; 0</code></span>
+<span id="L81" class="source-line highlighted"><span class="line-number">81</span><code></code></span>
+<span id="L82" class="source-line highlighted"><span class="line-number">82</span><code>    summary = json.loads(summary_path.read_text(encoding=&quot;utf-8&quot;))</code></span>
+<span id="L83" class="source-line highlighted"><span class="line-number">83</span><code>    assert summary[&quot;nu&quot;] == 3.0</code></span>
+<span id="L84" class="source-line highlighted"><span class="line-number">84</span><code>    assert summary[&quot;mean_student_t_error&quot;] &lt; summary[&quot;mean_gaussian_error&quot;]</code></span>
+<span id="L85" class="source-line highlighted"><span class="line-number">85</span><code>    assert summary[&quot;student_t_better_fraction&quot;] &gt; 0.5</code></span></pre>
+  </body>
+</html>

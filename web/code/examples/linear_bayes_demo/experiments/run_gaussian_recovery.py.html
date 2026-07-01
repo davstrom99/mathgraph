@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>examples/linear_bayes_demo/experiments/run_gaussian_recovery.py</title>
+    <link rel="stylesheet" href="../../../../style.css">
+  </head>
+  <body class="code-page">
+    <header class="code-header">
+      <h1>examples/linear_bayes_demo/experiments/run_gaussian_recovery.py</h1>
+    </header>
+    <pre class="source-view"><span id="L1" class="source-line"><span class="line-number">1</span><code>&quot;&quot;&quot;Run the Gaussian synthetic recovery experiment.</code></span>
+<span id="L2" class="source-line"><span class="line-number">2</span><code></code></span>
+<span id="L3" class="source-line"><span class="line-number">3</span><code>Attached graph node: `experiment.gaussian_recovery`.</code></span>
+<span id="L4" class="source-line"><span class="line-number">4</span><code>Declared outputs:</code></span>
+<span id="L5" class="source-line"><span class="line-number">5</span><code>- examples/linear_bayes_demo/results/gaussian_recovery_summary.json</code></span>
+<span id="L6" class="source-line"><span class="line-number">6</span><code>- examples/linear_bayes_demo/results/gaussian_recovery_error.png</code></span>
+<span id="L7" class="source-line"><span class="line-number">7</span><code>&quot;&quot;&quot;</code></span>
+<span id="L8" class="source-line"><span class="line-number">8</span><code></code></span>
+<span id="L9" class="source-line"><span class="line-number">9</span><code>from __future__ import annotations</code></span>
+<span id="L10" class="source-line"><span class="line-number">10</span><code></code></span>
+<span id="L11" class="source-line"><span class="line-number">11</span><code>import json</code></span>
+<span id="L12" class="source-line"><span class="line-number">12</span><code>from pathlib import Path</code></span>
+<span id="L13" class="source-line"><span class="line-number">13</span><code></code></span>
+<span id="L14" class="source-line"><span class="line-number">14</span><code>import matplotlib.pyplot as plt</code></span>
+<span id="L15" class="source-line"><span class="line-number">15</span><code>import numpy as np</code></span>
+<span id="L16" class="source-line"><span class="line-number">16</span><code></code></span>
+<span id="L17" class="source-line"><span class="line-number">17</span><code>from linear_bayes.experiments import run_recovery_experiment</code></span>
+<span id="L18" class="source-line"><span class="line-number">18</span><code></code></span>
+<span id="L19" class="source-line"><span class="line-number">19</span><code></code></span>
+<span id="L20" class="source-line"><span class="line-number">20</span><code>EXAMPLE_ROOT = Path(__file__).resolve().parent.parent</code></span>
+<span id="L21" class="source-line"><span class="line-number">21</span><code>BETA_TRUE = np.array([1.0, -0.5, 0.25])</code></span>
+<span id="L22" class="source-line"><span class="line-number">22</span><code>N_VALUES = [20, 50, 100, 250, 500]</code></span>
+<span id="L23" class="source-line"><span class="line-number">23</span><code>SEEDS = list(range(25))</code></span>
+<span id="L24" class="source-line"><span class="line-number">24</span><code>SIGMA = 1.0</code></span>
+<span id="L25" class="source-line"><span class="line-number">25</span><code>TAU = 10.0</code></span>
+<span id="L26" class="source-line"><span class="line-number">26</span><code>SUMMARY_PATH = EXAMPLE_ROOT / &quot;results&quot; / &quot;gaussian_recovery_summary.json&quot;</code></span>
+<span id="L27" class="source-line"><span class="line-number">27</span><code>PLOT_PATH = EXAMPLE_ROOT / &quot;results&quot; / &quot;gaussian_recovery_error.png&quot;</code></span>
+<span id="L28" class="source-line"><span class="line-number">28</span><code></code></span>
+<span id="L29" class="source-line"><span class="line-number">29</span><code></code></span>
+<a class="source-anchor" id="main"></a><span id="L30" class="source-line highlighted"><span class="line-number">30</span><code>def main(</code></span>
+<span id="L31" class="source-line highlighted"><span class="line-number">31</span><code>    summary_path: Path = SUMMARY_PATH,</code></span>
+<span id="L32" class="source-line highlighted"><span class="line-number">32</span><code>    plot_path: Path = PLOT_PATH,</code></span>
+<span id="L33" class="source-line highlighted"><span class="line-number">33</span><code>) -&gt; None:</code></span>
+<span id="L34" class="source-line highlighted"><span class="line-number">34</span><code>    &quot;&quot;&quot;Run and save outputs for graph node `experiment.gaussian_recovery`.&quot;&quot;&quot;</code></span>
+<span id="L35" class="source-line highlighted"><span class="line-number">35</span><code>    result = run_recovery_experiment(</code></span>
+<span id="L36" class="source-line highlighted"><span class="line-number">36</span><code>        n_values=N_VALUES,</code></span>
+<span id="L37" class="source-line highlighted"><span class="line-number">37</span><code>        d=BETA_TRUE.size,</code></span>
+<span id="L38" class="source-line highlighted"><span class="line-number">38</span><code>        sigma=SIGMA,</code></span>
+<span id="L39" class="source-line highlighted"><span class="line-number">39</span><code>        tau=TAU,</code></span>
+<span id="L40" class="source-line highlighted"><span class="line-number">40</span><code>        beta_true=BETA_TRUE,</code></span>
+<span id="L41" class="source-line highlighted"><span class="line-number">41</span><code>        seeds=SEEDS,</code></span>
+<span id="L42" class="source-line highlighted"><span class="line-number">42</span><code>    )</code></span>
+<span id="L43" class="source-line highlighted"><span class="line-number">43</span><code></code></span>
+<span id="L44" class="source-line highlighted"><span class="line-number">44</span><code>    summary_path.parent.mkdir(parents=True, exist_ok=True)</code></span>
+<span id="L45" class="source-line highlighted"><span class="line-number">45</span><code>    plot_path.parent.mkdir(parents=True, exist_ok=True)</code></span>
+<span id="L46" class="source-line highlighted"><span class="line-number">46</span><code></code></span>
+<span id="L47" class="source-line highlighted"><span class="line-number">47</span><code>    summary_path.write_text(json.dumps(result, indent=2), encoding=&quot;utf-8&quot;)</code></span>
+<span id="L48" class="source-line highlighted"><span class="line-number">48</span><code>    _save_error_plot(result, plot_path)</code></span>
+<span id="L49" class="source-line highlighted"><span class="line-number">49</span><code></code></span>
+<span id="L50" class="source-line highlighted"><span class="line-number">50</span><code>    first_error = result[&quot;mean_errors&quot;][0]</code></span>
+<span id="L51" class="source-line highlighted"><span class="line-number">51</span><code>    last_error = result[&quot;mean_errors&quot;][-1]</code></span>
+<span id="L52" class="source-line highlighted"><span class="line-number">52</span><code>    print(f&quot;Wrote {summary_path}&quot;)</code></span>
+<span id="L53" class="source-line highlighted"><span class="line-number">53</span><code>    print(f&quot;Wrote {plot_path}&quot;)</code></span>
+<span id="L54" class="source-line highlighted"><span class="line-number">54</span><code>    print(f&quot;Mean error: n={N_VALUES[0]} -&gt; {first_error:.4f}, n={N_VALUES[-1]} -&gt; {last_error:.4f}&quot;)</code></span>
+<span id="L55" class="source-line"><span class="line-number">55</span><code></code></span>
+<span id="L56" class="source-line"><span class="line-number">56</span><code></code></span>
+<a class="source-anchor" id="_save_error_plot"></a><span id="L57" class="source-line highlighted"><span class="line-number">57</span><code>def _save_error_plot(result: dict, plot_path: Path) -&gt; None:</code></span>
+<span id="L58" class="source-line highlighted"><span class="line-number">58</span><code>    n_values = np.asarray(result[&quot;n_values&quot;], dtype=float)</code></span>
+<span id="L59" class="source-line highlighted"><span class="line-number">59</span><code>    mean_errors = np.asarray(result[&quot;mean_errors&quot;], dtype=float)</code></span>
+<span id="L60" class="source-line highlighted"><span class="line-number">60</span><code>    std_errors = np.asarray(result[&quot;std_errors&quot;], dtype=float)</code></span>
+<span id="L61" class="source-line highlighted"><span class="line-number">61</span><code></code></span>
+<span id="L62" class="source-line highlighted"><span class="line-number">62</span><code>    fig, ax = plt.subplots(figsize=(7.0, 4.5), constrained_layout=True)</code></span>
+<span id="L63" class="source-line highlighted"><span class="line-number">63</span><code>    ax.errorbar(</code></span>
+<span id="L64" class="source-line highlighted"><span class="line-number">64</span><code>        n_values,</code></span>
+<span id="L65" class="source-line highlighted"><span class="line-number">65</span><code>        mean_errors,</code></span>
+<span id="L66" class="source-line highlighted"><span class="line-number">66</span><code>        yerr=std_errors,</code></span>
+<span id="L67" class="source-line highlighted"><span class="line-number">67</span><code>        marker=&quot;o&quot;,</code></span>
+<span id="L68" class="source-line highlighted"><span class="line-number">68</span><code>        linewidth=2.0,</code></span>
+<span id="L69" class="source-line highlighted"><span class="line-number">69</span><code>        capsize=4,</code></span>
+<span id="L70" class="source-line highlighted"><span class="line-number">70</span><code>        color=&quot;#1f77b4&quot;,</code></span>
+<span id="L71" class="source-line highlighted"><span class="line-number">71</span><code>        ecolor=&quot;#8fb9dc&quot;,</code></span>
+<span id="L72" class="source-line highlighted"><span class="line-number">72</span><code>    )</code></span>
+<span id="L73" class="source-line highlighted"><span class="line-number">73</span><code>    ax.set_xscale(&quot;log&quot;)</code></span>
+<span id="L74" class="source-line highlighted"><span class="line-number">74</span><code>    ax.set_xlabel(&quot;sample size n&quot;)</code></span>
+<span id="L75" class="source-line highlighted"><span class="line-number">75</span><code>    ax.set_ylabel(r&quot;$\|\hat{\beta}_{MAP} - \beta_0\|_2$&quot;)</code></span>
+<span id="L76" class="source-line highlighted"><span class="line-number">76</span><code>    ax.set_title(&quot;Gaussian synthetic recovery&quot;)</code></span>
+<span id="L77" class="source-line highlighted"><span class="line-number">77</span><code>    ax.grid(True, which=&quot;both&quot;, alpha=0.3)</code></span>
+<span id="L78" class="source-line highlighted"><span class="line-number">78</span><code>    fig.savefig(plot_path, dpi=160)</code></span>
+<span id="L79" class="source-line highlighted"><span class="line-number">79</span><code>    plt.close(fig)</code></span>
+<span id="L80" class="source-line"><span class="line-number">80</span><code></code></span>
+<span id="L81" class="source-line"><span class="line-number">81</span><code></code></span>
+<span id="L82" class="source-line"><span class="line-number">82</span><code>if __name__ == &quot;__main__&quot;:</code></span>
+<span id="L83" class="source-line"><span class="line-number">83</span><code>    main()</code></span></pre>
+  </body>
+</html>

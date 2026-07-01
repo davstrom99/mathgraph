@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 def _load_script_main():
-    script_path = Path("experiments/run_gaussian_recovery.py").resolve()
+    script_path = Path("examples/linear_bayes_demo/experiments/run_gaussian_recovery.py").resolve()
     spec = importlib.util.spec_from_file_location("run_gaussian_recovery", script_path)
     assert spec is not None
     assert spec.loader is not None

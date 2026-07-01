@@ -738,7 +738,8 @@ def _latex_text_arg(text: str) -> str:
 
 
 def _is_test_ref(ref: CodeRef) -> bool:
-    return ref.path.replace("\\", "/").startswith("tests/")
+    normalized = ref.path.replace("\\", "/")
+    return normalized.startswith("tests/") or "/tests/" in f"/{normalized}"
 
 
 def _index_html() -> str:
