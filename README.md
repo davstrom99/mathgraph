@@ -25,7 +25,7 @@ It is easy to get started in an existing project:
 A good first Codex prompt to try is:
 
 ```text
-/mathgraph Explain the main model branches, missing validations, and the highest-impact next improvement.
+/mathgraph Explain the main model branches, missing validations, and the highest-impact next improvement to the codebase.
 ```
 
 ## Example
