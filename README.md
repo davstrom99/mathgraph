@@ -4,7 +4,7 @@ When engineering or researching an idea by vibe coding with an agent, it is easy
 
 `mathgraph` is a skill and workflow that makes the agent root updates in a latent representation of the idea so code, docs, models, tests, and outputs stay consistent with what the project is really about.
 
-Because mathematics can express precise ideas with very few symbols, `mathgraph` parameterizes that latent representation as a graph of mathematical objects. The result is that the agent can keep precise ideas in context, make code changes that respect the idea of interest, and give the engineer or scientist an interface for understanding the project without reading a single line of agent-written code.
+Because mathematics can express precise ideas with very few symbols, `mathgraph` parameterizes that latent representation as a graph of mathematical objects. The result is that the agent can keep precise ideas in context, make code changes that respect the idea of interest, and give the engineer or scientist an interface for staying as the owner of the project without reading a single line of agent-written code.
 
 ## Install
 
